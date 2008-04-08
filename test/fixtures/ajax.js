@@ -542,6 +542,10 @@ Ajax.PeriodicalUpdater = Klass.create(Ajax.Base, {
   *
   *     language: html
   *     <div id="my_div"></div>
+  *
+  * Now a title.
+  * ===========
+  * 
   **/
 
 /** section: lang

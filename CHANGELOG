@@ -1,3 +1,5 @@
+* Make PDoc::Generators::Html::Description use BlueCloth. [Tobie]
+
 * Make PDoc::Generators::Html::Website#render accept an output directory as argument. [Tobie]
 
 * Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. [Tobie]

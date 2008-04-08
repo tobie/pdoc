@@ -9,9 +9,10 @@ module PDoc
         end
         
         def to_html
-          blocks.map do |block|
-            block.match(/\s{4}/) ? CodeBlock.new(block).to_html : content_tag(:p, block)
+          str = blocks.map do |block|
+            block.match(/\s{4}/) ? CodeBlock.new(block).to_html : block
           end.join("\n\n")
+          BlueCloth.new(str).to_html
         end
         
         def blocks
