@@ -2,15 +2,13 @@ module PDoc
   module Generators
     module Html
       class Website
-        def initialize(file)
-          @file = file
-          string = File.open(@file){ |f| f.read }
-          @root = Parser.new(string).parse
+        def initialize(parser_output)
+          @root = parser_output
           @depth = 0
         end
         
         # Generates the website to the specified directory.
-        def render(output = OUTPUT_DIR)
+        def render(output)
           Dir.chdir(File.expand_path(output))
           Page.new("index", "layout", variables).render_to_file("index.html")
           

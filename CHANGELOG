@@ -1,39 +1,43 @@
-* Make PDoc::Generators::Html::Description use BlueCloth. [Tobie]
+* Rename rakefile as Rakefile. [savetheclocktower]
 
-* Make PDoc::Generators::Html::Website#render accept an output directory as argument. [Tobie]
+* Add PDoc::Runner. [tobie]
 
-* Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. [Tobie]
+* Make PDoc::Generators::Html::Description use BlueCloth. [tobie]
 
-* Add Treetop compiler rake task. [Tobie]
+* Make PDoc::Generators::Html::Website#render accept an output directory as argument. [tobie]
 
-* Change includes and fires syntax (remove semi-colon). [sam, Tobie]
+* Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. [tobie]
 
-* Run all unit tests with rake test. [Tobie]
+* Add Treetop compiler rake task. [tobie]
 
-* Rename p_doc as pdoc. [Tobie]
+* Change includes and fires syntax (remove semi-colon). [sam, tobie]
 
-* Remove reference to Prototype from @title instance variable. [Tobie]
+* Run all unit tests with rake test. [tobie]
 
-* Update TextMate bundle to reflect latest syntax changes. [Tobie]
+* Rename p_doc as pdoc. [tobie]
 
-* Modify syntax for specifying language type in description code blocks. [Tobie]
+* Remove reference to Prototype from @title instance variable. [tobie]
 
-* Update README. [Tobie]
+* Update TextMate bundle to reflect latest syntax changes. [tobie]
 
-* Make syntax for events more consistent. [Tobie]
+* Modify syntax for specifying language type in description code blocks. [tobie]
 
-* Allow notation for `n` arguments in EBNF (args...). [Tobie]
+* Update README. [tobie]
 
-* Add support for events (syntax subject to change) [Tobie]
+* Make syntax for events more consistent. [tobie]
 
-* More consistency [Tobie]
+* Allow notation for `n` arguments in EBNF (args...). [tobie]
 
-* Finalize support for argument description [Tobie]
+* Add support for events (syntax subject to change) [tobie]
 
-* Add initial support for argument description [Tobie]
+* More consistency [tobie]
 
-* Add TextMate bundle [Tobie]
+* Finalize support for argument description [tobie]
 
-* Minute syntax change [Tobie]
+* Add initial support for argument description [tobie]
 
-* Add to public svn [Tobie]
+* Add TextMate bundle [tobie]
+
+* Minute syntax change [tobie]
+
+* Add to public svn [tobie]

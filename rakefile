@@ -3,7 +3,8 @@ require 'lib/pdoc'
 
 desc "Builds the documentation"
 task :build_doc do
-  PDoc::Generators::Html::Website.new(File.expand_path(File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js"))).render
+  source = File.expand_path(File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js"))
+  PDoc::Runner.new(source).render
 end
 
 desc "Empties output directory"
