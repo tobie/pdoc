@@ -1,0 +1,55 @@
+<h1 class="<%= class_names_for(@doc_instance) %>"><%= @doc_instance.full_name %> <span>(<%= @doc_instance.type %>)</span></h1>
+
+<% if @doc_instance.is_a?(Documentation::Klass) %>
+	<% if @doc_instance.superklass %>
+		<p>Superclass: <%=  auto_link(@doc_instance.superklass, false) %></p>
+	<% end %>
+	<% unless @doc_instance.subklasses.empty? %>
+		<p>Subclasses: <%= @doc_instance.subklasses.map {|subklass| auto_link(subklass, false) }.join(", ") %></p>
+	<% end %>
+<% end %>
+
+<% unless @doc_instance.mixins.empty? %>
+	<p>Includes: <%= @doc_instance.mixins.map {|mixin| auto_link(mixin, false) }.join(", ") %></p>
+<% end %>
+
+<h2>Methods</h2>
+<ul class="method-list">
+	<% @doc_instance.all_methods.each do |method| %>
+		<li><%= auto_link(method, true, :class => class_names_for(method)) %></li>
+	<% end %>
+</ul>
+
+<% unless @doc_instance.mixins.empty? %>
+	<% @doc_instance.mixins.each do |mixin| %>
+		<h3>Methods inherited from <%= auto_link(mixin) %>:</h3>
+		<ul class="method-list">
+			<% mixin.all_methods.each do |method| %>
+				<li><%= auto_link(method, true, :class => class_names_for(method)) %></li>
+			<% end %>
+		</ul>
+	<% end %>
+<% end %>
+
+<% if @doc_instance.is_a?(Documentation::Klass) && @doc_instance.constructor %>
+	<h2>Constructor</h2>
+	<h3 id="<%= dom_id(@doc_instance.constructor) %>"><code><%= @doc_instance.constructor.full_name %></code></h3>
+<% end %>
+
+<% 
+  {
+		:constants           => "Constants",
+		:klass_methods       => "Class methods",
+		:klass_properties    => "Class properties",
+		:instance_methods    => "Instance methods",
+		:instance_properties => "Instance properties"
+	}.each do |method, title| %>
+		<% methods = @doc_instance.send(method)
+     unless methods.empty? %>
+			<h2><%= title %></h2>
+			<ul>
+				<%= include "partials/short_description", :collection => methods %>
+			</ul>
+		<% end %>
+	<% end %>
+

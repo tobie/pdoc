@@ -1,0 +1,55 @@
+if (!window.PDoc) window.PDoc = {};
+PDoc.elements = {
+<%= @root.map{|e| "  '#{e.full_name}': '#{path_to(e)}'"}.join(",\n") %>
+};
+
+PDoc.highlightSelected = function() {
+  if (!window.location.hash) return;
+  var element = $(window.location.hash.substr(1));
+  if (element) element.highlight(PDoc.HighlightOptions);
+};
+
+PDoc.HighlightOptions = {
+  startcolor: '#e4e4e4',
+  restorecolor: true,
+  queue: {
+    position:'end',
+    scope: 'global',
+    limit: 1
+  }
+};
+
+document.observe('dom:loaded', function() {
+  function navigate(name) {
+    if(name in PDoc.elements) {
+      window.location = PDoc.pathPrefix + PDoc.elements[name];
+      PDoc.highlightSelected();
+    }
+  }
+  var search = $('search');
+  search.observe('focus', function() { this.select() });
+  search.up('form').observe('submit', function(event) {
+    event.stop();
+    navigate(search.getValue());
+  });
+  
+  new Autocompleter.Local('search', 'search_list', Object.keys(PDoc.elements), {
+    fullSearch: true,
+    partialChars: 1,
+    minChars: 1,
+    afterUpdateElement: function(element) {
+      navigate(element.getValue());
+    }
+  });
+});
+
+document.observe('click', function(event) {
+  var element = event.findElement('a');
+  if (!element) return;
+  var href = element.readAttribute('href');
+  if (!href.include('#')) return;
+  if (element = $(href.split('#').last()))
+    element.highlight(PDoc.HighlightOptions);
+});
+
+document.observe('dom:loaded', PDoc.highlightSelected);

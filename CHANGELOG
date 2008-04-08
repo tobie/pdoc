@@ -1,0 +1,37 @@
+* Make PDoc::Generators::Html::Website#render accept an output directory as argument. [Tobie]
+
+* Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. [Tobie]
+
+* Add Treetop compiler rake task. [Tobie]
+
+* Change includes and fires syntax (remove semi-colon). [sam, Tobie]
+
+* Run all unit tests with rake test. [Tobie]
+
+* Rename p_doc as pdoc. [Tobie]
+
+* Remove reference to Prototype from @title instance variable. [Tobie]
+
+* Update TextMate bundle to reflect latest syntax changes. [Tobie]
+
+* Modify syntax for specifying language type in description code blocks. [Tobie]
+
+* Update README. [Tobie]
+
+* Make syntax for events more consistent. [Tobie]
+
+* Allow notation for `n` arguments in EBNF (args...). [Tobie]
+
+* Add support for events (syntax subject to change) [Tobie]
+
+* More consistency [Tobie]
+
+* Finalize support for argument description [Tobie]
+
+* Add initial support for argument description [Tobie]
+
+* Add TextMate bundle [Tobie]
+
+* Minute syntax change [Tobie]
+
+* Add to public svn [Tobie]

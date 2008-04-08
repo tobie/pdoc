@@ -1,0 +1,27 @@
+grammar ArgumentDescription
+  include Basic
+  
+  rule argument_description
+    line '-' space+ argument_name arg_types:(space+ arguments_types)? ':' space* argument_description_text <ArgumentDescription>
+  end
+  
+  rule argument_description_text
+    text:char+ more:code_line* {
+      def to_s
+        [text.text_value].concat(more.elements).map{ |l| l.to_s.strip }.join(' ')
+      end
+    }
+  end
+  
+  rule argument_name
+    [a-zA-Z$]+
+  end
+  
+  rule arguments_types
+    '(' space* argument_type more:(space* ',' space+ argument_type)* space* ')'
+  end
+  
+  rule argument_type
+    [a-zA-Z]+
+  end
+end

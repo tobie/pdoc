@@ -1,0 +1,31 @@
+grammar EbnfArguments
+  include EbnfJavascript
+
+  rule arguments
+    argument args:(argument_separator argument)* <Arguments> / space* {
+      def to_a
+        []
+      end
+    }
+  end
+
+  rule argument
+    optional_argument / required_argument
+  end
+
+  rule argument_separator
+    space* (&'[' / ',')
+  end
+
+  rule optional_argument
+    "[" space* ","? required_argument default:(default_value)? "]" <OptionalArgument> 
+  end
+
+  rule default_value
+    space* "=" space* value:[^\]]+ 
+  end
+
+  rule required_argument
+    space* (js_variable / js_object) '...'? space* <Argument>
+  end
+end

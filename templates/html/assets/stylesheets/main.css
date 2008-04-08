@@ -1,0 +1,209 @@
+body {
+	font-family: Verdana, sans-serif;
+	font-size:100%;
+	line-height:1.125em;
+}
+
+a:link {
+	color: #000;
+}
+a:visited {
+	color: #000;
+}
+a:hover {
+	color: #000;
+}
+a:focus {
+	color: #000;
+}
+a:active {
+	color: #000;
+}
+
+.deprecated,
+a.deprecated code {
+	color: #999;
+	text-decoration: line-through;
+}
+
+a.deprecated {
+	text-decoration: none;
+}
+
+/* --- HEADER --- */
+
+#header {
+	zoom: 1;
+}
+
+#header:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* --- SEARCH --- */
+
+#search {
+	width: 300px;
+	float: right;
+}
+
+#search_list {
+	font: 13px monospace;
+	position: absolute;
+	width: 400px;
+	background-color: #fff;
+	border: 1px solid #888;
+	margin: 0;
+	padding: 0;
+}
+
+#search_list ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#search_list ul li.selected {
+	background-color: #b5d5ff;
+}
+
+#search_list ul li {
+	margin: 0;
+	padding: 2px;
+	height: 13px;
+	cursor: pointer;
+}
+
+/* --- LOGO --- */
+
+#header h1 {
+	float: left;
+	size: 250px;
+}
+
+/* --- MAIN --- */
+
+#main {
+	width: 100%;
+	zoom: 1;
+}
+
+#main:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* --- CONTENT --- */
+
+#content {
+	font-size: 0.875em;
+	float: right;
+	width: 75%;
+}
+
+#content h1 {
+	font-size: 1.5em;
+	height: 34px;
+	border-bottom: 2px solid #000;
+	margin-bottom: 18px;
+}
+
+#content h1 span {
+	font-size: 0.75em;
+}
+
+#content ul.method-list {
+	zoom: 1;
+}
+
+#content ul.method-list:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+#content ul.method-list li {
+	float: left;
+	margin-right: 1em;
+}
+
+/* --- CODE HIGHLIGTHING --- */
+
+pre {
+	background: #f7f7f7;
+	padding: 10px;
+	font-size: 90%;
+	line-height: 130%;
+}
+
+pre {
+	overflow: auto;
+}
+
+pre code {
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
+	font-size: 92%;
+}
+
+.html .tag {
+	color:#3344AA /*#BB7711*/
+}
+
+.html .attribute {
+	color:#BB7711
+}
+
+.keywords {
+	color: #f71;
+}
+.comment {
+	color: #517;
+}
+.string {
+	color: #392;
+}
+.regex { 
+	background: #D0F0FF; 
+	color: #27b;
+}
+
+.global {
+	color: blue;
+}
+
+/* --- SIDEBAR --- */
+
+#sidebar {
+	font-size: 0.875em;
+	width: 25%;
+	float: left;
+}
+
+#sidebar ul {
+	margin-left: 15px;
+}
+
+#sidebar a.current,
+#sidebar a.current-parent {
+	display: block;
+	background-color: #f3f3f3;
+}
+
+#sidebar a.current {
+	background-color: #e4e4e4;
+}
+
+/* --- FOOTER --- */
+
+#footer {
+	font-size: 0.75em;
+}
