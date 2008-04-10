@@ -2,8 +2,6 @@ module PDoc
   module Generators
     module Html
       class DescriptionParser
-        include Helpers
-        
         def initialize(description)
           @description = description
         end
@@ -21,7 +19,7 @@ module PDoc
       end
       
       class DescriptionParser::CodeBlock
-        include Helpers
+        include Helpers::BaseHelper
         
         def initialize(string)
           @string = string

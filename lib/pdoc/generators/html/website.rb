@@ -10,7 +10,7 @@ module PDoc
         # Generates the website to the specified directory.
         def render(output)
           Dir.chdir(File.expand_path(output))
-          Page.new("index", "layout", variables).render_to_file("index.html")
+          DocPage.new("index", "layout", variables).render_to_file("index.html")
           
           @root.sections.each do |section|
             @depth = 0
@@ -23,7 +23,7 @@ module PDoc
           copy_assets
           
           dest = File.join("javascripts", "application.js")
-          Page.new("application.js", false, variables).render_to_file(dest)
+          DocPage.new("application.js", false, variables).render_to_file(dest)
         end
         
         # Copies the content of the assets folder to the generated website's
