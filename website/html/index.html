@@ -26,7 +26,11 @@
 			</ul>
 		</div>
 		<div id="content">
-			<p>PDoc is a upcoming inline documentation parser for Prototype and Prototype-based libraries.</p>
+			<p>PDoc is an inline comment parser and JavaScript documentation generator written in Ruby. It is designed for documenting <a href="http://prototypejs.org">Prototype</a> and Prototype-based libraries.</p>
+
+			<p>PDoc uses <a href="http://treetop.rubyforge.org/">Treetop</a>, a Ruby-based DSL for text parsing and interpretation, and it&#8217;s own, ActionView-inspired, ERB-based templating system for HTML generation. Other documentation generators (for example, for DocBook XML) are planned.</p>
+
+			<p>Contrary to other inline documentation parser, PDoc does not rely on the JavaScript source code at all: it only parses the comments. This does imply being slightly more verbose when documenting the source code, but makes for a consistent, readable documentation and avoids the usual issues encountered when documenting highly dynamic languages.</p>
 		</div>
 		<div id="sidebar">
 		
