@@ -1,3 +1,9 @@
+* add PDoc::Generators::Html::Template [tobie]
+
+* Refactor PDoc::Generators::Html::Page [tobie]
+
+* Refactor PDoc::Generators::Html::Helpers [tobie]
+
 * Rename rakefile as Rakefile. [savetheclocktower]
 
 * Add PDoc::Runner. [tobie]

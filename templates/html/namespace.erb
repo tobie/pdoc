@@ -1,3 +1,5 @@
+<% @title = "#{@doc_instance.full_name} (#{@doc_instance.type})" %>
+
 <h1 class="<%= class_names_for(@doc_instance) %>"><%= @doc_instance.full_name %> <span>(<%= @doc_instance.type %>)</span></h1>
 
 <% if @doc_instance.is_a?(Documentation::Klass) %>
