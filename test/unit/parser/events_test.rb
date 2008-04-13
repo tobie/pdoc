@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), "..", "test_helper"))
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "parser_test_helper"))
 
 class EventsTest < Test::Unit::TestCase
   include PDocTestHelper

@@ -1,3 +1,5 @@
+* Move parser tests into their own folder. [tobie]
+
 * Extract BlueCloth extension to its own file. Add tests. [tobie]
 
 * Remove code block related rule. [tobie]

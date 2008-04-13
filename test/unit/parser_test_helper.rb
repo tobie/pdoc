@@ -1,6 +1,6 @@
 require 'test/unit'
 
-require File.expand_path(File.join(File.dirname(__FILE__), "..", "lib", "pdoc")) unless defined?(PDoc)
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "lib", "pdoc")) unless defined?(PDoc)
 
 class Treetop::Runtime::SyntaxNode 
   def method_missing(method, *args)
@@ -23,7 +23,7 @@ module PDocTestHelper
   end
   
   def parse_file(filename)
-    path = File.expand_path(File.join(File.dirname(__FILE__), "fixtures", filename))
+    path = File.expand_path(File.join(File.dirname(__FILE__), "..", "fixtures", filename))
     file = File.open(path){ |f| f.read }
     parse(file)
   end
