@@ -39,7 +39,7 @@ module PDoc
             variables.each { |key, value| instance_variable_set("@#{key}", value) }
           end
       end
-      
+
       class DocPage < Page
         include Helpers::LinkHelper, Helpers::MenuHelper
         
@@ -53,8 +53,8 @@ module PDoc
           super(template, layout, variables)
         end
         
-        def htmlize(content)
-          DescriptionParser.new(auto_link_content(content)).to_html
+        def htmlize(markdown)
+          super(auto_link_content(markdown))
         end
       end
       

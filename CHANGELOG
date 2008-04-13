@@ -1,3 +1,9 @@
+* Be more lenient with whitespace. [tobie]
+
+* Remove PDoc::Generators::Html::DescriptionParser and extend BlueCloth instead. [tobie]
+
+* Allow using the `@` prefix in argument descriptions. [tobie]
+
 * add PDoc::Generators::Html::Template [tobie]
 
 * Refactor PDoc::Generators::Html::Page [tobie]

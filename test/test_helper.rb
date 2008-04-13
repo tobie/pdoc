@@ -18,6 +18,10 @@ module PDocTestHelper
     result
   end
   
+  def blank_line
+    "\n * \n "
+  end
+  
   def parse_file(filename)
     path = File.expand_path(File.join(File.dirname(__FILE__), "fixtures", filename))
     file = File.open(path){ |f| f.read }

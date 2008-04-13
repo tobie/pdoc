@@ -22,8 +22,6 @@ class BasicTest < Test::Unit::TestCase
     text_line =  "\n *    here's some text       "
     assert_parsed text_line
     assert_equal TextLine, parse(text_line).elements.first.class
-    # TODO: Why is whitespace significant here?
-    #assert_equal "   here's some text       ", parse(text_line).elements.first.to_s
     assert_equal "here's some text", parse(text_line).elements.first.to_s.strip
   end
   
@@ -36,20 +34,20 @@ class BasicTest < Test::Unit::TestCase
     blank_line = "\n  *   \n"
     assert_parsed blank_line
     assert_equal BlankLine, parse(blank_line).elements.first.class
-    assert_equal "", parse(blank_line).elements.first.to_s
+    assert_equal "", parse(blank_line).elements.first.to_s.strip
     
     empty = "\n  *\n"
     assert_equal "", parse(empty).elements.first.to_s
   end
   
   def test_comment_start
-    starts =  "\n/**"
+    starts =  "\n   /**     "
     assert_parsed starts
     assert_equal CommentStart, parse(starts).elements.first.class
   end
   
   def test_comment_end
-    ends = "\n**/\n"
+    ends = "\n   **/    \n"
     assert_parsed ends
     assert_equal CommentEnd, parse(ends).elements.first.class
   end

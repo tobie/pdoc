@@ -19,7 +19,9 @@ module PDoc
     # Parses the preprocessed string. Returns an instance
     # of Documentation::Doc
     def parse
-      @parser.parse(pre_process)
+      result = @parser.parse(pre_process)
+      raise ParseError, "Malformed or empty documentation." if result.nil?
+      result
     end
     
     # Preprocess the string before parsing.
@@ -28,5 +30,9 @@ module PDoc
     def pre_process
       "\n" << @string.gsub(/\r\n/, "\n") << "\n"
     end
+  end
+  
+  # Thrown by PDoc::Parser if the parser returns nil.
+  class ParseError < StandardError
   end
 end

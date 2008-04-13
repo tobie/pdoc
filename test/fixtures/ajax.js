@@ -43,7 +43,8 @@
  * Element#setStyle(@element, styles) -> Element
  * - element (String, Element): an id or DOM node
  * - styles (String, Object, Hash): can be either a regular CSS string or
- *     a hash or regular object, in which case, properties need to be camelized
+ * a hash or regular object, in which case, properties need to be camelized
+ *
  * fires element:style:updated
  *
  * Sets the style of element
@@ -534,12 +535,14 @@ Ajax.PeriodicalUpdater = Klass.create(Ajax.Base, {
   * Here is a paragraph.
   * 
   * Another... and some code examples below:
-  *
+  *     
   *     alert(Toggle.foo());
   *     // -> does nothing
   *     
   *     foo.show();
-  *
+  *  
+  *  An HTML block
+  *     
   *     language: html
   *     <div id="my_div"></div>
   *

@@ -19,7 +19,7 @@ grammar Documentation
   end
   
   rule constructor_doc
-    start ebnf:(line constructor)+ arguments_descriptions events text comment_end <Constructor>
+    start ebnf:(line constructor)+ argument_descriptions events text comment_end <Constructor>
   end
   
   rule mixin_doc
@@ -27,15 +27,15 @@ grammar Documentation
   end
   
   rule klass_doc
-    start line ebnf:klass text comment_end <Klass>
+    start line space* ebnf:klass text comment_end <Klass>
   end
 
   rule klass_method_doc
-    start ebnf:(line klass_method)+ arguments_descriptions events text comment_end <KlassMethod>
+    start ebnf:(line klass_method)+ argument_descriptions events text comment_end <KlassMethod>
   end
   
   rule instance_method_doc
-    start ebnf:(line instance_method)+ arguments_descriptions events text comment_end <InstanceMethod>
+    start ebnf:(line instance_method)+ argument_descriptions events text comment_end <InstanceMethod>
   end
   
   rule klass_property_doc
@@ -51,7 +51,7 @@ grammar Documentation
   end
   
   rule utility_doc
-    start ebnf:(line utility)+ arguments_descriptions events text comment_end <Utility>
+    start ebnf:(line utility)+ argument_descriptions events text comment_end <Utility>
   end
   
   rule namespace_doc
@@ -62,8 +62,8 @@ grammar Documentation
     comment_start space* (tags)?
   end
   
-  rule arguments_descriptions
-    argument_description*
+  rule argument_descriptions
+    (argument_description+ blank_line)?
   end
   
   rule events

@@ -5,43 +5,43 @@ grammar EbnfExpression
   end
   
   rule mixin
-    'mixin' space+ js_namespace  (includes)? <Mixin>
+    space* 'mixin' space+ js_namespace  (includes)? <Mixin>
   end
   
   rule klass
-    'class' space+ js_namespace extends:(space+ '<' space+ js_namespace)? (includes)? <Klass>
+    space* 'class' space+ js_namespace extends:(space+ '<' space+ js_namespace)? (includes)? <Klass>
   end
   
   rule includes
-    line 'includes' space+ js_namespace more:(',' space+ js_namespace)*
+    line space* 'includes' space+ js_namespace more:(',' space+ js_namespace)*
   end
   
   rule constructor
-    'new' (space)+ js_namespace args <Constructor>
+    space* 'new' (space)+ js_namespace args <Constructor>
   end
 
   rule klass_method
-    js_namespace '.' js_variable args return_value <KlassMethod>
+    space* js_namespace '.' js_variable args return_value <KlassMethod>
   end
   
   rule instance_method
-    js_namespace '#' js_variable args return_value <InstanceMethod>
+    space* js_namespace '#' js_variable args return_value <InstanceMethod>
   end
   
   rule klass_property
-    js_namespace '.' js_variable return_value <KlassProperty>
+    space* js_namespace '.' js_variable return_value <KlassProperty>
   end
   
   rule instance_property
-    js_namespace '#' js_variable return_value <InstanceProperty>
+    space* js_namespace '#' js_variable return_value <InstanceProperty>
   end
 
   rule constant
-    js_namespace space* "=" space* value:(char)+ space* <Constant>
+    space* js_namespace space* "=" space* value:(char)+ space* <Constant>
   end
   
   rule utility
-    utility_name:('$' [$a-zA-Z]*) args return_value <Utility>
+    space* utility_name:('$' [$a-zA-Z]*) args return_value <Utility>
   end
   
   rule args

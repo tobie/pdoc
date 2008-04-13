@@ -2,7 +2,7 @@ module Description
   class Text < Treetop::Runtime::SyntaxNode
     include Enumerable
     def each
-      elements.map { |e| e.to_s }.each { |tag| yield tag }
+      elements.map { |e| e.to_s }.each { |line| yield line }
     end
     
     def join(sep = "\n")

@@ -340,7 +340,8 @@ module Documentation
     end
     
     def arguments
-      arguments_descriptions.elements
+      args = argument_descriptions.elements
+      args ? args.first.elements :  []
     end
     
     def fires
