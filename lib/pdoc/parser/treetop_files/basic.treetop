@@ -4,7 +4,7 @@ grammar Basic
   end
 
   rule blank_line
-    line_break space space? "*" space* text:space* &(line_break) <BlankLine>
+    line_break space* "*" space* text:space* &(line_break) <BlankLine>
   end
   
   rule text_line
@@ -12,11 +12,11 @@ grammar Basic
   end
   
   rule code_line
-    line "    " text:char+ <TextLine>
+    line ("   " / " ") text:char+ <TextLine>
   end
   
   rule line
-    line_break space* "*" space space? <Line>
+    line_break space* ("*  " / "* ") <Line>
   end
   
   rule comment_start

@@ -2,7 +2,7 @@ grammar ArgumentDescription
   include Basic
   
   rule argument_description
-    line '-' space+ argument_name arg_types:(space+ arguments_types)? ':' space* argument_description_text <ArgumentDescription>
+    line space? '-' space+ argument_name arg_types:(space+ arguments_types)? ':' space* argument_description_text <ArgumentDescription>
   end
   
   rule argument_description_text
