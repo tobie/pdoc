@@ -378,19 +378,28 @@ div#masthead h1#logo {
         color: #333;
         background-color: #fff;
         padding: 2px 6px;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #fff;
       }
       
         #menu #api_menu li a:hover {
-          background-color: #eee;
+          background-color: #CDE0FB;
+          border-top-color: #a4c8fb;
+          border-bottom-color: #a4c8fb;
         }
         
   #menu #api_menu .search-field {
     padding: 5px 6px;
     background-color: #cee8c3;
   }
+    #menu #api_menu label {
+      color: #555;
+    }
   
     #menu #api_menu input {
       border: 1px solid #bbb;
+      padding: 2px;
+      width: 160px;
     }
     
   #menu #api_menu ul {
@@ -399,6 +408,37 @@ div#masthead h1#logo {
   }
   
   #menu #api_menu .search-results {
-    padding: 0 0 5px;
+    padding: 0;
     border-bottom: 2px solid #ddd;
+  }
+  
+/* API menu */
+
+#menu #api_menu li a {
+  background-repeat: no-repeat;
+  background-position: 6px 3px;
+  padding: 3px 5px 3px 30px;
+  font-size: 12px;
+}
+
+  #menu #api_menu li a.class {
+    background-image: url(../images/class.png);
+  }
+  
+  #menu #api_menu li a.namespace {
+    background-image: url(../images/namespace.png);
+  }
+
+  #menu #api_menu li a.utility {
+    background-image: url(../images/method.png);
+  }
+
+  #menu #api_menu li a.mixin {
+    background-image: url(../images/mixin.png);
+  }
+  
+  #menu #api_menu li a.section {
+    text-transform: uppercase;
+    color: #777;
+    background-image: url(../images/section.png);
   }

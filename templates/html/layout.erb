@@ -14,7 +14,8 @@
 	      var menuButton = $('api_menu_button');
 	      var target = event.element();
 	      if (target === menuButton || target.descendantOf(menuButton)) {
-	        $('api_menu').show();	        
+	        $('api_menu').show();
+	        $('search').focus();
 	      }
 	    }
 	    
