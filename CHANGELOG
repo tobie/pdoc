@@ -1,3 +1,5 @@
+* Extract BlueCloth extension to its own file. Add tests. [tobie]
+
 * Remove code block related rule. [tobie]
 
 * Be more lenient with whitespace. [tobie]
