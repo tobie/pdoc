@@ -19,28 +19,79 @@ PDoc.HighlightOptions = {
   }
 };
 
-document.observe('dom:loaded', function() {
-  function navigate(name) {
-    if(name in PDoc.elements) {
-      window.location = PDoc.pathPrefix + PDoc.elements[name];
-      PDoc.highlightSelected();
-    }
-  }
-  var search = $('search');
-  search.observe('focus', function() { this.select() });
-  search.up('form').observe('submit', function(event) {
-    event.stop();
-    navigate(search.getValue());
-  });
+var Filterer = Class.create({
+  initialize: function(element, options) {
+    this.element = $(element);
+    this.options = Object.extend({
+      interval: 0.1,
+      resultsElement: '.search-results'
+    }, options || {});
+    
+    this.menu = this.options.menu;
+    this.links = this.menu.select('a');
+    
+    this.resultsElement = this.menu.down(this.options.resultsElement);
+    
+    this.events = {
+      filter:   this.filter.bind(this)
+    };
+    
+    this.menu.setStyle({ opacity: 0.9 });
+    this.addObservers();
+  },
   
-  new Autocompleter.Local('search', 'search_list', Object.keys(PDoc.elements), {
-    fullSearch: true,
-    partialChars: 1,
-    minChars: 1,
-    afterUpdateElement: function(element) {
-      navigate(element.getValue());
+  addObservers: function() {
+    this.element.observe('keyup', this.events.filter);
+  },
+    
+  filter: function(event) {
+    console.log(event.keyCode);
+    
+    if (event.keyCode && event.keyCode === Event.KEY_ESC) {
+      this.element.value = '';
+      this.onEmpty();
+    }    
+    
+    var value = $F(this.element).strip().toLowerCase();
+    var urls  = this.findURLs(value);    
+    var match = function(elem) {
+      return urls.any( function(url) { return elem.href.include(url); });
+    };    
+
+    var matchingLinks = this.links.select(match);    
+    if (matchingLinks.length === 0) {
+      this.onEmpty();
+      return;
     }
-  });
+    
+    this.buildResults(matchingLinks);
+  },
+  
+  buildResults: function(links) {
+    this.resultsElement.update();
+    var ul = new Element('ul');
+    links.each( function(link) {
+      ul.insert(link.cloneNode(true).wrap('li'));
+    }, this);    
+    this.resultsElement.insert(ul);
+    this.resultsElement.show();
+  },
+  
+  findURLs: function(str) {
+    var results = [];
+    for (var i in PDoc.elements) {
+      if (i.toLowerCase().include(str)) results.push(PDoc.elements[i]);
+    }
+    return results;
+  },
+  
+  onEmpty: function() {
+    this.resultsElement.hide();
+  }
+});
+
+document.observe('dom:loaded', function() {
+  new Filterer($('search'), { menu: $('api_menu') });
 });
 
 document.observe('click', function(event) {
@@ -52,4 +103,4 @@ document.observe('click', function(event) {
     element.highlight(PDoc.HighlightOptions);
 });
 
-document.observe('dom:loaded', PDoc.highlightSelected);
+document.observe('dom:loaded', PDoc.highlightSelected);;

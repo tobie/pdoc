@@ -1865,8 +1865,13 @@ Element.Methods = {
     element = $(element), ancestor = $(ancestor);
     var originalAncestor = ancestor;
 
-    if (element.compareDocumentPosition)
-      return (element.compareDocumentPosition(ancestor) & 8) === 8;
+    if (element.compareDocumentPosition) {
+      try {
+        return (element.compareDocumentPosition(ancestor) & 8) === 8;        
+      } catch(e) {
+        if (!e.startsWith('Permission denied')) throw e;
+      }
+    }
 
     if (element.sourceIndex && !Prototype.Browser.Opera) {
       var e = element.sourceIndex, a = ancestor.sourceIndex,

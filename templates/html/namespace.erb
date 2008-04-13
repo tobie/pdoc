@@ -1,57 +1,90 @@
-<% @title = "#{@doc_instance.full_name} (#{@doc_instance.type})" %>
+<% d = @doc_instance %>
 
-<h1 class="<%= class_names_for(@doc_instance) %>"><%= @doc_instance.full_name %> <span>(<%= @doc_instance.type %>)</span></h1>
+<% @title = "#{d.full_name} (#{d.type})" %>
 
+<h2 class="<%= class_names_for(d) %>">
+  <span><%= d.type %></span>
+  <%= d.full_name %>
+</h2>
+
+
+<% # Is it a CLASS?  %>
 <% if @doc_instance.is_a?(Documentation::Klass) %>
+
 	<% if @doc_instance.superklass %>
-		<p>Superclass: <%=  auto_link(@doc_instance.superklass, false) %></p>
+	<div class="section">
+	  <h3>Superclass</h3>
+	  <p><%= auto_link(d.superklass, false) %></p>
+	</div> <!-- .section -->		
 	<% end %>
+
 	<% unless @doc_instance.subklasses.empty? %>
-		<p>Subclasses: <%= @doc_instance.subklasses.map {|subklass| auto_link(subklass, false) }.join(", ") %></p>
+	<div class="section">
+	  <h3>Subclasses</h3>
+	  <p><%= d.subklasses.map { |s| auto_link(s, false) }.join(', ') %></p>
+	</div> <!-- .section -->		
 	<% end %>
+
 <% end %>
 
+<% # Does it have MIXINS? %>
 <% unless @doc_instance.mixins.empty? %>
-	<p>Includes: <%= @doc_instance.mixins.map {|mixin| auto_link(mixin, false) }.join(", ") %></p>
+  <div class="section">
+    <h3>Includes</h3>
+    <p><%= d.mixins.map { |m| auto_link(m, false) }.join(', ') %></p>
+  </div> <!-- .section -->
 <% end %>
 
-<h2>Methods</h2>
-<ul class="method-list">
-	<% @doc_instance.all_methods.each do |method| %>
-		<li><%= auto_link(method, true, :class => class_names_for(method)) %></li>
-	<% end %>
-</ul>
-
-<% unless @doc_instance.mixins.empty? %>
-	<% @doc_instance.mixins.each do |mixin| %>
-		<h3>Methods inherited from <%= auto_link(mixin) %>:</h3>
-		<ul class="method-list">
+<div class="section">
+  <h3>Methods</h3>
+  
+  <ul class="method-list">
+    <% d.all_methods.each do |method| %>
+      <li><%= auto_link(method, true, :class => class_names_for(method)) %></li>
+    <% end %>
+  </ul>
+  
+  <% unless @doc_instance.mixins.empty? %>
+    <% d.mixins.each do |mixin| %>
+    <h4 class="inherited">Inherited from <%= auto_link(mixin) %></h4>
+    <ul class="method-list">
 			<% mixin.all_methods.each do |method| %>
 				<li><%= auto_link(method, true, :class => class_names_for(method)) %></li>
 			<% end %>
-		</ul>
-	<% end %>
+    </ul>
+    <% end %>
+  <% end %>
+</div> <!-- .section -->
+
+<% if d.is_a?(Documentation::Klass) && d.constructor %>
+<div class="section">
+  <h3>Constructor</h3>
+  <p>
+    <pre id="<%= dom_id(d.constructor) %>" class="syntax"><code><%= d.constructor.full_name %></code></pre>
+  </p>
+</div> <!-- .section -->
 <% end %>
 
-<% if @doc_instance.is_a?(Documentation::Klass) && @doc_instance.constructor %>
-	<h2>Constructor</h2>
-	<h3 id="<%= dom_id(@doc_instance.constructor) %>"><code><%= @doc_instance.constructor.full_name %></code></h3>
-<% end %>
 
-<% 
-  {
-		:constants           => "Constants",
-		:klass_methods       => "Class methods",
-		:klass_properties    => "Class properties",
-		:instance_methods    => "Instance methods",
-		:instance_properties => "Instance properties"
-	}.each do |method, title| %>
-		<% methods = @doc_instance.send(method)
-     unless methods.empty? %>
-			<h2><%= title %></h2>
-			<ul>
-				<%= include "partials/short_description", :collection => methods %>
-			</ul>
-		<% end %>
-	<% end %>
+<%
+types = {
+	:constants           => "Constants",
+	:klass_methods       => "Class methods",
+	:klass_properties    => "Class properties",
+	:instance_methods    => "Instance methods",
+	:instance_properties => "Instance properties"  
+}
+%>
+
+<% types.each do |method, title| %>
+  <% methods = d.send(method) %>
+  <% unless methods.empty? %>
+    <div class="section">
+      <h3><%= title %></h3>
+      <ul>
+        <%= include "partials/short_description", :collection => methods %>
+      </ul>    
+    </div> <!-- .section -->
+  <% end %>
+<% end %>
 

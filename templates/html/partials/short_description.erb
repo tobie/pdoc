@@ -1,3 +1,8 @@
-<li><h3 id="<%= dom_id(object) %>"><code><%= object.name %></code></h3>
+<li><h4 id="<%= dom_id(object) %>"><%= object.name %></h4>
+  
+  <% if object.is_a?(Documentation::Method) %>
+    <pre class="syntax"><code class="ebnf"><%= object.ebnf_expressions %></code></pre>
+  <% end %>
+  
 	<%= htmlize(object.description) %>
 </li>

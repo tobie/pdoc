@@ -1,38 +1,98 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Prototype API documentation | <%= @title %></title>
+	  <meta name="generator" content="PDoc" />
+	  
+	  <%= javascript_include_tag "prototype", "effects", "controls" %>
+	  <%= javascript_include_tag "application", "code_highlighter" %>
+	  <%= stylesheet_link_tag "screen", "grid", "highlighter", "main" %>
+	  
+	  <script type="text/javascript" charset="utf-8">
+	    function menuButtonMouseOver(event) {
+	      var menuButton = $('api_menu_button');
+	      var target = event.element();
+	      if (target === menuButton || target.descendantOf(menuButton)) {
+	        $('api_menu').show();	        
+	      }
+	    }
+	    
+	    function menuButtonMouseOut(event) {
+	      var menuButton = $('api_menu_button');
+	      var menu = $('api_menu');
+	      var target = event.element(), related = event.relatedTarget;
+	      
+	      if (related === menu || related.descendantOf(menu)) return;
+	      menu.hide();
+	    }
+	    
+	    function menuMouseOut(event) {
+	      var menu = $('api_menu'), related = event.relatedTarget;
+	      if (related && !related.descendantOf(menu)) {
+	        arguments.callee.timer = Element.hide.delay(0.5, menu);
+	      } else {
+	        window.clearTimeout(arguments.callee.timer)
+	      }
+	    }
+	    
+	    document.observe('dom:loaded', function() {
+   	    $('api_menu_button').observe('mouseover', menuButtonMouseOver);
+   	    $('api_menu_button').observe('mouseout',  menuButtonMouseOut);
+   	    
+   	    $('api_menu').observe('mouseout', menuMouseOut);
+	    });
+	  </script>
+	  
+	  <script type="text/javascript" charset="utf-8">PDoc.pathPrefix = '<%= path_prefix %>';</script>
+  </head>
+  <body class="">
+    <div id="page">
+      <div id="links_wrapper">
+        <div id="links">
+          <ul id="internal_links">
+            <li class="selected"><a href="#">Home</a></li>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Weblog</a></li>
+          </ul>
+          <ul id="external_links">
+            <li id="scripty_link"><a href="http://script.aculo.us/">script.aculo.us</a></li>
+            <li id="rails_link"><a href="http://www.rubyonrails.org/">Ruby on Rails</a></li>
+          </ul>
+        </div> <!-- #links -->
+      </div> <!-- #links_wrapper -->
+      
+      <div id="masthead">
+        <div id="masthead_content">
+          <h1 onclick="with (document.body) className = className ? '' : 'grid'" id="logo"><span>Prototype JavaScript framework</span></h1>
+        </div> <!-- #masthead_content -->
+      </div> <!-- #masthead -->
+      
+      <div id="menu">
+        <div>
+          <h2><a href="#" id="api_menu_button">Menu &darr;</a></h2>
+          
+    			<ul id="api_menu" style="display: none">
+    			  <li class="search-field">
+    			    <form>
+      			    <label>Search <input type="text" id="search" size="20" /></label>
+    			    </form>
+    			  </li>
+    			  <li class="search-results" style="display: none"></li>
+    				<% @root.sections.each do |section| %>
+    					<%= menu(section) %>
+    				<% end %>
+    			</ul>          
+        </div>
+      </div> <!-- #menu -->
+      
+      <div id="main">
+        
+        <%= @content_for_layout %>
 
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Prototype API documentation | <%= @title %></title>
-	<meta name="generator" content="PDoc">
-	<%= javascript_include_tag "prototype", "effects", "controls", "application", "code_highlighter" %>
-	<%= stylesheet_link_tag "reset", "main" %>
-	<script type="text/javascript" charset="utf-8">PDoc.pathPrefix = '<%= path_prefix %>';</script>
-</head>
-<body>
-	<div id="header">
-		<h1><a href="<%= path_prefix %>index.html"><%= img_tag("logo.png", :alt => "Prototype API Documentation") %></a></h1>
-		<form action="" method="get" accept-charset="utf-8">
-			<div><input type="text" value="search" id="search"></div>
-			<div id="search_list"></div>
-		</form>
-	</div>
-	<div id="main">
-		<div id="content">
-			<%= @content_for_layout %>
-		</div>
-		<div id="sidebar">
-			<ul>
-				<% @root.sections.each do |section| %>
-					<%= menu(section) %>
-				<% end %>
-			</ul>
-		</div>
-	</div>
-	<div id="footer">
-		<p>&copy; 2006-<%= Time.now.year %> Prototype Core Team | Licenses:
-		<a rel="license" href="http://dev.rubyonrails.org/browser/spinoffs/prototype/trunk/LICENSE?format=raw">MIT (source code)</a> and <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><abbr title="Creative Commons Attribution-Share Alike 3.0 License">CC BY-SA</abbr> (documentation)</a>.</p>
-	</div>
+      </div> <!-- #main -->
+            
+    </div> <!-- #page -->
+
 </body>
 </html>
