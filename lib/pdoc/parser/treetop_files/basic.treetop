@@ -11,10 +11,6 @@ grammar Basic
     line text:char+ <TextLine>
   end
   
-  rule code_line
-    line ("   " / " ") text:char+ <TextLine>
-  end
-  
   rule line
     line_break space* line_separator space <Line>
   end

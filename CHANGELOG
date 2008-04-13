@@ -1,3 +1,5 @@
+* Remove code block related rule. [tobie]
+
 * Be more lenient with whitespace. [tobie]
 
 * Remove PDoc::Generators::Html::DescriptionParser and extend BlueCloth instead. [tobie]
