@@ -2,14 +2,14 @@ grammar ArgumentDescription
   include Basic
   
   rule argument_description
-    first:argument_description_first_line more:(argument_description_following_line)* <ArgumentDescription>
+    first:argument_description_first_line more:(argument_description_line)* <ArgumentDescription>
   end
   
   rule argument_description_first_line
     line space* '-' space+ argument_name arg_types:(space+ arguments_types)? ':' description:char+
   end
   
-  rule argument_description_following_line
+  rule argument_description_line
     line space* first_char:(!'-' .) more_char:char+ {
       def to_s
         first_char.text_value << more_char.text_value
