@@ -42,7 +42,7 @@ module PDoc
     def message
       <<-EOS
       
-ParseError: Expected #{expected_string} at line #{line}, column #{column} (byte #{index + 1}) after #{@parser.input[@parser.index...@parser.failure_index].inspect}
+ParseError: Expected #{expected_string} at line #{line}, column #{column} (byte #{index + 1}) after #{@parser.input[@parser.index...index].inspect}.
       
 #{source_code}
       
@@ -80,7 +80,9 @@ ParseError: Expected #{expected_string} at line #{line}, column #{column} (byte 
       if failures.size == 1
         failures.first.expected_string.inspect
       else
-        "one of " << failures.map { |f| f.expected_string.inspect }.uniq*', '
+        expected = failures.map { |f| f.expected_string.inspect }.uniq
+        last = expected.pop
+        "one of #{expected.join(', ')} or #{last}"
       end
     end
   end

@@ -1,4 +1,6 @@
-* Fix missing content. [tobie]
+* Better error message formatting (nitpicking, really!). [tobie]
+
+* Fix missing descriptions. [tobie]
 
 * Add nice error messages. [tobie]
 
