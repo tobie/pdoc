@@ -409,6 +409,10 @@ ul.method-list li {
   background-image: url(../images/constant.png);
 }
 
+.section-mixins h3 {
+  background-image: url(../images/mixin.png);
+}
+
 
 /* @end */
 

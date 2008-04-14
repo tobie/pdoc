@@ -65,7 +65,6 @@ var Filterer = Class.create({
     }
     
     var urls  = this.findURLs(value);  
-    console.log(urls);
     this.buildResults(urls);
   },
   
@@ -75,12 +74,11 @@ var Filterer = Class.create({
     urls.each( function(url) {
       var a  = new Element('a', {
         'class': url.type.gsub(/\s/, '_'),
-        href:    url.path
+        href:    PDoc.pathPrefix + url.path
       }).update(url.name);
       var li = new Element('li');
       li.appendChild(a);
       ul.appendChild(li);
-      console.log(li);
     });    
     this.resultsElement.show();
   },
