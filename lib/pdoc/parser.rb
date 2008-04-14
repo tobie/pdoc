@@ -20,7 +20,7 @@ module PDoc
     # of Documentation::Doc
     def parse
       result = @parser.parse(pre_process)
-      raise ParseError, "Malformed or empty documentation." if result.nil?
+      raise ParseError, @parser unless result
       result
     end
     
@@ -32,7 +32,56 @@ module PDoc
     end
   end
   
-  # Thrown by PDoc::Parser if the parser returns nil.
+  # Thrown by PDoc::Parser if the documentation is malformed.
   class ParseError < StandardError
+    def initialize(parser)
+      @parser = parser
+      @lines = @parser.input.split("\n").unshift("")
+    end
+    
+    def message
+      <<-EOS
+      
+ParseError: Expected #{expected_string} at line #{line}, column #{column} (byte #{index + 1}) after #{@parser.input[@parser.index...@parser.failure_index].inspect}
+      
+#{source_code}
+      
+      EOS
+    end
+    
+    def line
+      @parser.failure_line
+    end
+    
+    def column
+      @parser.failure_column
+    end
+    
+    def failures
+      @parser.terminal_failures
+    end
+    
+    def index
+      @parser.failure_index
+    end
+    
+    def source_code
+      ((line-2)..(line+2)).map do |index|
+        result = index == line ? "-->" : "   "
+        "#{result} #{index.to_s.rjust(5)} #{@lines[index]}"
+      end.join("\n")
+    end
+    
+    def failure_reason
+      ""
+    end
+    
+    def expected_string
+      if failures.size == 1
+        failures.first.expected_string.inspect
+      else
+        "one of " << failures.map { |f| f.expected_string.inspect }.uniq*', '
+      end
+    end
   end
 end
