@@ -12,14 +12,14 @@
 <% if @doc_instance.is_a?(Documentation::Klass) %>
 
 	<% if @doc_instance.superklass %>
-	<div class="section">
+	<div class="section section-superclass">
 	  <h3>Superclass</h3>
 	  <p><%= auto_link(d.superklass, false) %></p>
 	</div> <!-- .section -->		
 	<% end %>
 
 	<% unless @doc_instance.subklasses.empty? %>
-	<div class="section">
+	<div class="section section-subclasses">
 	  <h3>Subclasses</h3>
 	  <p><%= d.subklasses.map { |s| auto_link(s, false) }.join(', ') %></p>
 	</div> <!-- .section -->		
@@ -29,13 +29,13 @@
 
 <% # Does it have MIXINS? %>
 <% unless @doc_instance.mixins.empty? %>
-  <div class="section">
+  <div class="section section-mixins">
     <h3>Includes</h3>
     <p><%= d.mixins.map { |m| auto_link(m, false) }.join(', ') %></p>
   </div> <!-- .section -->
 <% end %>
 
-<div class="section">
+<div class="section section-method-list">
   <h3>Methods</h3>
   
   <ul class="method-list">
@@ -57,11 +57,13 @@
 </div> <!-- .section -->
 
 <% if d.is_a?(Documentation::Klass) && d.constructor %>
-<div class="section">
+<div class="section section-constructor">
   <h3>Constructor</h3>
   <p>
-    <pre id="<%= dom_id(d.constructor) %>" class="syntax"><code><%= d.constructor.full_name %></code></pre>
+    <pre id="<%= dom_id(d.constructor) %>" class="syntax"><code><%= d.constructor.ebnf_expressions %></code></pre>
   </p>
+  
+  <p><%= htmlize(d.constructor.description) %></p>
 </div> <!-- .section -->
 <% end %>
 
@@ -79,9 +81,9 @@ types = {
 <% types.each do |method, title| %>
   <% methods = d.send(method) %>
   <% unless methods.empty? %>
-    <div class="section">
+    <div class="section section-<%= method.to_s %>">
       <h3><%= title %></h3>
-      <ul>
+      <ul class="method-details-list">
         <%= include "partials/short_description", :collection => methods %>
       </ul>    
     </div> <!-- .section -->
