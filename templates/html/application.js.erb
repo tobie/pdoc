@@ -1,12 +1,18 @@
 if (!window.PDoc) window.PDoc = {};
 PDoc.elements = {
-<%= @root.map{|e| "  '#{e.full_name}': '#{path_to(e)}'"}.join(",\n") %>
+  <%= @root.map { |e, i| "'#{e.full_name}': { 'name': '#{e.full_name}', 'type': '#{e.type}', 'path': '#{path_to(e)}' }" }.join(",\n") %>
 };
 
-PDoc.highlightSelected = function() {
+PDoc.highlightSelected = function(element) {
   if (!window.location.hash) return;
-  var element = $(window.location.hash.substr(1));
-  if (element) element.highlight(PDoc.HighlightOptions);
+  element = (element || $(window.location.hash.substr(1)));
+  if (element) {
+    var alreadyHighlighted = $$('ul.method-details-list li.highlighted').first();
+    if (alreadyHighlighted) alreadyHighlighted.removeClassName('highlighted');
+
+    element.highlight(PDoc.HighlightOptions);
+    element.up('li').addClassName('highlighted');    
+  }
 };
 
 PDoc.HighlightOptions = {
@@ -30,7 +36,7 @@ var Filterer = Class.create({
     this.menu = this.options.menu;
     this.links = this.menu.select('a');
     
-    this.resultsElement = this.menu.down(this.options.resultsElement);
+    this.resultsElement = this.options.resultsElement;
     
     this.events = {
       filter:   this.filter.bind(this)
@@ -58,27 +64,24 @@ var Filterer = Class.create({
       return;
     }
     
-    var urls  = this.findURLs(value);    
-    var match = function(elem) {
-      return urls.any( function(url) { return elem.href.include(url); });
-    };    
-
-    var matchingLinks = this.links.select(match);    
-    if (matchingLinks.length === 0) {
-      this.onEmpty();
-      return;
-    }
-    
-    this.buildResults(matchingLinks);
+    var urls  = this.findURLs(value);  
+    console.log(urls);
+    this.buildResults(urls);
   },
   
-  buildResults: function(links) {
+  buildResults: function(urls) {
     this.resultsElement.update();
-    var ul = new Element('ul');
-    links.each( function(link) {
-      ul.insert(link.cloneNode(true).wrap('li'));
-    }, this);    
-    this.resultsElement.insert(ul);
+    var ul = this.resultsElement;
+    urls.each( function(url) {
+      var a  = new Element('a', {
+        'class': url.type.gsub(/\s/, '_'),
+        href:    url.path
+      }).update(url.name);
+      var li = new Element('li');
+      li.appendChild(a);
+      ul.appendChild(li);
+      console.log(li);
+    });    
     this.resultsElement.show();
   },
   
@@ -96,7 +99,7 @@ var Filterer = Class.create({
 });
 
 document.observe('dom:loaded', function() {
-  new Filterer($('search'), { menu: $('api_menu') });
+  new Filterer($('search'), { menu: $('api_menu'), resultsElement: $('search_results') });
 });
 
 document.observe('click', function(event) {
@@ -104,8 +107,9 @@ document.observe('click', function(event) {
   if (!element) return;
   var href = element.readAttribute('href');
   if (!href.include('#')) return;
-  if (element = $(href.split('#').last()))
-    element.highlight(PDoc.HighlightOptions);
+  if (element = $(href.split('#').last())) {
+    PDoc.highlightSelected(element);
+  }
 });
 
-document.observe('dom:loaded', PDoc.highlightSelected);;
+document.observe('dom:loaded', function() { PDoc.highlightSelected() });

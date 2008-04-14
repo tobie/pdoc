@@ -70,21 +70,23 @@
       </div> <!-- #masthead -->
       
       <div id="menu">
-        <div>
+        <div class="api-box">
           <h2><a href="#" id="api_menu_button">Menu &darr;</a></h2>
           
-    			<ul id="api_menu" style="display: none">
-    			  <li class="search-field">
-    			    <form>
-      			    <label>Search <input type="text" id="search" size="20" /></label>
-    			    </form>
-    			  </li>
-    			  <li class="search-results" style="display: none"></li>
+    			<ul id="api_menu" class="menu-items" style="display: none">
     				<% @root.sections.each do |section| %>
     					<%= menu(section) %>
     				<% end %>
     			</ul>          
-        </div>
+        </div> <!-- .api-box -->
+
+        <div class="search-box">
+  			  <form>
+    			  <label>Search <input type="text" id="search" size="20" /></label>
+  			  </form>
+  			  <ul id="search_results" class="search-results menu-items" style="display:none"></ul>
+        </div> <!-- .search-box -->
+
       </div> <!-- #menu -->
       
       <div id="main">
