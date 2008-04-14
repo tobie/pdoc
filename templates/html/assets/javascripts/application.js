@@ -1,18 +1,28 @@
-if (!window.PDoc) window.PDoc = {};
-PDoc.elements = {
-  <%= @root.map { |e, i| "'#{e.full_name}': { 'name': '#{e.full_name}', 'type': '#{e.type}', 'path': '#{path_to(e)}' }" }.join(",\n") %>
+PDoc.highlightSelected = function(element) {
+  if (!element && !window.location.hash) return;
+  element = (element || $(window.location.hash.substr(1)));
+  if (element) PDoc.highlight(element.up('li, div'));
 };
 
-PDoc.highlightSelected = function(element) {
-  if (!window.location.hash) return;
-  element = (element || $(window.location.hash.substr(1)));
-  if (element) {
-    var alreadyHighlighted = $$('ul.method-details-list li.highlighted').first();
-    if (alreadyHighlighted) alreadyHighlighted.removeClassName('highlighted');
-
-    element.highlight(PDoc.HighlightOptions);
-    element.up('li').addClassName('highlighted');    
+PDoc.highlight = function(element) {
+  var self = arguments.callee;
+  if (!self.frame) {
+    self.frame = new Element('div', { 'class': 'highlighter' });
+    document.body.appendChild(self.frame);
   }
+  
+  var frame = self.frame;
+  
+  element.getOffsetParent().appendChild(frame);
+  
+  frame.clonePosition(element, { offsetLeft: -5, offsetTop: -5 });
+  var w = parseFloat(element.getStyle('width')),
+      h = parseFloat(element.getStyle('height'));
+  
+  frame.setStyle({
+    width:  (w + 10) + 'px',
+    height: (h + 10) + 'px'
+  });
 };
 
 PDoc.HighlightOptions = {

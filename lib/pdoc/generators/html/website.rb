@@ -22,8 +22,8 @@ module PDoc
           
           copy_assets
           
-          dest = File.join("javascripts", "application.js")
-          DocPage.new("application.js", false, variables).render_to_file(dest)
+          dest = File.join("javascripts", "item_index.js")
+          DocPage.new("item_index.js", false, variables).render_to_file(dest)
         end
         
         # Copies the content of the assets folder to the generated website's
