@@ -78,15 +78,15 @@ Note that the argument separating comas belong _inside_ the brackets.
      
 Arguments can be described below the EBNF description using the following syntax:
     
-    - argumentName (acceptedTypes...): description.
+    - argumentName (acceptedType | otherAcceptedType | ...): description.
      
-For example (notice the 4 space indent in the last line): 
+For example: 
 
     /** 
      *  Event.findElement(event[, cssSelector]) -> Element | null
      *  - event (Event): a native Event instance
      *  - cssSelector (String): a optional CSS selector which uses
-     *      the same syntax found in regular CSS.
+     *  the same syntax found in regular CSS.
      **/
      
 ### Supported EBNF types

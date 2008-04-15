@@ -22,7 +22,7 @@ grammar ArgumentDescription
   end
   
   rule arguments_types
-    '(' space* argument_type more:(space* ',' space+ argument_type)* space* ')'
+    '(' space* argument_type more:(space+ '|' space+ argument_type)* space* ')'
   end
   
   rule argument_type

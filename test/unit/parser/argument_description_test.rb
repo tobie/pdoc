@@ -31,10 +31,10 @@ class ArgumentDescriptionTest < Test::Unit::TestCase
   end
   
   def test_argument_with_multiple_types
-    fixture = parse("\n * - foo (String, Number): a definition#{blank_line}")
+    fixture = parse("\n * - foo (String | Number): a definition#{blank_line}")
     assert_equal "foo",                            fixture.name
     assert_equal %w[String Number],                fixture.types
-    fixture = parse("\n * - foo (String, Number, Object): a definition#{blank_line}")
+    fixture = parse("\n * - foo (String | Number | Object): a definition#{blank_line}")
     assert_equal %w[String Number Object],         fixture.types
   end
 end
