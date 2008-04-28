@@ -6,17 +6,25 @@
 	<string>nop</string>
 	<key>command</key>
 	<string>#!/usr/bin/env ruby
-line = ENV['TM_CURRENT_LINE']
+
+# Input:  Entire Document
+# Output: Insert as Snippet
+# Key Equivalent: &lt;Return&gt;
+# Scope: comment.block
+
+line     = ENV['TM_CURRENT_LINE']
+index    = ENV['TM_LINE_NUMBER'].to_i
+nextline = $stdin.readlines[index + 1]
 
 puts
 print " " if line =~ /\/\*\*/
 print "*  $0"
-if line =~ /\/\*\*/
+if line.match(/\/\*\*/) &amp;&amp; !nextline.match(/^\s*\*/)
   puts
   print "**/"
 end</string>
 	<key>input</key>
-	<string>none</string>
+	<string>document</string>
 	<key>keyEquivalent</key>
 	<string></string>
 	<key>name</key>
