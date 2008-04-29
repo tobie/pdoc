@@ -23,6 +23,7 @@ module PDoc
         # Creates a new file and renders the page to it
         # using the assigned layout.
         def render_to_file(filename)
+          puts "    Rendering: #{filename}"
           File.open(filename, "w+") { |f| f << render }
         end
         
