@@ -1,3 +1,5 @@
+if (typeof PDoc === "undefined") window.PDoc = {};
+
 PDoc.highlightSelected = function(element) {
   if (!element && !window.location.hash) return;
   element = (element || $(window.location.hash.substr(1)));
