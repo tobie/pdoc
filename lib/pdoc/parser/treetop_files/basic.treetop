@@ -4,7 +4,7 @@ grammar Basic
   end
 
   rule blank_line
-    line_break space* line_separator space* text:space* &(line_break) <BlankLine>
+    line_break space* line_separator space* &(line_break) <BlankLine>
   end
   
   rule text_line

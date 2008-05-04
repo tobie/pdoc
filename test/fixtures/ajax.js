@@ -568,9 +568,15 @@ Ajax.PeriodicalUpdater = Klass.create(Ajax.Base, {
  * ruby inspired niceness
  **/
 var Enumerable = {
-  /** 
-   * Enumerable#each(iterator[, context]) -> Enumerable
-   * ruby inspired niceness
+   
+   /**
+    *  Enumerable#each(iterator[, context]) -> Enumerable
+    *  - iterator (Function): A `Function` that expects an item in the
+    *    collection as the first argument and a numerical index as the second.
+    *  - context (Object): The scope in which to call `iterator`. Affects what
+    *    the keyword `this` means inside `iterator`.
+    * 
+    * Calls `iterator` for each item in the collection.
    **/
   each: function(iterator, context) {
     var index = 0;

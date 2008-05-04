@@ -25,6 +25,10 @@ module PDocTestHelper
   def parse_file(filename)
     path = File.expand_path(File.join(File.dirname(__FILE__), "..", "fixtures", filename))
     file = File.open(path){ |f| f.read }
+    file.gsub!(/\r\n/, "\n")
+    file = file.split("\n").map do |line|
+      line.gsub(/\s+$/, '')
+    end.join("\n")
     parse(file)
   end
   

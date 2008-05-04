@@ -28,7 +28,11 @@ module PDoc
     # Converts "\r\n" to "\n" and avoids edge case
     # by wrapping the string in line breaks.
     def pre_process
-      "\n" << @string.gsub(/\r\n/, "\n") << "\n"
+      string = @string.gsub(/\r\n/, "\n")
+      string = string.split("\n").map do |line|
+        line.gsub(/\s+$/, '')
+      end.join("\n")
+      "\n#{string}\n"
     end
   end
   

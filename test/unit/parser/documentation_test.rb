@@ -439,6 +439,7 @@ class DocumentationTest < Test::Unit::TestCase
   def test_description
     assert_equal "The Element class",      fixtures.find_by_name("Element").description
     assert_equal "Sets the style of element\nand returns it", fixtures.find_by_name("Element#setStyle").description
+    assert_equal "Calls `iterator` for each item in the collection.", fixtures.find_by_name("Enumerable#each").description
   end
   
   def test_arguments_descriptions

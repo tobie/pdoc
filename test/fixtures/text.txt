@@ -2,9 +2,9 @@
 * some text
 * more text
 *
-*   function foo(){
-*     return blah
-*   }
+*     function foo() {
+*       return blah
+*     }
 *
 * some more text. 
 *
