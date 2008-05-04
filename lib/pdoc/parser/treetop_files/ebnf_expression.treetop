@@ -21,7 +21,7 @@ grammar EbnfExpression
   end
 
   rule klass_method
-    space* js_namespace '.' js_variable args return_value <KlassMethod>
+    space* js_namespace args return_value <KlassMethod>
   end
   
   rule instance_method
@@ -29,7 +29,7 @@ grammar EbnfExpression
   end
   
   rule klass_property
-    space* js_namespace '.' js_variable return_value <KlassProperty>
+    space* js_namespace return_value <KlassProperty>
   end
   
   rule instance_property

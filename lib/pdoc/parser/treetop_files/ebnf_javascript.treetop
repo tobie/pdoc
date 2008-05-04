@@ -33,7 +33,7 @@ grammar EbnfJavascript
   end
   
   rule js_namespace
-    js_constant ('.' js_constant)* {
+    (js_constant / js_variable) ('.' (js_constant / js_variable))* {
       def namespace
         to_a.slice(0..-2).join(".")
       end
