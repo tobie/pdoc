@@ -90,7 +90,7 @@ var Filterer = Class.create({
     this.buildResults(urls);
   },
   
-  keypress: function(event) {
+  keypress: function(event) {    
     if (![Event.KEY_UP, Event.KEY_DOWN, Event.KEY_RETURN].include(event.keyCode))
       return;
       
