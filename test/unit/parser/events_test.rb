@@ -8,17 +8,20 @@ class EventsTest < Test::Unit::TestCase
   end
   
   def test_single_event
-    assert_parsed "\n * fires click"
-    assert_equal %w[click],                  parse("\n * fires click").to_a
+    fixture = "\n * fires click"
+    assert_parsed fixture
+    assert_equal %w[click],                  parse(fixture).to_a
   end
   
   def test_single_namespaced_event
-    assert_parsed "\n * fires element:updated"
-    assert_equal %w[element:updated],        parse("\n * fires element:updated").to_a
+    fixture = "\n * fires element:updated"
+    assert_parsed fixture
+    assert_equal %w[element:updated],        parse(fixture).to_a
   end
   
   def test_multiple_events
-    assert_parsed "\n * fires click, element:updated"
-    assert_equal %w[click element:updated],  parse("\n * fires click, element:updated").to_a
+    fixture = "\n * fires click, element:updated"
+    assert_parsed fixture
+    assert_equal %w[click element:updated],  parse(fixture).to_a
   end
 end

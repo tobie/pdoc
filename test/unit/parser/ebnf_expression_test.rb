@@ -35,6 +35,16 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal "Responders",                 parse(ebnf).klass_name
     assert_equal "Array",                      parse(ebnf).returns
     assert_equal ebnf,                         parse(ebnf).to_s
+    
+    ebnf = "document.viewport.foo -> Bar"
+    assert_parsed ebnf
+    assert_equal KlassProperty,                parse(ebnf).class
+    assert_equal "document.viewport",          parse(ebnf).namespace
+    assert_equal "foo",                        parse(ebnf).name
+    assert_equal "document.viewport.foo",      parse(ebnf).full_name
+    assert_equal "viewport",                   parse(ebnf).klass_name
+    assert_equal "Bar",                        parse(ebnf).returns
+    assert_equal ebnf,                         parse(ebnf).to_s
   end
   
   def test_utility
@@ -63,6 +73,17 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal "Element",                    parse(ebnf).klass_name
     assert_equal %w[element content],          parse(ebnf).arguments.map(&:name)
     assert_equal "Element",                    parse(ebnf).returns
+    assert_equal ebnf,                         parse(ebnf).to_s
+    
+    ebnf = "document.viewport.getWidth() -> Number"
+    assert_parsed ebnf
+    assert_equal KlassMethod,                  parse(ebnf).class
+    assert_equal "document.viewport",          parse(ebnf).namespace
+    assert_equal "getWidth",                   parse(ebnf).name
+    assert_equal "document.viewport.getWidth", parse(ebnf).full_name
+    assert_equal "viewport",                   parse(ebnf).klass_name
+    assert_equal [],                           parse(ebnf).arguments
+    assert_equal "Number",                     parse(ebnf).returns
     assert_equal ebnf,                         parse(ebnf).to_s
   end
   
@@ -180,6 +201,26 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal nil,                          parse(ebnf).klass_name
     assert_equal %w[Enumerable],               parse(ebnf).mixins.map(&:name)
     assert_equal [""],                         parse(ebnf).mixins.map(&:namespace)
+    assert_equal ebnf,                         parse(ebnf).to_s
+    
+    ebnf = "document"
+    assert_parsed ebnf
+    assert_equal Namespace,                    parse(ebnf).class
+    assert_equal "",                           parse(ebnf).namespace
+    assert_equal "document",                   parse(ebnf).name
+    assert_equal "document",                   parse(ebnf).full_name
+    assert_equal nil,                          parse(ebnf).klass_name
+    assert_equal [],                           parse(ebnf).mixins
+    assert_equal ebnf,                         parse(ebnf).to_s
+    
+    ebnf = "document.viewport"
+    assert_parsed ebnf
+    assert_equal Namespace,                    parse(ebnf).class
+    assert_equal "document",                   parse(ebnf).namespace
+    assert_equal "viewport",                   parse(ebnf).name
+    assert_equal "document.viewport",          parse(ebnf).full_name
+    assert_equal nil,                          parse(ebnf).klass_name
+    assert_equal [],                           parse(ebnf).mixins
     assert_equal ebnf,                         parse(ebnf).to_s
   end
   

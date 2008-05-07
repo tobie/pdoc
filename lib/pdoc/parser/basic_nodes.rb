@@ -1,7 +1,7 @@
 module Basic
   class BlankLine < Treetop::Runtime::SyntaxNode
     def to_s
-      text.text_value
+      ""
     end
   end
 

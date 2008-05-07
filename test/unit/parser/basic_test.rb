@@ -10,7 +10,6 @@ class BasicTest < Test::Unit::TestCase
   
   def test_fixture_loader
     assert_file_parsed "test.txt"
-    assert_equal Space, parse_file("test.txt").elements.first.class
   end
   
   def test_space
@@ -34,9 +33,11 @@ class BasicTest < Test::Unit::TestCase
     blank_line = "\n  *   \n"
     assert_parsed blank_line
     assert_equal BlankLine, parse(blank_line).elements.first.class
-    assert_equal "", parse(blank_line).elements.first.to_s.strip
+    assert_equal "", parse(blank_line).elements.first.to_s
     
     empty = "\n  *\n"
+    assert_parsed empty
+    assert_equal BlankLine, parse(empty).elements.first.class
     assert_equal "", parse(empty).elements.first.to_s
   end
   

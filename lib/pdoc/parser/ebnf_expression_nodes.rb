@@ -44,8 +44,16 @@ module EbnfExpression
   end
   
   class KlassMethod < Method
-    def full_name
-      "#{super}.#{name}"
+    def klass_name
+      js_namespace.to_a.slice(-2)
+    end
+    
+    def name
+      js_namespace.to_a.last
+    end
+
+    def namespace
+      js_namespace.to_a.slice(0..-2).join(".")
     end
   end
   
@@ -84,8 +92,16 @@ module EbnfExpression
   end
   
   class KlassProperty < Base
-    def full_name
-      "#{super}.#{name}"
+    def klass_name
+      js_namespace.to_a.slice(-2)
+    end
+    
+    def name
+      js_namespace.to_a.last
+    end
+
+    def namespace
+      js_namespace.to_a.slice(0..-2).join(".")
     end
   end
   

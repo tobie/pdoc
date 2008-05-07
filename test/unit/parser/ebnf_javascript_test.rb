@@ -30,5 +30,8 @@ class EbnfJavascriptTest < Test::Unit::TestCase
   
   def test_namespace # basic and non-recursive
     assert_parsed "Foo.Bar"
+    assert_parsed "foo.bar"
+    assert_parsed "foo.Bar"
+    assert_parsed "Foo.bar"
   end
 end

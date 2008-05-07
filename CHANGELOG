@@ -1,71 +1,75 @@
-* Switch argument type selector from `,` to `|`. [tobie]
+* Allow lowercased namespaces. [#2 state:resolved] (tobie)
 
-* Log info to Terminal. [tobie]
+* Remove trailing whitespaces. Outdent descriptions. [#1 state:resolved, #3 state:resolved] (tobie)
 
-* Better error message formatting (nitpicking, really!). [tobie]
+* Switch argument type selector from `,` to `|`. (tobie)
 
-* Fix missing descriptions. [tobie]
+* Log info to Terminal. (tobie)
 
-* Add nice error messages. [tobie]
+* Better error message formatting (nitpicking, really!). (tobie)
 
-* Move Parser tests into their own folder. [tobie]
+* Fix missing descriptions. (tobie)
 
-* Extract BlueCloth extension to its own file. Add tests. [tobie]
+* Add nice error messages. (tobie)
 
-* Remove code block related rule. [tobie]
+* Move Parser tests into their own folder. (tobie)
 
-* Be more lenient with whitespace. [tobie]
+* Extract BlueCloth extension to its own file. Add tests. (tobie)
 
-* Remove PDoc::Generators::Html::DescriptionParser and extend BlueCloth instead. [tobie]
+* Remove code block related rule. (tobie)
 
-* Allow using the `@` prefix in argument descriptions. [tobie]
+* Be more lenient with whitespace. (tobie)
 
-* add PDoc::Generators::Html::Template [tobie]
+* Remove PDoc::Generators::Html::DescriptionParser and extend BlueCloth instead. (tobie)
 
-* Refactor PDoc::Generators::Html::Page [tobie]
+* Allow using the `@` prefix in argument descriptions. (tobie)
 
-* Refactor PDoc::Generators::Html::Helpers [tobie]
+* add PDoc::Generators::Html::Template (tobie)
 
-* Rename rakefile as Rakefile. [savetheclocktower]
+* Refactor PDoc::Generators::Html::Page (tobie)
 
-* Add PDoc::Runner. [tobie]
+* Refactor PDoc::Generators::Html::Helpers (tobie)
 
-* Make PDoc::Generators::Html::Description use BlueCloth. [tobie]
+* Rename rakefile as Rakefile. (savetheclocktower)
 
-* Make PDoc::Generators::Html::Website#render accept an output directory as argument. [tobie]
+* Add PDoc::Runner. (tobie)
 
-* Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. [tobie]
+* Make PDoc::Generators::Html::Description use BlueCloth. (tobie)
 
-* Add Treetop compiler rake task. [tobie]
+* Make PDoc::Generators::Html::Website#render accept an output directory as argument. (tobie)
 
-* Change includes and fires syntax (remove semi-colon). [sam, tobie]
+* Remove usage of class_eval to enable easier documentation by rdoc. Start documenting the code. (tobie)
 
-* Run all unit tests with rake test. [tobie]
+* Add Treetop compiler rake task. (tobie)
 
-* Rename p_doc as pdoc. [tobie]
+* Change includes and fires syntax (remove semi-colon). (sam, tobie)
 
-* Remove reference to Prototype from @title instance variable. [tobie]
+* Run all unit tests with rake test. (tobie)
 
-* Update TextMate bundle to reflect latest syntax changes. [tobie]
+* Rename p_doc as pdoc. (tobie)
 
-* Modify syntax for specifying language type in description code blocks. [tobie]
+* Remove reference to Prototype from @title instance variable. (tobie)
 
-* Update README. [tobie]
+* Update TextMate bundle to reflect latest syntax changes. (tobie)
 
-* Make syntax for events more consistent. [tobie]
+* Modify syntax for specifying language type in description code blocks. (tobie)
 
-* Allow notation for `n` arguments in EBNF (args...). [tobie]
+* Update README. (tobie)
 
-* Add support for events (syntax subject to change) [tobie]
+* Make syntax for events more consistent. (tobie)
 
-* More consistency [tobie]
+* Allow notation for `n` arguments in EBNF (args...). (tobie)
 
-* Finalize support for argument description [tobie]
+* Add support for events (syntax subject to change) (tobie)
 
-* Add initial support for argument description [tobie]
+* More consistency (tobie)
 
-* Add TextMate bundle [tobie]
+* Finalize support for argument description (tobie)
 
-* Minute syntax change [tobie]
+* Add initial support for argument description (tobie)
 
-* Add to public svn [tobie]
+* Add TextMate bundle (tobie)
+
+* Minute syntax change (tobie)
+
+* Add to public svn (tobie)
