@@ -46,8 +46,9 @@ var Filterer = Class.create({
     }, options || {});
     
     this.element.writeAttribute("autocomplete", "off");    
-    this.element.up('form').observe("submit", function(event) { event.stop(); });
+    this.element.up('form').observe("submit", Event.stop);
     
+    // The Safari-only "search" input type is prettier
     if (Prototype.Browser.WebKit)
       this.element.type = "search";
     
@@ -55,10 +56,13 @@ var Filterer = Class.create({
     this.links = this.menu.select('a');
     
     this.resultsElement = this.options.resultsElement;
+    this.resultsElement.setStyle({
+      overflowX: 'hidden'
+    });
     
     this.events = {
       filter:   this.filter.bind(this),
-      keypress: this.keypress.bind(this)
+      keydown: this.keydown.bind(this)
     };
     
     this.menu.setStyle({ opacity: 0.9 });
@@ -72,6 +76,8 @@ var Filterer = Class.create({
   },
   
   filter: function(event) {
+    if (this._timer) window.clearTimeout(this._timer);
+    
     // clear the text box on ESC
     if (event.keyCode && event.keyCode === Event.KEY_ESC) {
       this.element.value = '';
@@ -90,8 +96,12 @@ var Filterer = Class.create({
     this.buildResults(urls);
   },
   
-  keypress: function(event) {    
+  keydown: function(event) {    
     if (![Event.KEY_UP, Event.KEY_DOWN, Event.KEY_RETURN].include(event.keyCode))
+      return;
+      
+    // ignore if any modifier keys are present
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
       return;
       
     event.stop();
@@ -102,30 +112,55 @@ var Filterer = Class.create({
       if (!highlighted) return;
       window.location.href = highlighted.down('a').href;
     } else {
-      // move the focus
-      if (!highlighted) {
-        var highlighted = this.resultsElement.down('li').addClassName('highlighted');
-      } else {
-        var method = (Event.KEY_DOWN === event.keyCode) ? 'next' : 'previous';
-        highlighted.removeClassName('highlighted');
-        var adjacent = highlighted[method]('li');
-        if (!adjacent) {
-          adjacent = method == 'next' ? this.resultsElement.down('li') :
-           this.resultsElement.down('li:last-of-type');
-        }
-        adjacent.addClassName('highlighted');
-        highlighted = adjacent;
-      }
+      var direction = (Event.KEY_DOWN === event.keyCode) ? 1 : -1;
+      highlighted = this.moveHighlight(direction);
     }
     
+    
+    if ([Event.KEY_UP, Event.KEY_DOWN].include(event.keyCode) &&
+     !Prototype.Browser.WebKit) {    
+      // if up/down key is held down, list should keep scrolling
+      // Safari does this automatically because it fires the keydown
+      // event over and over
+      this._timer = window.setTimeout(this.scrollList.bind(this, direction), 100);
+    }
+  },
+  
+  moveHighlight: function(direction) {
+    var highlighted = this.resultsElement.down('.highlighted');
+    // move the focus
+    if (!highlighted) {
+      // if there is none, highlight the first result
+      var highlighted = this.resultsElement.down('li').addClassName('highlighted');
+    } else {
+      var method = (direction === 1) ? 'next' : 'previous';
+      highlighted.removeClassName('highlighted');
+      var adjacent = highlighted[method]('li');
+      if (!adjacent) {
+        adjacent = method == 'next' ? this.resultsElement.down('li') :
+         this.resultsElement.down('li:last-of-type');
+      }
+      adjacent.addClassName('highlighted');
+      highlighted = adjacent;
+    }
+
     // Adjust the scroll offset of the container so that the highlighted
     // item is always in view.
     var distanceToBottom = highlighted.offsetTop + highlighted.offsetHeight;
     if (distanceToBottom > this.resultsElement.offsetHeight + this.resultsElement.scrollTop) {
+      // item is too low
       this.resultsElement.scrollTop = distanceToBottom - this.resultsElement.offsetHeight;
     } else if (highlighted.offsetTop < this.resultsElement.scrollTop) {
+      // item is too high
       this.resultsElement.scrollTop = highlighted.offsetTop;
     }
+    
+    return highlighted;
+  },
+  
+  scrollList: function(direction) {
+    this.moveHighlight(direction);
+    this._timer = window.setTimeout(this.scrollList.bind(this, direction), 100);
   },
   
   buildResults: function(urls) {
@@ -158,12 +193,12 @@ var Filterer = Class.create({
   
   showResults: function() {
     this.resultsElement.show();
-    document.observe("keydown", this.events.keypress);
+    document.observe("keydown", this.events.keydown);
   },
   
   hideResults: function() {
     this.resultsElement.hide();
-    document.stopObserving("keydown", this.events.keypress);
+    document.stopObserving("keydown", this.events.keydown);
   }  
 });
 

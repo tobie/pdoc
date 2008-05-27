@@ -319,7 +319,8 @@ ul.method-list li {
         border-bottom: 1px solid #fff;
       }
       
-        #menu .menu-items li a:hover {
+        #menu .menu-items li a:hover,
+        #menu .menu-items li.highlighted a {
           background-color: #CDE0FB;
           border-top-color: #a4c8fb;
           border-bottom-color: #a4c8fb;
