@@ -217,3 +217,15 @@ document.observe('click', function(event) {
 });
 
 document.observe('dom:loaded', function() { PDoc.highlightSelected() });
+
+Event.observe(window, 'load', function() {
+  var menu = $('menu');
+  var OFFSET = menu.viewportOffset().top;
+  
+  Event.observe(window, 'scroll', function() {
+    var sOffset = document.viewport.getScrollOffsets();
+    if (sOffset.top > OFFSET) {
+      menu.addClassName('fixed');
+    } else menu.removeClassName('fixed');
+  })
+});

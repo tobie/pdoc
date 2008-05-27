@@ -430,3 +430,14 @@ ul.method-details-list li.highlighted {
 }
 
 /* @end */
+
+
+/* floating menu */
+
+#menu.fixed {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  left: 232px;
+}  
+  
