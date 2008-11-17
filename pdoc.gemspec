@@ -12,40 +12,8 @@ Gem::Specification.new do |s|
         "CHANGELOG", 
 		"README.markdown", 
 		"Rakefile", 
-		"pdoc.gemspec",
-		
-		"lib/pdoc.rb",
-        "lib/pdoc/runner.rb"] +
-        
-        ["",
-        "/html",
-        "/html/bluecloth_extension",
-        "/html/helpers",
-        "/html/template",
-        "/html/page",
-        "/html/website"].map { |f| "lib/pdoc/generators#{f}.rb" } +
-        
-        ["/argument_description",
-        "/basic",
-        "/description",
-        "/documentation",
-        "/ebnf_arguments",
-        "/ebnf_expression",
-        "/ebnf_javascript",
-        "/events",
-        "/section_content",
-        "/tags"].map { |f| "lib/pdoc/parser/treetop_files#{f}.treetop" } +
-        
-        ["",
-        "/basic_nodes",
-        "/tags_nodes",
-        "/argument_description_nodes",
-        "/description_nodes",
-        "/ebnf_arguments_nodes",
-        "/ebnf_expression_nodes",
-        "/section_content_nodes",
-        "/documentation_nodes"].map { |f| "lib/pdoc/parser#{f}.rb" } +
-        
+		"pdoc.gemspec"] +
+		Dir['lib/**/*'] +
         Dir['templates/**/*']
   
   s.autorequire = "lib/pdoc.rb"
