@@ -12,3 +12,14 @@ require 'erb'
 require File.expand_path(File.join(DIR, "pdoc", "runner"))
 require File.expand_path(File.join(DIR, "pdoc", "generators"))
 require File.expand_path(File.join(DIR, "pdoc", "parser"))
+
+require 'fileutils'
+
+module PDoc
+  def self.copy_templates(template_type, destination)
+    dir = File.expand_path(destination)
+    raise "File already exists: #{destination}" if File.exist?(dir)
+    FileUtils.cp_r("#{TEMPLATES_DIR}/#{template_type}", dir)
+  end
+end
+

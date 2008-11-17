@@ -1,0 +1,36 @@
+require 'rubygems'
+require 'oyster'
+require 'pdoc'
+
+spec = Oyster.spec do
+  name "pdoc -- Inline comment parser and JavaScript documentation generator"
+  author "Tobie Langel <tobie.langel@gmail.com>"
+  
+  synopsis <<-EOS
+    pdoc [-o OUTPUT_DIR] [-t TEMPLATE_DIR] SOURCE_FILE
+  EOS
+  
+  string :output,
+         :desc => "Directory in which to dump output files",
+         :default => "pdoc"
+  
+  string :templates,
+         :desc => "Directory containing template files"
+  
+  subcommand :'copy-templates' do
+    synopsis <<-EOS
+      pdoc copy-templates TYPE DESTINATION
+    EOS
+  end
+end
+
+begin; options = spec.parse
+rescue Oyster::HelpRendered; exit
+end
+
+if command = options[:'copy-templates']
+  args = command[:unclaimed]
+  PDoc.copy_templates(args[0], File.expand_path(args[1]))
+  exit
+end
+
