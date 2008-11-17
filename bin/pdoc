@@ -21,6 +21,13 @@ spec = Oyster.spec do
     synopsis <<-EOS
       pdoc copy-templates TYPE DESTINATION
     EOS
+    
+    description <<-EOS
+      PDoc includes a set of default templates for each type of output generator.
+      This command lets you extract a set of these templates into a local directory
+      so you can tweak it to suit your needs. Be sure to specify your set of
+      templates next time you run pdoc.
+    EOS
   end
 end
 
@@ -33,4 +40,8 @@ if command = options[:'copy-templates']
   PDoc.copy_templates(args[0], File.expand_path(args[1]))
   exit
 end
+
+PDoc::Runner.new(options[:unclaimed].first,
+    :output => File.expand_path(options[:output])
+).run
 

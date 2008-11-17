@@ -1,8 +1,8 @@
 module PDoc
   class Runner
-    def initialize(source_file, output_directory = OUTPUT_DIR)
+    def initialize(source_file, options = {})
       @source_file      = source_file
-      @output_directory = output_directory
+      @output_directory = options[:output] || OUTPUT_DIR
       @generator        = Generators::Html::Website
       @parser           = Parser.new(source)
     end

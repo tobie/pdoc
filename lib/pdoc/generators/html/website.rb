@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module PDoc
   module Generators
     module Html
@@ -9,7 +11,9 @@ module PDoc
         
         # Generates the website to the specified directory.
         def render(output)
-          Dir.chdir(File.expand_path(output))
+          path = File.expand_path(output)
+          FileUtils.mkdir_p(path)
+          Dir.chdir(path)
           DocPage.new("index", "layout", variables).render_to_file("index.html")
           
           @root.sections.each do |section|
@@ -29,7 +33,7 @@ module PDoc
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
-          cp_r Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.'
+          FileUtils.cp_r Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.'
         end
         
         # Creates a new directory with read, write and execute permission.

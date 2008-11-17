@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
         "/html/page",
         "/html/website"].map { |f| "lib/pdoc/generators#{f}.rb" } +
         
-        ["lib/pdoc/parser.rb"] +
         ["/argument_description",
         "/basic",
         "/description",
@@ -37,7 +36,8 @@ Gem::Specification.new do |s|
         "/section_content",
         "/tags"].map { |f| "lib/pdoc/parser/treetop_files#{f}.treetop" } +
         
-        ["/basic_nodes",
+        ["",
+        "/basic_nodes",
         "/tags_nodes",
         "/argument_description_nodes",
         "/description_nodes",
