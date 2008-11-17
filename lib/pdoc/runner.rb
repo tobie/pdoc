@@ -1,10 +1,11 @@
 module PDoc
   class Runner
     def initialize(source_file, options = {})
-      @source_file      = source_file
-      @output_directory = options[:output] || OUTPUT_DIR
-      @generator        = Generators::Html::Website
-      @parser           = Parser.new(source)
+      @source_file         = source_file
+      @output_directory    = File.expand_path(options[:output] || OUTPUT_DIR)
+      @templates_directory = options[:templates] && File.expand_path(options[:templates])
+      @generator           = options[:generator] || Generators::Html::Website
+      @parser              = Parser.new(source)
     end
     
     def source
@@ -21,7 +22,7 @@ module PDoc
     def render
       log "Generating documentation to: #{@output_directory}."
       start_time = Time.new
-      @generator.new(@parser_output).render(@output_directory)
+      @generator.new(@parser_output, :templates => @templates_directory).render(@output_directory)
       log "Documentation generated in #{Time.new - start_time} seconds."
     end
     

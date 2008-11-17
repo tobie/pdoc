@@ -13,10 +13,10 @@ module PDoc
         # Renders the page as a string using the assigned layout.
         def render
           if @layout
-            @content_for_layout = Template.new(@template).result(binding)
-            Template.new(@layout).result(binding)
+            @content_for_layout = Template.new(@template, @templates_directory).result(binding)
+            Template.new(@layout, @templates_directory).result(binding)
           else
-            Template.new(@template).result(binding)
+            Template.new(@template, @templates_directory).result(binding)
           end
         end
         
@@ -29,9 +29,9 @@ module PDoc
         
         def include(path, options)
           if object = options[:object]
-            Template.new(path).result(binding)
+            Template.new(path, @templates_directory).result(binding)
           else
-            options[:collection].map { |object| Template.new(path).result(binding) }.join("\n")
+            options[:collection].map { |object| Template.new(path, @templates_directory).result(binding) }.join("\n")
           end
         end
         

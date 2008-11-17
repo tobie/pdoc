@@ -42,6 +42,7 @@ if command = options[:'copy-templates']
 end
 
 PDoc::Runner.new(options[:unclaimed].first,
-    :output => File.expand_path(options[:output])
+    :output => options[:output],
+    :templates => options[:templates]
 ).run
 

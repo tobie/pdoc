@@ -1,11 +1,10 @@
-require 'fileutils'
-
 module PDoc
   module Generators
     module Html
       class Website
-        def initialize(parser_output)
+        def initialize(parser_output, options = {})
           @root = parser_output
+          @templates_directory = options[:templates]
           @depth = 0
         end
         
@@ -33,7 +32,7 @@ module PDoc
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
-          FileUtils.cp_r Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.'
+          FileUtils.cp_r(Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.')
         end
         
         # Creates a new directory with read, write and execute permission.
@@ -55,7 +54,7 @@ module PDoc
         
         private
           def variables
-            {:root => @root, :depth => @depth}
+            {:root => @root, :depth => @depth, :templates_directory => @templates_directory}
           end
           
           def path(object)

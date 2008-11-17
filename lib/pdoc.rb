@@ -8,12 +8,12 @@ VENDOR_DIR = File.expand_path(File.join(DIR, "..", "vendor"))
   $:.unshift File.expand_path(c)
 end
 
-require 'erb' 
+require 'erb'
+require 'fileutils'
+
 require File.expand_path(File.join(DIR, "pdoc", "runner"))
 require File.expand_path(File.join(DIR, "pdoc", "generators"))
 require File.expand_path(File.join(DIR, "pdoc", "parser"))
-
-require 'fileutils'
 
 module PDoc
   def self.copy_templates(template_type, destination)
@@ -22,4 +22,3 @@ module PDoc
     FileUtils.cp_r("#{TEMPLATES_DIR}/#{template_type}", dir)
   end
 end
-
