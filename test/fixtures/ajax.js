@@ -370,6 +370,11 @@ Ajax.Request = Klass.create(Ajax.Base, {
 Ajax.Request.Events = 
   ['Uninitialized', 'Loading', 'Loaded', 'Interactive', 'Complete'];
 
+/**
+ * class Ajax.SpecialRequest < Ajax.Request
+ **/
+Ajax.SpecialRequest = Klass.create(Ajax.Request, {});
+
 Ajax.Response = Klass.create({
   initialize: function(request){
     this.request = request;

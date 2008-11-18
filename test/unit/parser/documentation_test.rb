@@ -19,7 +19,7 @@ class DocumentationTest < Test::Unit::TestCase
     klasses).each do |method|
       assert_respond_to fixtures, method
     end
-    assert_equal 32, fixtures.size
+    assert_equal 33, fixtures.size
   end
   
   def test_globals
@@ -27,7 +27,7 @@ class DocumentationTest < Test::Unit::TestCase
   end
   
   def test_descendants
-    assert_equal %w[$ $$ Ajax Base Element Enumerable Request Responders String Toggle],
+    assert_equal %w[$ $$ Ajax Base Element Enumerable Request Responders SpecialRequest String Toggle],
       fixtures.descendants.map(&:name).sort
   end
   
@@ -39,7 +39,7 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal %w[ajax dom lang],                fixtures.sections.map(&:name)
     assert_equal [Section, Section, Section],      fixtures.sections.map(&:class)
     assert_equal %w[Ajax],                         fixtures.sections.first.children.map(&:name)
-    assert_equal %w[Ajax Base Request Responders], fixtures.sections.first.descendants.map(&:name)
+    assert_equal %w[Ajax Base Request Responders SpecialRequest], fixtures.sections.first.descendants.map(&:name)
   end
   
   def test_find_by_name
@@ -69,8 +69,8 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal [],                       fixture.related_utilities
     assert_equal "ajax",                   fixture.doc_parent.name
     assert_equal %w[ajax],                 fixture.ancestors.map(&:name)
-    assert_equal %w[Base Request Responders], fixture.children.map(&:name)
-    assert_equal %w[Base Request Responders], fixture.descendants.map(&:name)
+    assert_equal %w[Base Request Responders SpecialRequest], fixture.children.map(&:name)
+    assert_equal %w[Base Request Responders SpecialRequest], fixture.descendants.map(&:name)
     
     fixture = fixtures.find_by_name("Ajax.Responders")
     assert_equal Namespace,                fixture.class
@@ -106,6 +106,7 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal %w[lang],                 fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
+    assert_equal %w[Responders],           fixture.mixed_into.map(&:name)
   end
   
   def test_klass
@@ -115,7 +116,8 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "Ajax",                   fixture.namespace_string
     assert_equal "Ajax.Base",              fixture.full_name
     assert_equal [],                       fixture.mixins
-    assert_equal %w[Request],              fixture.subklasses.map(&:name)
+    assert_equal %w[Request SpecialRequest],  fixture.subklasses.map(&:name)
+    assert_equal %w[Request],              fixture.child_klasses.map(&:name)
     assert                                !fixture.mixin?
     assert                                !fixture.subklass?
     assert_equal nil,                      fixture.superklass
@@ -142,10 +144,10 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "Ajax.Request",           fixture.full_name
     assert_equal fixtures.find_by_name("new Ajax.Request"),  fixture.constructor
     assert_equal [],                       fixture.mixins
-    assert_equal [],                       fixture.subklasses
+    assert_equal %w[SpecialRequest],       fixture.subklasses.map(&:name)
     assert                                !fixture.mixin?
     assert                                 fixture.subklass?
-    assert                                !fixture.superklass?
+    assert                                 fixture.superklass?
     assert_equal "Ajax.Base",              fixture.superklass.full_name
     assert_equal Klass,                    fixture.superklass.class
     assert_equal "ajax",                   fixture.section.name
