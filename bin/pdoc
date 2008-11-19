@@ -7,7 +7,7 @@ spec = Oyster.spec do
   author "Tobie Langel <tobie.langel@gmail.com>"
   
   synopsis <<-EOS
-    pdoc [-o OUTPUT_DIR] [-t TEMPLATE_DIR] SOURCE_FILE
+    pdoc [-o OUTPUT_DIR] [-t TEMPLATE_DIR] SOURCE_FILES
   EOS
   
   string :output,
@@ -41,8 +41,7 @@ if command = options[:'copy-templates']
   exit
 end
 
-PDoc::Runner.new(options[:unclaimed].first,
-    :output => options[:output],
-    :templates => options[:templates]
-).run
+files = options[:unclaimed].dup
+files << {:output => options[:output], :templates => options[:templates]}
+PDoc::Runner.new(*files).run
 

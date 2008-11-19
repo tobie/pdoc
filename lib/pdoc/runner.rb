@@ -1,7 +1,8 @@
 module PDoc
   class Runner
-    def initialize(source_file, options = {})
-      @source_file         = source_file
+    def initialize(*source_files)
+      options              = source_files.last.is_a?(Hash) ? source_files.pop : {}
+      @source_files        = source_files
       @output_directory    = File.expand_path(options[:output] || OUTPUT_DIR)
       @templates_directory = options[:templates] && File.expand_path(options[:templates])
       @generator           = options[:generator] || Generators::Html::Website
@@ -9,11 +10,11 @@ module PDoc
     end
     
     def source
-      File.open(@source_file){ |f| f.read }
+      @source_files.map { |path| File.open(path) { |f| f.read } }.join("\n\n")
     end
     
     def parse
-      log "Parsing source file: #{@source_file}."
+      log "Parsing source files: #{@source_files * ', '}."
       start_time = Time.new
       @parser_output = @parser.parse
       log "Parsing completed in #{Time.new - start_time} seconds."
