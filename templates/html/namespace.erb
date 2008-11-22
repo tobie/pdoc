@@ -35,6 +35,14 @@
   </div> <!-- .section -->
 <% end %>
 
+<% # Are there related utilities? %>
+<% unless @doc_instance.related_utilities.empty? %>
+  <div class="section section-utilities">
+    <h3>Related utilities</h3>
+    <p><%= d.related_utilities.map { |u| auto_link(u, false) }.join(', ') %></p>
+  </div> <!-- .section -->
+<% end %>
+
 <div class="section section-method-list">
   <% unless d.all_methods.empty? && d.mixins.empty? %>
     <h3>Methods</h3>

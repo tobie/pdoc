@@ -4,5 +4,12 @@
     <pre class="syntax"><code class="ebnf"><%= object.ebnf_expressions %></code></pre>
   <% end %>
   
+  <% unless object.aliases.empty? %>
+    <p class="alias aliases">Aliased as: <%= object.aliases.map { |a| auto_link(a, false) }.join(', ') %></p>
+  <% end %>
+  <% if object.alias? %>
+    <p class="alias alias-of">Alias for <%= auto_link(object.alias_of, false) %></p>
+  <% end %>
+  
 	<%= htmlize(object.description) %>
 </li>
