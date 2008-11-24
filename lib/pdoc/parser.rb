@@ -14,12 +14,15 @@ module PDoc
     def initialize(string)
       @string = string
       @parser = DocumentationParser.new
+      @percentage = 0
     end
     
     # Parses the preprocessed string. Returns an instance
     # of Documentation::Doc
     def parse
+      @finished = false
       result = @parser.parse(pre_process)
+      @finished = true
       raise ParseError, @parser unless result
       result
     end
@@ -33,6 +36,19 @@ module PDoc
         line.gsub(/\s+$/, '')
       end.join("\n")
       "\n#{string}\n"
+    end
+    
+    def completion_percentage
+      if @parser.index
+        ratio = @parser.index.to_f / @parser.input.size.to_f
+        percentage = (ratio * 100).round
+        @percentage = percentage if percentage > @percentage
+      end
+      "#{@percentage}%"
+    end
+
+    def finished?
+      @finished
     end
   end
   

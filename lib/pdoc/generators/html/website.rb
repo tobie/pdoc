@@ -1,25 +1,18 @@
 module PDoc
   module Generators
     module Html
-      class Website
-        def initialize(parser_output, options = {})
-          @root = parser_output
-          @templates_directory = options[:templates]
-          @depth = 0
-        end
-        
+      class Website < AbstractGenerator
         # Generates the website to the specified directory.
         def render(output)
+          @depth = 0
           path = File.expand_path(output)
           FileUtils.mkdir_p(path)
           Dir.chdir(path)
           DocPage.new("index", "layout", variables).render_to_file("index.html")
-          
-          @root.sections.each do |section|
+          root.sections.each do |section|
             @depth = 0
             mkdir(section.name)
-            dest = "#{section.id}.html"
-            DocPage.new("section", variables.merge(:doc_instance => section)).render_to_file(dest)
+            render_template('section', "#{section.id}.html", {:doc_instance => section})
             section.children.each{ |d| build_tree(d) }
           end
           
@@ -29,15 +22,15 @@ module PDoc
           DocPage.new("item_index.js", false, variables).render_to_file(dest)
         end
         
+        def render_template(template, dest, var = {})
+          DocPage.new(template, variables.merge(var)).render_to_file(dest)
+          log "\c[[F\c[[K    Rendering: #{dest}"
+        end
+        
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
           FileUtils.cp_r(Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.')
-        end
-        
-        # Creates a new directory with read, write and execute permission.
-        def mkdir(name)
-          Dir.mkdir(name, 0755)
         end
         
         def build_tree(object)
@@ -48,13 +41,13 @@ module PDoc
           end
           template = find_template_name(object)
           dest = File.join(path(object), "#{object.id}.html")
-          DocPage.new(template, variables.merge(:doc_instance => object)).render_to_file(dest)
+          render_template(template, dest, {:doc_instance => object})
           @depth -= 1
         end
         
         private
           def variables
-            {:root => @root, :depth => @depth, :templates_directory => @templates_directory}
+            {:root => root, :depth => @depth, :templates_directory => options[:templates]}
           end
           
           def path(object)

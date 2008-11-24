@@ -14,17 +14,27 @@ module PDoc
     end
     
     def parse
-      log "Parsing source files: #{@source_files * ', '}."
+      Thread.new(@parser) do |parser|
+        log "Parsing source files: #{@source_files * ', '}."
+        log 'Processing... 0%'
+        i = 0
+        begin
+          dots = ('.' * i) << (' ' * (3-i)) 
+          log "\c[[F    Processing#{dots} #{parser.completion_percentage}"
+          i =  i == 3 ? 0 : i + 1
+          sleep 0.1
+        end until parser.finished?
+      end
       start_time = Time.new
       @parser_output = @parser.parse
-      log "Parsing completed in #{Time.new - start_time} seconds."
+      log "\c[[F    Parsing completed in #{Time.new - start_time} seconds.\n\n"
     end
     
     def render
-      log "Generating documentation to: #{@output_directory}."
+      log "Generating documentation to: #{@output_directory}.\n\n"
       start_time = Time.new
       @generator.new(@parser_output, :templates => @templates_directory).render(@output_directory)
-      log "Documentation generated in #{Time.new - start_time} seconds."
+      log "\c[[F    Documentation generated in #{Time.new - start_time} seconds."
     end
     
     def run
