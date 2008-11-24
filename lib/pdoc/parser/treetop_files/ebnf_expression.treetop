@@ -19,13 +19,21 @@ grammar EbnfExpression
   rule constructor
     space* 'new' (space)+ js_namespace args <Constructor>
   end
+  
+  rule instance_accessor
+    js_namespace '#' js_variable
+  end
+  
+  rule instance_signature
+    instance_accessor args
+  end
 
   rule klass_method
     space* js_namespace args return_value <KlassMethod>
   end
   
   rule instance_method
-    space* js_namespace '#' js_variable args return_value <InstanceMethod>
+    space* instance_signature return_value <InstanceMethod>
   end
   
   rule klass_property
@@ -33,7 +41,7 @@ grammar EbnfExpression
   end
   
   rule instance_property
-    space* js_namespace '#' js_variable return_value <InstanceProperty>
+    space* instance_accessor return_value <InstanceProperty>
   end
 
   rule constant

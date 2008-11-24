@@ -80,12 +80,28 @@ module EbnfExpression
   end
   
   class InstanceMethod < Method
+    def accessor
+      instance_signature.instance_accessor
+    end
+    
+    def js_namespace
+      accessor.js_namespace
+    end
+    
+    def js_variable
+      accessor.js_variable
+    end
+    
+    def args
+      instance_signature.args
+    end
+    
     def full_name
-      "#{super}##{name}"
+      accessor.text_value
     end
     
     def signature
-      "#{js_namespace.text_value}##{name}#{args.text_value}"
+      instance_signature.text_value
     end
   end
   
@@ -114,8 +130,20 @@ module EbnfExpression
   end
   
   class InstanceProperty < Base
+    def accessor
+      instance_accessor
+    end
+    
+    def js_namespace
+      accessor.js_namespace
+    end
+    
+    def js_variable
+      accessor.js_variable
+    end
+    
     def full_name
-      "#{super}##{name}"
+      accessor.text_value
     end
   end
   
