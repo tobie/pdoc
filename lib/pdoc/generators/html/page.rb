@@ -42,7 +42,7 @@ module PDoc
       end
 
       class DocPage < Page
-        include Helpers::LinkHelper, Helpers::MenuHelper
+        include Helpers::LinkHelper, Helpers::CodeHelper, Helpers::MenuHelper
         
         attr_reader :doc_instance, :depth, :root
         

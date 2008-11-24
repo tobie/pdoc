@@ -55,6 +55,10 @@ module EbnfExpression
     def namespace
       js_namespace.to_a.slice(0..-2).join(".")
     end
+    
+    def signature
+      "#{js_namespace.text_value}#{args.text_value}"
+    end
   end
   
   class Utility < Method
@@ -78,6 +82,10 @@ module EbnfExpression
   class InstanceMethod < Method
     def full_name
       "#{super}##{name}"
+    end
+    
+    def signature
+      "#{js_namespace.text_value}##{name}#{args.text_value}"
     end
   end
   
