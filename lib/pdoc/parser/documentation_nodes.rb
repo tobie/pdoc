@@ -344,6 +344,14 @@ module Documentation
       args ? args.first.elements :  []
     end
     
+    def signature
+      ebnf_expressions.first.signature
+    end
+    
+    def returns
+      ebnf_expressions.first.returns
+    end
+    
     def fires
       events.empty? ? [] : events.to_a
     end

@@ -1,7 +1,20 @@
 <li><h4 id="<%= dom_id(object) %>"><%= object.name %></h4>
   
   <% if object.is_a?(Documentation::Method) %>
-    <pre class="syntax"><code class="ebnf"><%= object.ebnf_expressions %></code></pre>
+    <%= method_synopsis(object) %>
+    <% unless object.arguments.empty? %>
+      <ul class="argument-list">
+        <% object.arguments.each do |arg| %>
+          <li>
+            <code><%= arg.name %></code>
+            <% unless arg.types.empty? %>
+              (<%= arg.types.map { |t| auto_link(t, false) }.join(' | ') %>)
+            <% end %>
+            <%= ' &ndash; ' + arg.description unless arg.description.empty? %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   <% end %>
   
   <% unless object.aliases.empty? %>
