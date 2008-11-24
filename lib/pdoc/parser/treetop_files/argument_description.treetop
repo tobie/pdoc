@@ -1,5 +1,5 @@
 grammar ArgumentDescription
-  include Basic
+  include EbnfJavascript
   
   rule argument_description
     first:argument_description_first_line more:(argument_description_line)* <ArgumentDescription>
@@ -26,6 +26,6 @@ grammar ArgumentDescription
   end
   
   rule argument_type
-    namespace
+    js_namespace
   end
 end
