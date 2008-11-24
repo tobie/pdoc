@@ -71,7 +71,7 @@ module EbnfExpression
     end
     
     def full_name
-      "#{name}"
+      name
     end
     
     def namespace
