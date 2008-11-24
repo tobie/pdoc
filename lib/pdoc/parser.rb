@@ -41,7 +41,7 @@ module PDoc
     def completion_percentage
       if @parser.index
         ratio = @parser.index.to_f / @parser.input.size.to_f
-        percentage = (ratio * 100).round
+        percentage = (ratio * 100).floor
         @percentage = percentage if percentage > @percentage
       end
       "#{@percentage}%"
