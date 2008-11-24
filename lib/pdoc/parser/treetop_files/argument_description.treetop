@@ -26,6 +26,6 @@ grammar ArgumentDescription
   end
   
   rule argument_type
-    [a-zA-Z]+
+    namespace
   end
 end
