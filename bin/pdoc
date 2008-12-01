@@ -8,7 +8,14 @@ spec = Oyster.spec do
   
   synopsis <<-EOS
     pdoc [-o OUTPUT_DIR] [-t TEMPLATE_DIR] SOURCE_FILES
+    pdoc [OPTIONS] -d SOURCE_DIRECTORY
   EOS
+  
+  string :directory,
+         :desc => "Directory to search for JavaScript files. Will take all *.js " +
+                  "files from the given directory (including subdirectories) and use " +
+                  "them to generate documentation. This option takes precedence over " +
+                  "SOURCE_FILES."
   
   string :output,
          :desc => "Directory in which to dump output files",
@@ -41,7 +48,10 @@ if command = options[:'copy-templates']
   exit
 end
 
-files = options[:unclaimed].dup
+files = (d = options[:directory]) ?
+        Dir["#{d}/**/*.js"] :
+        options[:unclaimed].dup
+
 files << {:output => options[:output], :templates => options[:templates]}
 PDoc::Runner.new(*files).run
 
