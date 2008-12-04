@@ -2,8 +2,6 @@ module PDoc
   module Generators
     module Html
       class Page
-        include Helpers::BaseHelper
-        
         def initialize(template, layout, variables = {})
           @template = template
           @layout = layout
@@ -42,8 +40,6 @@ module PDoc
       end
 
       class DocPage < Page
-        include Helpers::LinkHelper, Helpers::CodeHelper, Helpers::MenuHelper
-        
         attr_reader :doc_instance, :depth, :root
         
         def initialize(template, layout = "layout", variables = {})

@@ -1,11 +1,20 @@
 module PDoc
   module Generators
     module Html
+      
+      unless defined? TEMPLATES_DIRECTORY
+        TEMPLATES_DIRECTORY = File.join(TEMPLATES_DIR, "html")
+      end
+      
       class Website
         def initialize(parser_output, options = {})
           @root = parser_output
-          @templates_directory = options[:templates]
           @depth = 0
+          
+          @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
+          require "#{ @templates_directory }/helpers"
+          Page.__send__(:include, Helpers::BaseHelper)
+          Helpers.constants.map(&Helpers.method(:const_get)).each(&DocPage.method(:include))
         end
         
         # Generates the website to the specified directory.
