@@ -1,3 +1,5 @@
+* Implemented nested arguments in EBNF syntax. [#8 state:resolved] (samleb)
+
 * Allow lowercased namespaces. [#2 state:resolved] (tobie)
 
 * Remove trailing whitespaces. Outdent descriptions. [#1 state:resolved, #3 state:resolved] (tobie)

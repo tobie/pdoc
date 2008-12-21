@@ -11,11 +11,15 @@ module EbnfArguments
     def default_value
       nil
     end
+    
+    def flatten_nested_args
+      [self]
+    end
   end
 
   class OptionalArgument < Treetop::Runtime::SyntaxNode
     def name
-      required_argument.text_value
+      required_argument.name
     end
     
     def optional?
@@ -23,18 +27,32 @@ module EbnfArguments
     end
     
     def default_value
-      if default.empty?
-        nil
-      else
+      unless default.empty?
         value = default.value.text_value.strip
         value.empty? ? nil : value
       end
+    end
+    
+    def flatten_nested_args
+      arguments = [self]
+      unless nested.empty?
+        nested.elements.each do |optional|
+          arguments.concat(optional.flatten_nested_args)
+        end
+      end
+      arguments
     end
   end
   
   class Arguments < Treetop::Runtime::SyntaxNode
     def to_a
-      [argument].concat(args.elements.map {|e| e.argument})
+      first_argument.flatten_nested_args + rest_arguments_flattened
+    end
+    
+    def rest_arguments_flattened
+      rest.elements.inject([]) do |args, e|
+        args.concat(e.argument.flatten_nested_args)
+      end
     end
   end
 end

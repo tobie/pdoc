@@ -61,6 +61,7 @@ class ArgumentsTest < Test::Unit::TestCase
    assert_parsed "hello [  , foo ] [   ,  bar=43 ]"
    assert_parsed "hello,world[,foo][,bar=43]"
    assert_parsed "hello  ,  world [ ,  foo ] [   ,  bar=43 ]"
+   assert_parsed "hello...[, world = foo]"
    assert_equal ["foo", "bar"], parse("[foo],bar").to_a.map(&:name)
    assert_equal "content", parse("hello[,content]").to_a.last.name
    assert_equal "content", parse("hello[,content=foo]").to_a.last.name
@@ -68,4 +69,13 @@ class ArgumentsTest < Test::Unit::TestCase
    assert parse("hello[,content=foo]").to_a.last.optional?
    assert !parse("hello[,content=foo]").to_a.first.optional?
  end
+  
+  def test_nested_optional_arguments
+    assert_parsed "hello[,foo[,bar]]"
+    assert_parsed "hello [  ,  foo = 3 [   ,  bar = 43 ]]"
+    assert_parsed "hello[,foo[,bar=43][,baz=26]]"
+    assert_parsed "[length = 30[, suffix = '...']]"
+    assert_equal ["foo", "bar"], parse("[foo[,bar]]").to_a.map(&:name)
+    assert_equal ["hello", "foo", "bar", "baz"], parse("hello[,foo[,bar=43][,baz=26]]").to_a.map(&:name)
+  end
 end
