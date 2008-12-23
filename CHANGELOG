@@ -1,3 +1,5 @@
+* Make "?" a valid type in argument descriptions. (savetheclocktower)
+
 * Implemented nested arguments in EBNF syntax. [#8 state:resolved] (samleb)
 
 * Allow lowercased namespaces. [#2 state:resolved] (tobie)

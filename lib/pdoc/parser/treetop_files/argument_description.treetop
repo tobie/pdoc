@@ -26,6 +26,6 @@ grammar ArgumentDescription
   end
   
   rule argument_type
-    js_namespace
+    js_namespace / '?'
   end
 end
