@@ -30,7 +30,7 @@ module PDoc
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
-          FileUtils.cp_r(Dir.glob(File.join(TEMPLATES_DIR, "html", "assets", "**")), '.')
+          FileUtils.cp_r(Dir.glob(File.join(@options[:templates] || TEMPLATES_DIR, "html", "assets", "**")), '.')
         end
         
         def build_tree(object)
@@ -47,7 +47,7 @@ module PDoc
         
         private
           def variables
-            {:root => root, :depth => @depth, :templates_directory => options[:templates]}
+            {:root => root, :depth => @depth, :templates_directory => File.join(options[:templates] || TEMPLATES_DIR, "html")}
           end
           
           def path(object)
