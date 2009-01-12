@@ -1,3 +1,5 @@
+* Fix issue where `auto_link` would throw an exception for certain types of objects. (samleb)
+
 * Make "?" a valid type in argument descriptions. (savetheclocktower)
 
 * Implemented nested arguments in EBNF syntax. [#8 state:resolved] (samleb)

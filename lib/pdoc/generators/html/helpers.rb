@@ -67,6 +67,7 @@ module PDoc
           def auto_link(obj, short = true, attributes = {})
             obj = root.find_by_name(obj) || obj if obj.is_a?(String)
             return "<code>#{obj}</code>" if obj.is_a?(String)
+            return nil if obj.nil?
             name = short ? obj.name : obj.full_name
             name = "<code>#{name}</code>" unless obj.is_a?(Documentation::Section)
             link_to(name, path_to(obj), { :title => "#{obj.full_name} (#{obj.type})" }.merge(attributes))
