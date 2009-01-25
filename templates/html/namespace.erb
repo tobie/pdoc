@@ -43,6 +43,16 @@
   </div> <!-- .section -->
 <% end %>
 
+<% # Is it a MIXIN? %>
+<% if @doc_instance.is_a?(Documentation::Mixin) %>
+  <% unless d.mixed_into.empty? %>
+  <div class="section section-mixedinto">
+    <h3>Mixed into</h3>
+    <p><%= d.mixed_into.map { |m| auto_link(m, false) }.join(', ') %></p>
+  </div> <!-- .section -->
+  <% end %>
+<% end %>
+
 <div class="section section-method-list">
   <% unless d.all_methods.empty? && d.mixins.empty? %>
     <h3>Methods</h3>

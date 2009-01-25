@@ -510,15 +510,25 @@ module Documentation
     end
     
     def superklass?
-      !subklasses.empty?
+      !child_klasses.empty?
     end
     
     def superklass
       subklass? ? root.find_by_name(ebnf.superklass.text_value) : nil
     end
     
-    def subklasses
+    def superklasses
+      klass, list = self, mixins.dup
+      while klass = klass.superklass; list << klass; end
+      list
+    end
+    
+    def child_klasses
       root.klasses.select { |k| k.superklass === self }
+    end
+    
+    def subklasses
+      root.klasses.select { |k| k.superklasses.include?(self) }
     end
     
     def methodized_methods
@@ -546,6 +556,10 @@ module Documentation
     
     def type
       "mixin"
+    end
+    
+    def mixed_into
+      root.namespaces.select { |n| n.mixins.include?(self) }
     end
   end
 end
