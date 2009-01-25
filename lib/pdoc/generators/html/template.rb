@@ -3,13 +3,9 @@ module PDoc
     module Html
       class Template < ERB
         
-        unless defined? TEMPLATES_DIRECTORY
-          TEMPLATES_DIRECTORY = File.join(TEMPLATES_DIR, "html")
-        end
-        
         def initialize(file_name = "layout.erb", templates_directory = nil)
           @file_name = file_name
-          @templates_directory = templates_directory || TEMPLATES_DIRECTORY
+          @templates_directory = templates_directory
           super(IO.read(file_path), nil, '%')
         end
         

@@ -1,7 +1,21 @@
 module PDoc
   module Generators
     module Html
+      
+      unless defined? TEMPLATES_DIRECTORY
+        TEMPLATES_DIRECTORY = File.join(TEMPLATES_DIR, "html")
+      end
+      
       class Website < AbstractGenerator
+        def initialize(parser_output, options = {})
+          super
+          
+          @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
+          require File.join(@templates_directory, "helpers")
+          Page.__send__(:include, Helpers::BaseHelper)
+          Helpers.constants.map(&Helpers.method(:const_get)).each(&DocPage.method(:include))
+        end
+        
         # Generates the website to the specified directory.
         def render(output)
           @depth = 0
@@ -30,7 +44,7 @@ module PDoc
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
-          FileUtils.cp_r(Dir.glob(File.join(@options[:templates] || TEMPLATES_DIR, "html", "assets", "**")), '.')
+          FileUtils.cp_r(Dir.glob(File.join(@templates_directory, "assets", "**")), '.')
         end
         
         def build_tree(object)
@@ -47,7 +61,7 @@ module PDoc
         
         private
           def variables
-            {:root => root, :depth => @depth, :templates_directory => File.join(options[:templates] || TEMPLATES_DIR, "html")}
+            {:root => root, :depth => @depth, :templates_directory => @templates_directory}
           end
           
           def path(object)
