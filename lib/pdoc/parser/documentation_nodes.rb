@@ -313,6 +313,18 @@ module Documentation
       root.descendants.select { |d| d.section === self }.sort_by { |e| e.name }
     end
     
+    def utilities
+      children.select { |d| d.is_a?(Utility) }
+    end
+    
+    def namespaces
+      children.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
+    end
+    
+    def klasses
+      children.select { |d| d.is_a?(Klass) }
+    end
+    
     # Returns "section".
     def type
       "section"

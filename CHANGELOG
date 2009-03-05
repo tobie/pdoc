@@ -1,3 +1,5 @@
+* Add `utilities`, `namespaces`, and `klasses` attributes to `Documentation::Section` nodes. (savetheclocktower)
+
 * Add `short_description` attribute for documentation nodes. Presents only the first paragraph of a description. (savetheclocktower)
 
 * Give Documentation::Doc a name for breadcrumb navigation. (savetheclocktower)
