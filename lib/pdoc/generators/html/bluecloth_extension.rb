@@ -1,4 +1,11 @@
-require "bluecloth"
+# Prefer RDiscount because BlueCloth is slow and has problems with Ruby 1.9.
+begin
+  require 'rdiscount'
+  BlueCloth = RDiscount
+rescue LoadError => e
+  require 'bluecloth'
+end
+
 class BlueCloth
   CodeBlockClassNameRegexp = /(?:\s*lang(?:uage)?:\s*(\w+)\s*\n)(.*)/
   def transform_code_blocks( str, rs )

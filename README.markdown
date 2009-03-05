@@ -12,6 +12,8 @@ Unlike other inline-doc parsers, PDoc does not rely on the JavaScript source cod
 PDoc depends on Rake, BlueCloth, and treetop, all of which can be obtained through RubyGems:
 
     gem install rake BlueCloth treetop
+    
+As an alternative to BlueCloth, you can use [RDiscount](http://github.com/rtomayko/rdiscount/tree/master "rtomayko's rdiscount at master - GitHub"), which is faster than BlueCloth and compatible with Ruby 1.9.1. PDoc will prefer RDiscount if it is found.
 
 ## Usage
 
