@@ -1,3 +1,5 @@
+* Add `short_description` attribute for documentation nodes. Presents only the first paragraph of a description. (savetheclocktower)
+
 * Give Documentation::Doc a name for breadcrumb navigation. (savetheclocktower)
 
 * Prefer RDiscount over BlueCloth. (savetheclocktower).

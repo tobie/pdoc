@@ -225,6 +225,11 @@ module Documentation
       text.to_s
     end
     
+    # Just the first paragraph of the description.
+    def short_description
+      description.split(/\n\n/).first
+    end
+    
     def id
       name.downcase.gsub('$', "dollar")
     end
