@@ -100,6 +100,10 @@ module Documentation
     def size
       to_a.length
     end
+    
+    def name
+      "Home"
+    end
   end
   
   class Base < Treetop::Runtime::SyntaxNode
