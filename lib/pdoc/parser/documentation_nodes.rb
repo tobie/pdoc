@@ -369,6 +369,10 @@ module Documentation
       ebnf_expressions.first.signature
     end
     
+    def generic_signature
+      ebnf_expressions.first.generic_signature
+    end
+    
     def returns
       ebnf_expressions.first.returns
     end

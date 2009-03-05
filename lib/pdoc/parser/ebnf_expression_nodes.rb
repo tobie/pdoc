@@ -41,6 +41,12 @@ module EbnfExpression
     def methodized_arguments
       arguments.slice(1..-1)
     end
+    
+    def signature
+      "#{js_namespace.text_value}#{args.text_value}"
+    end
+    
+    alias :generic_signature :signature
   end
   
   class KlassMethod < Method
@@ -57,7 +63,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{js_namespace.text_value}#{args.text_value}"
+      "#{name}#{args.text_value}"
     end
   end
   
@@ -101,7 +107,16 @@ module EbnfExpression
     end
     
     def signature
-      instance_signature.text_value
+      # If the first argument is methodized, we filter it out for the
+      # ordinary method signature.
+      instance_signature.text_value.gsub(/@[\w\d]+(?:,\s*)?/, '')
+    end
+    
+    # For "methodized" methods.
+    def generic_signature
+      # Keep the first argument (but lose the @). Also change the instance
+      # symbol to static.
+      instance_signature.text_value.gsub('#', '.').gsub('@', '')
     end
   end
   
