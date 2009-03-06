@@ -43,7 +43,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{js_namespace.text_value}#{args.text_value}"
+      "#{name}#{args.text_value}"
     end
     
     alias :generic_signature :signature
@@ -63,7 +63,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{name}#{args.text_value}"
+      "#{js_namespace}#{args.text_value}"
     end
   end
   
