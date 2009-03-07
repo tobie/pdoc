@@ -37,8 +37,8 @@ module PDoc
         end
         
         def render_template(template, dest, var = {})
-          DocPage.new(template, variables.merge(var)).render_to_file(dest)
           log "\c[[F\c[[K    Rendering: #{dest}"
+          DocPage.new(template, variables.merge(var)).render_to_file(dest)
         end
         
         # Copies the content of the assets folder to the generated website's
@@ -65,7 +65,7 @@ module PDoc
           end
           
           def path(object)
-            [object.section.name].concat(object.namespace_string.downcase.split('.'))
+            [object.section.name.downcase].concat(object.namespace_string.downcase.split('.'))
           end
           
           def find_template_name(obj)
