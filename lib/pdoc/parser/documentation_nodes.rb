@@ -247,12 +247,12 @@ module Documentation
 
     # Returns section's id
     def id
-      section.id
+      "#{section.id}_section"
     end
 
     # Returns section's full_name
     def full_name
-      section.full_name
+      "#{section.name} section"
     end
 
     # Returns section's title
@@ -314,15 +314,15 @@ module Documentation
     end
     
     def utilities
-      children.select { |d| d.is_a?(Utility) }
+      descendants.select { |d| d.is_a?(Utility) }
     end
     
     def namespaces
-      children.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
+      descendants.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
     end
     
     def klasses
-      children.select { |d| d.is_a?(Klass) }
+      descendants.select { |d| d.is_a?(Klass) }
     end
     
     # Returns "section".
