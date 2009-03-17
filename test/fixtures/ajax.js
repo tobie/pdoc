@@ -561,7 +561,9 @@ Ajax.PeriodicalUpdater = Klass.create(Ajax.Base, {
   * a foo bar baz
   **/
 
-
+/** section: ajax
+ * class Ajax.Namespace.Manager
+ **/
 
 /** section: lang
  * mixin Enumerable

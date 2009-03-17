@@ -23,12 +23,14 @@ module PDoc
           FileUtils.mkdir_p(path)
           Dir.chdir(path)
           DocPage.new("index", "layout", variables).render_to_file("index.html")
+          
           root.sections.each do |section|
             @depth = 0
             mkdir(section.name)
             render_template('section', "#{section.id}.html", {:doc_instance => section})
-            section.children.each{ |d| build_tree(d) }
           end
+          
+          root.namespaces.each(&method(:render_namespace))
           
           copy_assets
           
@@ -47,16 +49,11 @@ module PDoc
           FileUtils.cp_r(Dir.glob(File.join(@templates_directory, "assets", "**")), '.')
         end
         
-        def build_tree(object)
-          @depth += 1
-          unless object.children.empty?
-            mkdir(File.join(path(object), object.id))
-            object.children.each { |d| build_tree(d) }
-          end
-          template = find_template_name(object)
-          dest = File.join(path(object), "#{object.id}.html")
+        def render_namespace(object)
+          template, path = find_template_name(object), path(object)
+          @depth = path.size
+          dest = File.join(path, "#{object.id}.html")
           render_template(template, dest, {:doc_instance => object})
-          @depth -= 1
         end
         
         private

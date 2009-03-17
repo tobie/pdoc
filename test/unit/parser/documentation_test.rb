@@ -19,7 +19,7 @@ class DocumentationTest < Test::Unit::TestCase
     klasses).each do |method|
       assert_respond_to fixtures, method
     end
-    assert_equal 32, fixtures.size
+    assert_equal 33, fixtures.size
   end
   
   def test_globals
@@ -27,7 +27,7 @@ class DocumentationTest < Test::Unit::TestCase
   end
   
   def test_descendants
-    assert_equal %w[$ $$ Ajax Base Element Enumerable Request Responders String Toggle],
+    assert_equal %w[$ $$ Ajax Base Element Enumerable Manager Request Responders String Toggle],
       fixtures.descendants.map(&:name).sort
   end
   
@@ -39,7 +39,7 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal %w[ajax dom lang],                fixtures.sections.map(&:name)
     assert_equal [Section, Section, Section],      fixtures.sections.map(&:class)
     assert_equal %w[Ajax],                         fixtures.sections.first.children.map(&:name)
-    assert_equal %w[Ajax Base Request Responders], fixtures.sections.first.descendants.map(&:name)
+    assert_equal %w[Ajax Base Manager Request Responders], fixtures.sections.first.descendants.map(&:name)
   end
   
   def test_find_by_name

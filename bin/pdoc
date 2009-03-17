@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'oyster'
-require 'pdoc'
+require File.dirname(__FILE__) + '/../lib/pdoc'
 
 spec = Oyster.spec do
   name "pdoc -- Inline comment parser and JavaScript documentation generator"
