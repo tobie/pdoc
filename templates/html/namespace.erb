@@ -43,6 +43,13 @@
   </div> <!-- .section -->
 <% end %>
 
+<% unless @doc_instance.description.strip == '' %>
+<div class="section section-description">
+  <h3>Description</h3>
+  <%= htmlize(@doc_instance.description) %>
+</div> <!-- .section -->
+<% end %>
+
 <div class="section section-method-list">
   <% unless d.all_methods.empty? && d.mixins.empty? %>
     <h3>Methods</h3>
