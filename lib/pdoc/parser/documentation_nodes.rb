@@ -448,11 +448,23 @@ module Documentation
     def type
       "class property"
     end
+    
+    def ebnf_expressions
+      ebnf.elements.map { |e| e.elements.last }
+    end
+    
+    def signature
+      ebnf.text_value.strip
+    end
   end
   
   class InstanceProperty < Property
     def type
       "instance property"
+    end
+    
+    def signature
+      ebnf.text_value.strip
     end
   end
   

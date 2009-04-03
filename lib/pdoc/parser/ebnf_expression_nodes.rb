@@ -63,7 +63,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{js_namespace}#{args.text_value}"
+      "#{namespace}.#{name}#{args.text_value}"
     end
   end
   
@@ -142,6 +142,10 @@ module EbnfExpression
     def namespace
       js_namespace.to_a.slice(0..-2).join(".")
     end
+    
+    def signature
+      "#{namespace}.#{name}#{return_value}"
+    end
   end
   
   class InstanceProperty < Base
@@ -159,6 +163,10 @@ module EbnfExpression
     
     def full_name
       accessor.text_value
+    end
+    
+    def signature
+      "#{namespace}##{name}#{return_value}"
     end
   end
   

@@ -9,7 +9,7 @@ grammar EbnfJavascript
   end
   
   rule js_constant
-    [A-Z] [a-zA-Z]* {
+    [A-Z] [a-zA-Z_0-9$]* {
       def value
         text_value
       end
@@ -33,7 +33,7 @@ grammar EbnfJavascript
   end
   
   rule js_namespace
-    (js_constant / js_variable) ('.' (js_constant / js_variable))* {
+    (js_constant / js_all_caps_constant / js_variable) ('.' (js_constant / js_all_caps_constant / js_variable))* {
       def namespace
         to_a.slice(0..-2).join(".")
       end
