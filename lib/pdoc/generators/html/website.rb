@@ -30,7 +30,9 @@ module PDoc
             render_template('section', "#{section.id}.html", {:doc_instance => section})
           end
           
-          root.namespaces.each(&method(:render_namespace))
+          root.utilities.each(&method(:render_namespace))
+          
+          root.namespaces.each(&method(:render_utility))
           
           copy_assets
           
@@ -52,6 +54,13 @@ module PDoc
         def render_namespace(object)
           template, path = find_template_name(object), path(object)
           @depth = path.size
+          dest = File.join(path, "#{object.id}.html")
+          render_template(template, dest, {:doc_instance => object})
+        end
+
+        def render_utility(object)
+          template, path = find_template_name(object), path(object)
+          @depth = path.size - 1
           dest = File.join(path, "#{object.id}.html")
           render_template(template, dest, {:doc_instance => object})
         end
