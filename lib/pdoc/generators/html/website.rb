@@ -30,9 +30,8 @@ module PDoc
             render_template('section', "#{section.id}.html", {:doc_instance => section})
           end
           
-          root.utilities.each(&method(:render_namespace))
-          
-          root.namespaces.each(&method(:render_utility))
+          root.utilities.each(&method(:render_utility))
+          root.namespaces.each(&method(:render_namespace))
           
           copy_assets
           
