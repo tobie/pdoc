@@ -21,7 +21,8 @@ module PDoc
           end
           
           def htmlize(markdown)
-            BlueCloth.new(markdown).to_html
+            html = BlueCloth.new(markdown).to_html
+            html.gsub(/<code>(.*?)<\/code>/) { |match| auto_link($1, false) }
           end
           
           def javascript_include_tag(*names)
