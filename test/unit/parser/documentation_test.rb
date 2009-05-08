@@ -19,7 +19,7 @@ class DocumentationTest < Test::Unit::TestCase
     klasses).each do |method|
       assert_respond_to fixtures, method
     end
-    assert_equal 33, fixtures.size
+    assert_equal 34, fixtures.size
   end
   
   def test_globals
@@ -62,7 +62,7 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal nil,                      fixture.namespace
     assert                                !fixture.deprecated?
     assert                                !fixture.alias?
-    assert_equal %w[getTransport],         fixture.klass_methods.map(&:name)
+    assert_equal %w[__private__ getTransport], fixture.klass_methods.map(&:name)
     assert_equal %w[activeRequestCount],   fixture.klass_properties.map(&:name)
     assert_equal [],                       fixture.instance_methods
     assert_equal [],                       fixture.instance_properties

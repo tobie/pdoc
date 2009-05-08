@@ -86,7 +86,12 @@ var Ajax = {
   /**
    * Ajax.activeRequestCount -> 0
    **/  
-  activeRequestCount: 0
+  activeRequestCount: 0,
+  
+  /**
+   * Ajax.__private__() -> Boolean
+   **/
+  __private__: function() { return true }
 };
 
 /** section: ajax

@@ -25,7 +25,7 @@ grammar EbnfJavascript
   end
   
   rule js_variable
-    [a-z] [a-zA-Z]* {
+    [_a-zA-Z] [_a-zA-Z0-9]* {
       def value
         text_value
       end
