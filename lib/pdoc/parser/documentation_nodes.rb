@@ -1,9 +1,13 @@
 module Documentation
   class Doc < Treetop::Runtime::SyntaxNode
     include Enumerable
+    
+    def tags
+      @tags ||= elements.first.elements.map { |e| e.elements.last }
+    end
 
     def each
-      elements.first.elements.map { |e| e.elements.last }.each { |tag| yield tag }
+      tags.each { |tag| yield tag }
     end
     
     # Returns an array of all deprecated object.
@@ -106,7 +110,45 @@ module Documentation
     end
   end
   
+  module Memoized
+    def method_added(method_name)
+      if instance_method(method_name).arity.zero?
+        avoid_infinite_method_added_loop do
+          memoize(method_name)
+        end
+      end
+    end
+    
+    def memoize(method_name)
+      sanitized_name = method_name.to_s
+      sanitized_name = sanitized_name.sub(/!$/, '_bang')
+      sanitized_name = sanitized_name.sub(/\?$/, '_question_mark')
+      complete_name = "#{sanitized_name}_#{object_id}"
+      
+      class_eval(<<-EVAL, __FILE__, __LINE__)
+        alias compute_#{complete_name} #{method_name}    # alias compute_section_12235760 section
+                                                         # 
+        def #{method_name}                               # def section
+          unless defined?(@#{complete_name})             #   unless defined?(@section_12235760)
+            @#{complete_name} = compute_#{complete_name} #     @section_12235760 = compute_section_12235760
+          end                                            #   end
+          @#{complete_name}                              #   @section_12235760
+        end                                              # end
+      EVAL
+    end
+    
+    def avoid_infinite_method_added_loop
+      unless @memoizing
+        @memoizing = true
+        yield
+        @memoizing = false
+      end
+    end
+  end
+  
   class Base < Treetop::Runtime::SyntaxNode
+    extend Memoized
+    
     # Returns an instance of Doc (the root of the tree outputed by the PDoc::Parser).
     def root
       parent.parent.parent
