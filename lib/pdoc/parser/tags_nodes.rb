@@ -7,7 +7,8 @@ module Tags
     end
     
     def each
-      [tag].concat(more.elements.map { |e| e.tag }).each { |tag| yield tag }
+      yield tag
+      more.elements.each { |e| yield e.tag }
     end
   end
 end
