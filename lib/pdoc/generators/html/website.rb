@@ -20,13 +20,13 @@ module PDoc
         def render(output)
           @depth = 0
           path = File.expand_path(output)
-          FileUtils.mkdir_p(path)
+          FileUtils.mkdir_p(path.downcase)
           Dir.chdir(path)
           DocPage.new("index", "layout", variables).render_to_file("index.html")
           
           root.sections.each do |section|
             @depth = 0
-            mkdir(section.name)
+            mkdir(section.name.downcase)
             render_template('section', "#{section.id}.html", {:doc_instance => section})
           end
           
@@ -59,7 +59,7 @@ module PDoc
 
         def render_utility(object)
           template, path = find_template_name(object), path(object)
-          @depth = path.size - 1
+          @depth = path.size
           dest = File.join(path, "#{object.id}.html")
           render_template(template, dest, {:doc_instance => object})
         end

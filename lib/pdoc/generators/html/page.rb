@@ -21,7 +21,8 @@ module PDoc
         # Creates a new file and renders the page to it
         # using the assigned layout.
         def render_to_file(filename)
-          FileUtils.mkdir_p(File.dirname(filename))
+          filename ||= ""
+          FileUtils.mkdir_p(File.dirname(filename).downcase)
           File.open(filename, "w+") { |f| f << render }
         end
         
