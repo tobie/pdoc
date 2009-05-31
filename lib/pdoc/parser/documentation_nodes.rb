@@ -563,7 +563,7 @@ module Documentation
     end
     
     def all_methods
-      klass_methods.concat(instance_methods).sort_by { |e| e.name }
+      (klass_methods + instance_methods).sort_by { |e| e.name }
     end
     
     def children
