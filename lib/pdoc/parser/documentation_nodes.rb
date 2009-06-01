@@ -123,7 +123,7 @@ module Documentation
       sanitized_name = method_name.to_s
       sanitized_name = sanitized_name.sub(/!$/, '_bang')
       sanitized_name = sanitized_name.sub(/\?$/, '_question_mark')
-      complete_name = "#{sanitized_name}_#{object_id}"
+      complete_name = "#{sanitized_name}_#{object_id.abs}"
       
       class_eval(<<-EVAL, __FILE__, __LINE__)
         alias compute_#{complete_name} #{method_name}    # alias compute_section_12235760 section
