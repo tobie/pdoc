@@ -23,6 +23,16 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal "Response",                   parse(ebnf).klass_name
     assert_equal "Array | Object | null",      parse(ebnf).returns
     assert_equal ebnf,                         parse(ebnf).to_s
+    
+    ebnf = "a123#b456 -> Array | Object | null"
+    assert_parsed ebnf
+    assert_equal InstanceProperty,             parse(ebnf).class
+    assert_equal "a123",                       parse(ebnf).namespace
+    assert_equal "b456",                       parse(ebnf).name
+    assert_equal "a123#b456",                  parse(ebnf).full_name
+    assert_equal "a123",                       parse(ebnf).klass_name
+    assert_equal "Array | Object | null",      parse(ebnf).returns
+    assert_equal ebnf,                         parse(ebnf).to_s
   end
   
   def test_klass_property
@@ -192,6 +202,16 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal [],                           parse(ebnf).mixins
     assert_equal ebnf,                         parse(ebnf).to_s
     
+    ebnf = "scripty2"
+    assert_parsed ebnf
+    assert_equal Namespace,                    parse(ebnf).class
+    assert_equal "",                           parse(ebnf).namespace
+    assert_equal "scripty2",                   parse(ebnf).name
+    assert_equal "scripty2",                   parse(ebnf).full_name
+    assert_equal nil,                          parse(ebnf).klass_name
+    assert_equal [],                           parse(ebnf).mixins
+    assert_equal ebnf,                         parse(ebnf).to_s
+    
     ebnf = "Ajax\n * includes Enumerable"
     assert_parsed ebnf
     assert_equal Namespace,                    parse(ebnf).class
@@ -242,6 +262,15 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal "JSONFilter",                       parse(ebnf).name
     assert_equal "Prototype.JSONFilter",             parse(ebnf).full_name
     assert_equal "/^\/\*-secure-([\s\S]*)\*\/\s*$/", parse(ebnf).returns
+    assert_equal ebnf,                               parse(ebnf).to_s
+    
+    ebnf = "s2.css.LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/"
+    assert_parsed ebnf
+    assert_equal Constant,                           parse(ebnf).class
+    assert_equal "s2.css",                           parse(ebnf).namespace
+    assert_equal "LENGTH",                           parse(ebnf).name
+    assert_equal "s2.css.LENGTH",                    parse(ebnf).full_name
+    assert_equal "/^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/", parse(ebnf).returns
     assert_equal ebnf,                               parse(ebnf).to_s
   end
   

@@ -3,6 +3,6 @@ grammar SectionContent
   include Description
   
   rule section
-    line space* '==' space* title:[a-zA-Z\s]+ space* '==' space* text <Section>
+    line space* '==' space* title:[a-zA-Z0-9\s]+ space* '==' space* text <Section>
   end
 end
