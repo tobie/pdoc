@@ -1,3 +1,5 @@
+* Fix that autolinking wouldn't recognize numbers in namespaces/method names.
+
 * Improve support for "methodized" methods (methods available on both the instance and the class). Introduce `generic_signature` attribute for Documentation::InstanceMethod that shows the alternative signature for the static version of the method. (savetheclocktower)
 
 * Add `utilities`, `namespaces`, and `klasses` attributes to `Documentation::Section` nodes. (savetheclocktower)
