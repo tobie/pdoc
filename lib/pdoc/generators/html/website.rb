@@ -20,7 +20,7 @@ module PDoc
         def render(output)
           @depth = 0
           path = File.expand_path(output)
-          FileUtils.mkdir_p(path.downcase)
+          FileUtils.mkdir_p(path)
           Dir.chdir(path)
           DocPage.new("index", "layout", variables).render_to_file("index.html")
           
