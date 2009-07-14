@@ -30,23 +30,17 @@ module EbnfExpression
   end
   
   class Method < Base
-    def methodized?
-      args.methodize.text_value == "@"
-    end
-    
     def arguments
       args.arguments.to_a
     end
     
-    def methodized_arguments
-      arguments.slice(1..-1)
+    def methodized?
+      false
     end
     
     def signature
       "#{name}#{args.text_value}"
     end
-    
-    alias :generic_signature :signature
   end
   
   class KlassMethod < Method
@@ -58,13 +52,28 @@ module EbnfExpression
       js_namespace.to_a.last
     end
 
+    def methodized?
+      args.methodize.text_value == '@'
+    end
+
     def namespace
       js_namespace.to_a.slice(0..-2).join(".")
     end
     
+    # If methodized, go instance-like.  Otherwise remain static-like.
     def signature
-      "#{namespace}.#{name}#{args.text_value}"
+      return static_signature unless methodized?
+      static_signature.sub('.', '#').sub(/\((.*?)(,\s*|\))/) {
+        first_arg = $1.to_s.strip
+        (first_arg[-1, 1] == '[' ? '([' : '(') + ($2 == ')' ? $2 : '')
+      }
     end
+
+    def static_signature
+      "#{namespace}.#{name}#{args.text_value.sub('@', '')}"
+    end
+
+    alias_method :generic_signature, :static_signature
   end
   
   class Utility < Method
@@ -90,6 +99,10 @@ module EbnfExpression
       instance_signature.instance_accessor
     end
     
+    def args
+      instance_signature.args
+    end
+    
     def js_namespace
       accessor.js_namespace
     end
@@ -98,25 +111,12 @@ module EbnfExpression
       accessor.js_variable
     end
     
-    def args
-      instance_signature.args
-    end
-    
     def full_name
       accessor.text_value
     end
-    
+
     def signature
-      # If the first argument is methodized, we filter it out for the
-      # ordinary method signature.
-      instance_signature.text_value.gsub(/@[\w\d]+(?:,\s*)?/, '')
-    end
-    
-    # For "methodized" methods.
-    def generic_signature
-      # Keep the first argument (but lose the @). Also change the instance
-      # symbol to static.
-      instance_signature.text_value.gsub('#', '.').gsub('@', '')
+      instance_signature.text_value
     end
   end
   
