@@ -21,8 +21,12 @@ module PDoc
           end
           
           def htmlize(markdown)
-            html = BlueCloth.new(markdown).to_html
-            html.gsub(/<code>(.*?)<\/code>/) { |match| auto_link($1) }
+            BlueCloth.new(markdown).to_html
+          end
+          
+          # Gah, what an ugly hack.
+          def inline_htmlize(markdown)
+            htmlize(markdown).gsub(/^<p>/, '').gsub(/<\/p>$/, '')
           end
           
           def javascript_include_tag(*names)
@@ -61,23 +65,47 @@ module PDoc
           end
 
           def path_to(obj)
-            path = path_prefix << [obj.section.name].concat(obj.namespace_string.downcase.split('.')).join("/")
+            return path_to_section(obj) if obj.is_a?(Documentation::Section)
+            path = path_prefix << [obj.section.name.downcase].concat(obj.namespace_string.downcase.split('.')).join("/")
             has_own_page?(obj) ? "#{path}/#{obj.id.downcase}.html" : "#{path}.html##{dom_id(obj)}"
           end
+          
+          def path_to_section(obj)
+            "#{path_prefix}#{obj.id.gsub(/\s/, '_')}.html"
+          end
+          
+          def section_from_name(name)
+            root.sections.find { |section| section.name == name }
+          end          
 
           def auto_link(obj, short = true, attributes = {})
+            if obj.is_a?(String) && obj =~ /\ssection$/
+              obj = section_from_name(obj.gsub(/\ssection$/, ''))
+            end
+            obj.sub!('...', '…') if obj.is_a?(String)
+            if obj.is_a?(String) && obj.strip =~ /^\[.+\]$/
+              return obj.gsub(/[^],.…\s[]+/) { |item| auto_link(item, short, attributes) }
+            end
             obj = root.find_by_name(obj) || obj if obj.is_a?(String)
-            return "<code>#{obj}</code>" if obj.is_a?(String)
             return nil if obj.nil?
+            return obj if obj.is_a?(String)
             name = short ? obj.name : obj.full_name
-            name = "<code>#{name}</code>" unless obj.is_a?(Documentation::Section)
             link_to(name, path_to(obj), { :title => "#{obj.full_name} (#{obj.type})" }.merge(attributes))
+          end
+          
+          def auto_link_code(obj, short = true, attributes = {})
+            return "<code>#{auto_link(obj, short, attributes)}</code>"
           end
 
           def auto_link_content(content)
-            content.gsub(/\[\[([a-zA-Z0-9$\.#]+)(?:\s+([^\]]+))?\]\]/) do |m|
+            content.gsub!(/\[\[([a-zA-Z]+)\s+section\]\]/) do |m|
+              result = auto_link(section_from_name($1), false)
+              result
+            end
+            content.gsub(/\[\[([a-zA-Z$\.#]+)(?:\s+([^\]]+))?\]\]/) do |m|
               if doc_instance = root.find_by_name($1)
-                $2 ? link_to($2, path_to(doc_instance)) : auto_link(doc_instance, false)
+                $2 ? link_to($2, path_to(doc_instance)) :
+                  auto_link_code(doc_instance, false)
               else
                 $1
               end
@@ -96,17 +124,38 @@ module PDoc
         
         module CodeHelper
           def method_synopsis(object)
-            <<-EOS
-              <pre class="syntax"><code class="ebnf">#{ object.signature } -&gt; #{ auto_link(object.returns, false) }</code></pre>
-            EOS
+            result = []
+            result << '<pre class="syntax"><code class="ebnf">'
+            if object.is_a?(Documentation::Property)
+              result << "#{object.signature}"
+            else
+              ebnfs = object.ebnf_expressions.dup
+              if object.is_a?(Documentation::KlassMethod) && object.methodized?
+                result << "#{object.static_signature} &rArr; #{auto_link(object.returns, false)}<br />"
+                result << "#{object.signature} &rArr; #{auto_link(object.returns, false)}"
+                ebnfs.shift
+                result.last << '<br />' unless ebnfs.empty?
+              end
+              ebnfs.each do |ebnf|
+                result << "#{ebnf.signature} &rArr; #{auto_link(ebnf.returns, false)}"
+              end
+            end
+            result << '</code></pre>'
+            result.join('')
           end
         end
         
         module MenuHelper
           def menu(obj)
             class_names = menu_class_name(obj)
-            html = auto_link(obj, false, :class => "#{class_names} #{class_names_for(obj)}")
-            html << content_tag(:ul, obj.children.map { |n| menu(n) }.join("\n"))
+            html = <<-EOS
+              <div class='menu-item'>
+                #{auto_link(obj, false, :class => class_names_for(obj))}
+              </div>
+            EOS
+            unless obj.children.empty?
+              html << content_tag(:ul, obj.children.map { |n|menu(n) }.join("\n"))
+            end
             content_tag(:li, html, :class => class_names)
           end
 

@@ -411,8 +411,8 @@ module Documentation
       ebnf_expressions.first.signature
     end
     
-    def generic_signature
-      ebnf_expressions.first.generic_signature
+    def static_signature
+      ebnf_expressions.first.static_signature
     end
     
     def returns

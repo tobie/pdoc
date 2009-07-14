@@ -72,8 +72,6 @@ module EbnfExpression
     def static_signature
       "#{namespace}.#{name}#{args.text_value.sub('@', '')}"
     end
-
-    alias_method :generic_signature, :static_signature
   end
   
   class Utility < Method
