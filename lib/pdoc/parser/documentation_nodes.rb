@@ -601,7 +601,7 @@ module Documentation
     end
     
     def methodized_methods
-      instance_methods.select { |e| e.methodized? }
+      klass_methods.select { |e| e.methodized? }
     end
     
     def constructor

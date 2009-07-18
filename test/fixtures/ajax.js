@@ -40,7 +40,7 @@
 
 
 /** 
- * Element#setStyle(@element, styles) -> Element
+ * Element.setStyle(@element, styles) -> Element
  * - element (String | Element): an id or DOM node
  * - styles (String | Object | Hash): can be either a regular CSS string or
  * a hash or regular object, in which case, properties need to be camelized
