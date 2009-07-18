@@ -1,7 +1,7 @@
 module EbnfArguments
   class Argument < Treetop::Runtime::SyntaxNode
     def name
-      text_value
+      text_value.strip
     end
     
     def optional?
