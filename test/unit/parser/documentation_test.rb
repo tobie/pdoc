@@ -166,10 +166,10 @@ class DocumentationTest < Test::Unit::TestCase
     
     fixture = fixtures.find_by_name("Element")
     assert_equal Klass,                    fixture.class
-    assert_equal [],                       fixture.klass_methods
+    assert_equal %w[setStyle],             fixture.klass_methods.map(&:name)
     assert_equal %w[setStyle],             fixture.methodized_methods.map(&:name)
     assert_equal [],                       fixture.klass_properties
-    assert_equal %w[bar foo setStyle],     fixture.instance_methods.map(&:name)
+    assert_equal %w[bar foo],              fixture.instance_methods.map(&:name)
     assert_equal [],                       fixture.instance_properties
     assert_equal %w[$],                    fixture.related_utilities.map(&:name)
     assert_equal "dom",                    fixture.doc_parent.name
@@ -340,11 +340,11 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
     
-    fixture = fixtures.find_by_name("Element#setStyle")
-    assert_equal InstanceMethod,           fixture.class
+    fixture = fixtures.find_by_name("Element.setStyle")
+    assert_equal KlassMethod,              fixture.class
     assert_equal "setStyle",               fixture.name
     assert_equal "Element",                fixture.namespace_string
-    assert_equal "Element#setStyle",       fixture.full_name
+    assert_equal "Element.setStyle",       fixture.full_name
     assert_equal "Element",                fixture.klass_name
     assert_equal Klass,                    fixture.klass.class
     assert_equal "Element",                fixture.klass.full_name
@@ -438,12 +438,12 @@ class DocumentationTest < Test::Unit::TestCase
   
   def test_description
     assert_equal "The Element class",      fixtures.find_by_name("Element").description
-    assert_equal "Sets the style of element\nand returns it", fixtures.find_by_name("Element#setStyle").description
+    assert_equal "Sets the style of element\nand returns it", fixtures.find_by_name("Element.setStyle").description
     assert_equal "Calls `iterator` for each item in the collection.", fixtures.find_by_name("Enumerable#each").description
   end
   
   def test_arguments_descriptions
-    fixture = fixtures.find_by_name("Element#setStyle")
+    fixture = fixtures.find_by_name("Element.setStyle")
     assert_equal %w[element styles],       fixture.arguments.map(&:name)
     assert_equal %w[String Element],       fixture.arguments.first.types
     assert_equal "an id or DOM node",      fixture.arguments.first.description
@@ -455,13 +455,13 @@ class DocumentationTest < Test::Unit::TestCase
   end
   
   def test_event
-    assert_equal %w[element:style:updated], fixtures.find_by_name("Element#setStyle").fires
+    assert_equal %w[element:style:updated], fixtures.find_by_name("Element.setStyle").fires
     assert_equal [],                       fixtures.find_by_name("Element#foo").fires
     assert_equal %w[click],                fixtures.find_by_name("Element#bar").fires
   end
   
   def test_aliases
-    fixture = fixtures.find_by_name("Element#setStyle")
+    fixture = fixtures.find_by_name("Element.setStyle")
     assert_equal [],                       fixture.aliases
     assert                                !fixture.alias?
     assert_equal nil,                      fixture.alias_of

@@ -362,6 +362,7 @@ class EbnfExpressionTest < Test::Unit::TestCase
   def test_methodized_argument
     ebnf            = "Element.down(@element[,selector][,index=0]) -> Element"
     ebnf_with_space = "Element.down( @element [ , selector ] [ , index=0 ] ) -> Element"
+    ebnf2           = "Element.writeAttribute(@element, attribute[, value = true]) -> Element"
     
     assert_parsed ebnf
     assert_parsed ebnf_with_space
@@ -369,12 +370,20 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert parse(ebnf_with_space).methodized?
     assert !parse("Event#stop() -> a value").methodized?
     assert_equal 3,                                parse(ebnf).arguments.length
+    assert_equal 3,                                parse(ebnf2).arguments.length
     assert_equal 3,                                parse(ebnf_with_space).arguments.length
     assert_equal ["element", "selector", "index"], parse(ebnf).arguments.map(&:name)
+    assert_equal ['element', 'attribute', 'value'],parse(ebnf2).arguments.map(&:name)
     assert_equal [nil, nil, "0"],                  parse(ebnf).arguments.map(&:default_value)
+    assert_equal [nil, nil, "true"],               parse(ebnf2).arguments.map(&:default_value)
     assert_equal [false, true, true],              parse(ebnf).arguments.map(&:optional?)
-    assert_equal ["selector", "index"],            parse(ebnf).methodized_arguments.map(&:name)
-    assert_equal [nil, "0"],                       parse(ebnf).methodized_arguments.map(&:default_value)
-    assert_equal [true, true],                     parse(ebnf).methodized_arguments.map(&:optional?)
+    assert_equal [false, false, true],             parse(ebnf2).arguments.map(&:optional?)
+    
+    # Check instance-based, default signatures
+    assert_equal 'Element#down([selector][,index=0])', parse(ebnf).signature
+    assert_equal 'Element#writeAttribute(attribute[, value = true])', parse(ebnf2).signature
+    # Check static signatures
+    assert_equal 'Element.down(element[,selector][,index=0])', parse(ebnf).static_signature
+    assert_equal 'Element.writeAttribute(element, attribute[, value = true])', parse(ebnf2).static_signature
   end
 end
