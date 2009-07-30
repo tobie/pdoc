@@ -83,8 +83,8 @@ module PDoc
               obj = section_from_name(obj.gsub(/\ssection$/, ''))
             end
             obj.sub!('...', '…') if obj.is_a?(String)
-            if obj.is_a?(String) && obj.strip =~ /^\[.+\]$/
-              return obj.gsub(/[^\],.…\s\[]+/) { |item| auto_link(item, short, attributes) }
+            if obj.is_a?(String) && obj.strip =~ /^\[.+\]$|\|/
+              return obj.gsub(/[^\],.…\s\|\[]+/) { |item| auto_link(item, short, attributes) }
             end
             obj = root.find_by_name(obj) || obj if obj.is_a?(String)
             return nil if obj.nil?

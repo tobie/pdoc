@@ -53,7 +53,11 @@ grammar EbnfExpression
   end
   
   rule args
-    '(' space* methodize:'@'? arguments space* ')'
+    '(' space* methodize:'@'? arguments space* ')' {
+      def text_value
+        super.to_s.sub('( )', '()')
+      end
+    }
   end
 
   rule namespace
