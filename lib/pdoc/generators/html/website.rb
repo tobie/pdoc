@@ -70,7 +70,9 @@ module PDoc
           end
           
           def path(object)
-            [object.section.name.downcase].concat(object.namespace_string.downcase.split('.'))
+            arr = object.namespace_string.downcase.split('.')
+            arr.unshift object.section.name.downcase if root.sections?
+            arr
           end
           
           def find_template_name(obj)
