@@ -56,13 +56,7 @@ module PDoc
           dest = File.join(path, "#{object.id}.html")
           render_template(template, dest, {:doc_instance => object})
         end
-
-        def render_utility(object)
-          template, path = find_template_name(object), path(object)
-          @depth = path.size
-          dest = File.join(path, "#{object.id}.html")
-          render_template(template, dest, {:doc_instance => object})
-        end
+        alias :render_utility :render_namespace
         
         private
           def variables
