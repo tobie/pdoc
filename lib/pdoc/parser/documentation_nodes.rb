@@ -96,11 +96,6 @@ module Documentation
       select { |e| e.is_a?(Section) }.sort_by { |e| e.name }
     end
     
-    # Returns true if at least on section has been defined.
-    def sections?
-      @has_sections ||= any? { |e| e.is_a?(Section) }
-    end
-    
     def inspect
       to_a.inspect
     end
@@ -226,7 +221,6 @@ module Documentation
     # Returns the section this instance belongs to. If no section has been 
     # specified in the tags, it iterates through the ancestors until it finds one.
     def section
-      return nil unless root.sections?
       if tags.include?("section")
         value = tags.find { |tag| tag.name == "section" }.value
         root.sections.find { |s| s.name == value }
@@ -254,11 +248,7 @@ module Documentation
     # Recursively collects all of instance's doc_parent and returns them
     # as an ordered array.
     def ancestors
-      if doc_parent
-        doc_parent.ancestors.unshift(doc_parent)
-      else
-        []
-      end
+      [doc_parent].concat(doc_parent.ancestors)
     end
     
     # Returns all direct descendants of instance.
