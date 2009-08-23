@@ -21,7 +21,7 @@ module PDoc
           end
           
           def htmlize(markdown)
-            BlueCloth.new(markdown).to_html
+            RDiscount.new(markdown, :smart).to_html
           end
           
           # Gah, what an ugly hack.
