@@ -7,12 +7,22 @@ module PDoc
       end
       
       class Website < AbstractGenerator
+        
+        include Helpers::BaseHelper
+        
         def initialize(parser_output, options = {})
           super
-          
           @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
           @index_page = options[:index_page]
-          require File.join(@templates_directory, "helpers")
+          load_custom_helpers
+        end
+        
+        def load_custom_helpers
+          begin
+            require File.join(@templates_directory, "helpers")
+          rescue LoadError => e
+            return nil
+          end
           self.class.__send__(:include, Helpers::BaseHelper)
           Page.__send__(:include, Helpers::BaseHelper)
           Helpers.constants.map(&Helpers.method(:const_get)).each(&DocPage.method(:include))
