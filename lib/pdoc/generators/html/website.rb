@@ -11,7 +11,9 @@ module PDoc
           super
           
           @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
+          @index_page = options[:index_page]
           require File.join(@templates_directory, "helpers")
+          self.class.__send__(:include, Helpers::BaseHelper)
           Page.__send__(:include, Helpers::BaseHelper)
           Helpers.constants.map(&Helpers.method(:const_get)).each(&DocPage.method(:include))
         end
@@ -22,7 +24,8 @@ module PDoc
           path = File.expand_path(output)
           FileUtils.mkdir_p(path)
           Dir.chdir(path)
-          DocPage.new("index", "layout", variables).render_to_file("index.html")
+          vars = variables.merge(:index_page_content => index_page_content)
+          DocPage.new("index", "layout", vars).render_to_file("index.html")
           
           root.sections.each do |section|
             @depth = 0
@@ -69,6 +72,10 @@ module PDoc
           
           def find_template_name(obj)
             obj.is_a?(Documentation::Utility) ? "utility" : "namespace"
+          end
+          
+          def index_page_content
+            @index_page ? htmlize(File.read(@index_page)) : nil
           end
       end
     end

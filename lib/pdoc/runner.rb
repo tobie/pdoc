@@ -5,6 +5,7 @@ module PDoc
       @source_files        = source_files
       @output_directory    = File.expand_path(options[:output] || OUTPUT_DIR)
       @templates_directory = options[:templates] && File.expand_path(options[:templates])
+      @index_page          = options[:index_page] && File.expand_path(options[:index_page])
       @generator           = options[:generator] || Generators::Html::Website
       @parser              = Parser.new(source)
     end
@@ -33,7 +34,10 @@ module PDoc
     def render
       log "Generating documentation to: #{@output_directory}.\n\n"
       start_time = Time.new
-      @generator.new(@parser_output, :templates => @templates_directory).render(@output_directory)
+      @generator.new(@parser_output, { 
+        :templates => @templates_directory,
+        :index_page => @index_page
+      }).render(@output_directory)
       log "\c[[F    Documentation generated in #{Time.new - start_time} seconds."
     end
     
