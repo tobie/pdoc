@@ -5,7 +5,7 @@ body.grid {
 
 body.grid div#page {
   overflow: hidden;
-  background: url(http://prototype.conio.net/new/images/grid-55-5.png);
+  background: url(../images/grid.png);
 }
 
 body.grid div#page * {

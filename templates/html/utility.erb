@@ -2,12 +2,20 @@
 
 <% @title = "#{@doc_instance.full_name} utility" %>
 
-<h2><span>utility</span> <%= @doc_instance.name %></h2>
+<%= include "partials/breadcrumbs", :object => d %>
 
-<% # What's it related to? %>
-<% unless @doc_instance.related_to.nil? %>
-  <div class="section section-related">
-    <h3>Related to</h3>
-    <p><%= auto_link(d.related_to, false) %></p>
-  </div> <!-- .section -->
-<% end %>
+<h2 class="page-title">
+  <span class="type">utility </span><%= @doc_instance.name %>
+</h2>
+
+<div class="section">
+  <div class="section-title">
+    <h3>Description</h3>
+  </div> <!-- .section-title -->
+  
+  <div class="section-content">
+    <ul class="method-details-list">
+      <%= include "partials/short_description", :collection => [@doc_instance] %>            
+    </ul>    
+  </div> <!-- .section-content -->
+</div> <!-- .section -->
