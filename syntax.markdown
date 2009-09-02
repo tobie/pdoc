@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 Syntax
 ======
 
@@ -18,7 +22,7 @@ The first line of a comment is reserved for tags. Tags are optional. Tags are se
 Currently accepted tags are: `deprecated`, `section:`, `alias of:`, `related to:`
 
     /** deprecated, section: dom, alias of: Element#descendantOf
-     *  Element#childOf(@element, className) -> Element
+     *  Element.childOf(@element, className) -> Element
      *  ...
      **/
 
@@ -30,13 +34,13 @@ EBNF
 The lines directly following tags are reserved for the EBNF description of the documented object. Typically, there's only one EBNF per documented object. However, some objects might require more than one.
 
     /** 
-     *  Element#down(@element[, cssSelector][, index]) -> Element | null
+     *  Element.down(@element[, cssSelector][, index]) -> Element | null
      *  ...
      **/
      
     /** 
-     *  Element#writeAttribute(@element, attribute[, value = true]) -> Element
-     *  Element#writeAttribute(@element, attributes) -> Element
+     *  Element.writeAttribute(@element, attribute[, value = true]) -> Element
+     *  Element.writeAttribute(@element, attributes) -> Element
      *  ...
      **/
      
@@ -183,7 +187,7 @@ Utilities are global functions starting with a dollar-sign (`$`).
 Methodized methods are methods which are both available as a class method and an instance method, in which case the first argument becomes the instance object itself. For example, all of `Element`'s instance methods are methodized and thus also available as class methods of `Element`. Methodized methods are indicated by prefixing their first argument with the `@` symbol.
 
     /** 
-     *  Element#hide(@element) -> Element
+     *  Element.hide(@element) -> Element
      *  ...
      **/
      
