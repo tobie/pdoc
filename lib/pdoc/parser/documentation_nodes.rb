@@ -263,6 +263,10 @@ module Documentation
       results
     end
     
+    def ebnf_expressions
+      ebnf.elements.map { |e| e.elements.last }
+    end
+    
     def description
       text.to_s
     end
@@ -274,6 +278,10 @@ module Documentation
     
     def id
       name.downcase.gsub('$', "dollar")
+    end
+    
+    def signature
+      ebnf.text_value.strip
     end
     
     def inspect
@@ -378,10 +386,6 @@ module Documentation
       namespace
     end
     
-    def ebnf_expressions
-      ebnf.elements.map { |e| e.elements.last }
-    end
-
     def klass_name
       ebnf_expressions.first.klass_name
     end
@@ -490,23 +494,11 @@ module Documentation
     def type
       "class property"
     end
-    
-    def ebnf_expressions
-      ebnf.elements.map { |e| e.elements.last }
-    end
-    
-    def signature
-      ebnf.text_value.strip
-    end
   end
   
   class InstanceProperty < Property
     def type
       "instance property"
-    end
-    
-    def signature
-      ebnf.text_value.strip
     end
   end
   
