@@ -35,14 +35,14 @@
 
 			<p>Unlike other inline-doc parsers, PDoc does not rely on the JavaScript source code at all; it only parses the comments. This approach, though slightly more verbose, is much better at generating consistent, reliable documentation, and avoids the headaches encountered when documenting highly dynamic languages.</p>
 
-			<h2 id="installation">Installation</h2>
+			<h2>Installation</h2>
 
-			<p>PDoc depends on Rake, <a href="http://github.com/rtomayko/rdiscount/tree/master" title="rtomayko's rdiscount at master - GitHub">RDiscount</a>, and treetop, all of which can be obtained through RubyGems:</p>
+			<p>PDoc depends on Rake, <a href="http://maruku.rubyforge.org/">Maruku</a>, and treetop, all of which can be obtained through RubyGems:</p>
 
-			<pre><code>gem install rake rdiscount treetop
+			<pre><code>gem install rake maruku treetop
 			</code></pre>
 
-			<p><a href="http://github.com/rtomayko/rdiscount/tree/master" title="rtomayko's rdiscount at master - GitHub">RDiscount</a> is a faster alternative to BlueCloth and is compatible with Ruby 1.9.1.</p>
+			<p>Maruku is a more solid alternative to BlueCloth and is compatible with Ruby 1.9.1.</p>
 
 			<h2>Usage</h2>
 
@@ -65,7 +65,6 @@
 			<p>The HTML generator (<code>PDoc::Generators::Html</code>) has associated <em>templates</em> (in the <code>templates</code> directory) that accept syntax nodes and echo their metadata onto the page using <a href="http://www.ruby-doc.org/stdlib/libdoc/erb/rdoc/index.html" title="erb: Ruby Standard Library Documentation">ERB</a>. Templates are modular, so it&#8217;s quite easy to apply a custom &#8220;skin&#8221; to one&#8217;s documentation pages.</p>
 
 			<p>Furthermore, generators themselves are modular; PDoc can, theoretically, parse once and render to several different targets (HTML, <a href="http://www.docbook.org/" title="DocBook.org">DocBook XML</a>, CHM, PDF, even <a href="http://www.scriptdoc.org/" title="ScriptDoc.org: Dynamic Language Documentation">ScriptDoc</a>.) We hope many such generators will exist in the future.</p>
-
 			
 			<div id="twitter_div">
 				<h2 class="twitter-title">Twitter Updates</h2>

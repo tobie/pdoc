@@ -21,7 +21,7 @@ module PDoc
           end
           
           def htmlize(markdown)
-            RDiscount.new(markdown, :smart).to_html
+            Maruku.new(markdown).to_html
           end
           
           # Gah, what an ugly hack.

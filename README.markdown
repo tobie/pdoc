@@ -9,11 +9,11 @@ Unlike other inline-doc parsers, PDoc does not rely on the JavaScript source cod
 
 ## Installation
 
-PDoc depends on Rake, [RDiscount](http://github.com/rtomayko/rdiscount/tree/master "rtomayko's rdiscount at master - GitHub"), and treetop, all of which can be obtained through RubyGems:
+PDoc depends on Rake, [Maruku](http://maruku.rubyforge.org/), and treetop, all of which can be obtained through RubyGems:
 
-    gem install rake rdiscount treetop
+    gem install rake maruku treetop
     
-[RDiscount](http://github.com/rtomayko/rdiscount/tree/master "rtomayko's rdiscount at master - GitHub") is a faster alternative to BlueCloth and is compatible with Ruby 1.9.1.
+Maruku is a more solid alternative to BlueCloth and is compatible with Ruby 1.9.1.
 
 ## Usage
 
