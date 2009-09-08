@@ -137,7 +137,7 @@ module PDoc
                 result.last << '<br />' unless ebnfs.empty?
               end
               ebnfs.each do |ebnf|
-                result << "#{ebnf.signature} &rArr; #{auto_link(ebnf.returns, false)}"
+                result << "#{ebnf.signature} &rArr; #{auto_link(ebnf.returns, false)}<br />"
               end
             end
             result << '</code></pre>'
