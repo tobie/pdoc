@@ -98,6 +98,7 @@ module PDoc
           end
 
           def auto_link_content(content)
+            return '' if content.nil?
             content.gsub!(/\[\[([a-zA-Z]+)\s+section\]\]/) do |m|
               result = auto_link(section_from_name($1), false)
               result
