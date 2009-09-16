@@ -6,4 +6,5 @@ require File.join(HTML_DIR, "helpers")
 require File.join(HTML_DIR, "template")
 require File.join(HTML_DIR, "page")
 require File.join(HTML_DIR, "website")
+require File.join(HTML_DIR, "syntax_highlighter")
 
