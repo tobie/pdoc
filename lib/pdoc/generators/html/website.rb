@@ -34,8 +34,8 @@ module PDoc
           path = File.expand_path(output)
           FileUtils.mkdir_p(path)
           Dir.chdir(path)
-          vars = variables.merge(:index_page_content => index_page_content)
-          DocPage.new("index", "layout", vars).render_to_file("index.html")
+          
+          render_index
           
           root.sections.each do |section|
             @depth = 0
@@ -43,13 +43,18 @@ module PDoc
             render_template('section', "#{section.id}.html", {:doc_instance => section})
           end
           
-          root.utilities.each(&method(:render_utility))
-          root.namespaces.each(&method(:render_namespace))
+          root.utilities.each(&method(:render_object))
+          root.namespaces.each(&method(:render_object))
           
           copy_assets
           
           dest = File.join("javascripts", "item_index.js")
           DocPage.new("item_index.js", false, variables).render_to_file(dest)
+        end
+        
+        def render_index
+          vars = variables.merge(:index_page_content => index_page_content)
+          DocPage.new('index', 'layout', vars).render_to_file('index.html')
         end
         
         def render_template(template, dest, var = {})
@@ -63,13 +68,12 @@ module PDoc
           FileUtils.cp_r(Dir.glob(File.join(@templates_directory, "assets", "**")), '.')
         end
         
-        def render_namespace(object)
+        def render_object(object)
           template, path = find_template_name(object), path(object)
           @depth = path.size
           dest = File.join(path, "#{object.id}.html")
           render_template(template, dest, {:doc_instance => object})
         end
-        alias :render_utility :render_namespace
         
         private
           def variables
