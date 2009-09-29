@@ -12,8 +12,9 @@ module PDoc
         
         def initialize(parser_output, options = {})
           super
-          @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
-          @index_page = options[:index_page]
+          @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
+          @index_page = File.expand_path(options[:index_page])
+          @syntax_highlighter = SyntaxHighlighter.new(options[:syntax_highlighter])
           load_custom_helpers
         end
         
@@ -49,17 +50,17 @@ module PDoc
           copy_assets
           
           dest = File.join("javascripts", "item_index.js")
-          DocPage.new("item_index.js", false, variables).render_to_file(dest)
+          render_page(dest, "item_index.js", false, variables)
         end
         
         def render_index
           vars = variables.merge(:index_page_content => index_page_content)
-          DocPage.new('index', 'layout', vars).render_to_file('index.html')
+          render_page("index.html", "index", "layout", vars)
         end
         
         def render_template(template, dest, var = {})
           log "\c[[F\c[[K    Rendering: #{dest}"
-          DocPage.new(template, variables.merge(var)).render_to_file(dest)
+          render_page(dest, template, variables.merge(var))
         end
         
         # Copies the content of the assets folder to the generated website's
@@ -76,6 +77,10 @@ module PDoc
         end
         
         private
+          def render_page(dest, *args)
+            DocPage.new(@syntax_highlighter, *args).render_to_file(dest)
+          end
+          
           def variables
             {:root => root, :depth => @depth, :templates_directory => @templates_directory}
           end

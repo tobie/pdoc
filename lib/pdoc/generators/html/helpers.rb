@@ -21,6 +21,7 @@ module PDoc
           end
           
           def htmlize(markdown)
+            markdown = syntax_highlighter.parse(markdown) if respond_to?(:syntax_highlighter)
             Maruku.new(markdown).to_html
           end
           
