@@ -10,10 +10,15 @@ module PDoc
         
         include Helpers::BaseHelper
         
+        class << Website
+          attr_accessor :syntax_highlighter
+        end
+        
         def initialize(parser_output, options = {})
           super
           @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
           @index_page = options[:index_page] && File.expand_path(options[:index_page])
+          Website.syntax_highlighter = SyntaxHighlighter.new(options[:syntax_highlighter])
           load_custom_helpers
         end
         

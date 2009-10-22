@@ -79,6 +79,19 @@ class HtmlHelpersTest < Test::Unit::TestCase
     assert html.include?('$(element...)'), 'Missing vararg signature'
   end
   
+  def test_htmlize_syntax_highlight
+    PDoc::Generators::Html::Website.syntax_highlighter = PDoc::Generators::Html::SyntaxHighlighter.new
+    doc = parse_doc(<<-DOC)
+Element#foo() -> Element
+
+Example:
+    
+    var foo = "bar";
+DOC
+      html = run_helper(:htmlize, doc, doc.to_a.last.description)
+      assert_equal("<p>Example:</p>\n<pre><code class='javascript'>var foo = \"bar\";</code></pre>", html)
+    end
+  
   def parse_doc(source)
     src = %(
 /** section: dom
@@ -86,7 +99,7 @@ class HtmlHelpersTest < Test::Unit::TestCase
  **/
 
 /**
-#{source.strip.map { |line| " * #{line.lstrip}" }}
+#{source.strip.map { |line| " * #{line}" }}
  **/
     )
   PDoc::Parser.new(src).parse
