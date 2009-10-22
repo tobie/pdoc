@@ -12,8 +12,8 @@ module PDoc
         
         def initialize(parser_output, options = {})
           super
-          @templates_directory = options[:templates] || TEMPLATES_DIRECTORY
-          @index_page = options[:index_page]
+          @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
+          @index_page = options[:index_page] && File.expand_path(options[:index_page])
           load_custom_helpers
         end
         
