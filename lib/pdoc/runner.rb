@@ -1,12 +1,12 @@
 module PDoc
   class Runner
     def initialize(*source_files)
-      options           = source_files.last.is_a?(Hash) ? source_files.pop.dup : {}
-      @source_files     = source_files
-      @output_directory = File.expand_path(options.delete(:output) || OUTPUT_DIR)
-      @generator        = options.delete(:generator) || Generators::Html::Website
-      @parser           = Parser.new(source)
-      @options          = options
+      options              = source_files.last.is_a?(Hash) ? source_files.pop.dup : {}
+      @source_files        = source_files
+      @output_directory    = File.expand_path(options.delete(:output) || OUTPUT_DIR)
+      @generator           = options.delete(:generator) || Generators::Html::Website
+      @parser              = Parser.new(source)
+      @options             = options
     end
     
     def source

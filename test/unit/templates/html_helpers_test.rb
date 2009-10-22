@@ -16,14 +16,11 @@ class HtmlHelpersTest < Test::Unit::TestCase
       def path_to(foo)
         '/some/path' # Not tested here, although it should
       end
-      
-      def syntax_highlighter
-        PDoc::Generators::Html::SyntaxHighlighter.new
-      end
     end
   end
   
   def test_htmlize_syntax_highlight
+    PDoc::Generators::Html::Website.syntax_highlighter = PDoc::Generators::Html::SyntaxHighlighter.new
     doc = parse_doc(<<-DOC)
 Element#foo() -> Element
 

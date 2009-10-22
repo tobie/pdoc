@@ -46,10 +46,9 @@ module PDoc
       class DocPage < Page
         include Helpers::LinkHelper, Helpers::CodeHelper, Helpers::MenuHelper
         
-        attr_reader :syntax_highlighter, :doc_instance, :depth, :root
+        attr_reader :doc_instance, :depth, :root
         
-        def initialize(syntax_highlighter, template, layout = "layout", variables = {})
-          @syntax_highlighter = syntax_highlighter
+        def initialize(template, layout = "layout", variables = {})
           if layout.is_a?(Hash)
             variables = layout
             layout = "layout"
