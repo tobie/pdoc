@@ -6,8 +6,8 @@ module PDoc
         
         attr_reader :highlighter
         
-        def initialize(highlighter = :none)
-          @highlighter = highlighter.to_sym
+        def initialize(h = nil)
+          @highlighter = h.nil? ? :none : h.to_sym
         end
         
         def parse(input)
