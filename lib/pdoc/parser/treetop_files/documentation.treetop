@@ -55,7 +55,7 @@ grammar Documentation
   end
   
   rule namespace_doc
-    start line ebnf:namespace text comment_end <Namespace>
+    start line space* ebnf:namespace text comment_end <Namespace>
   end
   
   rule start
