@@ -30,6 +30,10 @@ module PDoc
         end
         
         def include(path, options = {})
+          r = ''
+          options.each { |k, v| r << "#{k.to_s} = options[:#{k}];" }
+          eval(r)
+          
           if options[:collection]
             options[:collection].map { |object| Template.new(path, @templates_directory).result(binding) }.join("\n")
           else
