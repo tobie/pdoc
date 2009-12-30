@@ -51,7 +51,7 @@ if (Prototype.Browser.MobileSafari)
 **/
 
 /**
- *  == dom ==
+ *  == DOM ==
  *  DOM extensions.
 **/
  
@@ -2062,7 +2062,7 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
     this.updater = new Ajax.Updater(this.container, this.url, this.options);
   }
 });
-/** section: dom
+/** section: DOM
  *  $(element) -> Element
  *  $(element...) -> [Element...]
  *  - element (Element | String): A reference to an existing DOM node _or_ a
@@ -2098,7 +2098,7 @@ if (Prototype.BrowserFeatures.XPath) {
 
 /*--------------------------------------------------------------------------*/
 
-/** section: dom
+/** section: DOM
  * Node
 **/
 if (!window.Node) var Node = { };
@@ -2121,7 +2121,7 @@ if (!Node.ELEMENT_NODE) {
   });
 }
 
-/** section: dom
+/** section: DOM
  *  class Element
 **/
 (function() {
@@ -3559,7 +3559,7 @@ Element.addMethods = function(methods) {
   if (Element.extend.refresh) Element.extend.refresh();
   Element.cache = { };
 };
-/** section: dom
+/** section: DOM
  *  class Element.Layout
 **/
 Element.Layout = Class.create({
@@ -4106,7 +4106,7 @@ Object.extend(Element.Methods, {
   }
 });
 
-/** section: dom
+/** section: DOM
  * document.viewport
 **/ 
 

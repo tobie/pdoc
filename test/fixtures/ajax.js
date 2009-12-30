@@ -1,7 +1,7 @@
 
  
  /**
-  * == dom ==
+  * == DOM ==
   * The DOM section
   **/
   
@@ -20,7 +20,7 @@
     **/
 
 
-/** section: dom
+/** section: DOM
  * class Element
  * The Element class
  **/
@@ -32,7 +32,7 @@
  * the $ function
  **/
  
- /** section: dom
+ /** section: DOM
   * $$(selector) -> Array
   * the $$ function
   **/
@@ -527,7 +527,7 @@ Ajax.PeriodicalUpdater = Klass.create(Ajax.Base, {
 });
 
  
- /** deprecated, section: dom
+ /** deprecated, section: DOM
   * Toggle
   **/
   

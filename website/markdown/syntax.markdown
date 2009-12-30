@@ -17,7 +17,7 @@ The first line of a comment is reserved for tags. Tags are optional. Tags are se
 
 Currently accepted tags are: `deprecated`, `section:`, `alias of:`, `related to:`
 
-    /** deprecated, section: dom, alias of: Element#descendantOf
+    /** deprecated, section: DOM, alias of: Element#descendantOf
      *  Element#childOf(@element, className) -> Element
      *  ...
      **/

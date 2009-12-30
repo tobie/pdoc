@@ -36,10 +36,10 @@ class DocumentationTest < Test::Unit::TestCase
   end
   
   def test_sections
-    assert_equal %w[ajax dom lang],                fixtures.sections.map(&:name)
+    assert_equal %w[DOM ajax lang],                fixtures.sections.map(&:name)
     assert_equal [Section, Section, Section],      fixtures.sections.map(&:class)
-    assert_equal %w[Ajax],                         fixtures.sections.first.children.map(&:name)
-    assert_equal %w[Ajax Base Manager Request Responders], fixtures.sections.first.descendants.map(&:name)
+    assert_equal %w[Ajax],                         fixtures.sections[1].children.map(&:name)
+    assert_equal %w[Ajax Base Manager Request Responders], fixtures.sections[1].descendants.map(&:name)
   end
   
   def test_find_by_name
@@ -172,8 +172,8 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal %w[bar foo],              fixture.instance_methods.map(&:name)
     assert_equal [],                       fixture.instance_properties
     assert_equal %w[$],                    fixture.related_utilities.map(&:name)
-    assert_equal "dom",                    fixture.doc_parent.name
-    assert_equal %w[dom],                  fixture.ancestors.map(&:name)
+    assert_equal "DOM",                    fixture.doc_parent.name
+    assert_equal %w[DOM],                  fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
     
@@ -245,19 +245,19 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "",                       fixture.namespace_string
     assert_equal "$",                      fixture.full_name
     assert_equal nil,                      fixture.klass_name
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal fixtures.find_by_name("Element"), fixture.related_to
     assert_equal nil,                      fixture.namespace
     assert                                !fixture.deprecated?
     assert                                !fixture.alias?
-    assert_equal "dom",                    fixture.doc_parent.name
-    assert_equal %w[dom],                  fixture.ancestors.map(&:name)
+    assert_equal "DOM",                    fixture.doc_parent.name
+    assert_equal %w[DOM],                  fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
     
     fixture = fixtures.find_by_name("$$")
     assert_equal Utility,                  fixture.class
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal nil,                      fixture.related_to
   end
   
@@ -348,14 +348,14 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "Element",                fixture.klass_name
     assert_equal Klass,                    fixture.klass.class
     assert_equal "Element",                fixture.klass.full_name
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal Klass,                    fixture.namespace.class
     assert_equal "Element",                fixture.namespace.full_name
     assert                                !fixture.deprecated?
     assert                                !fixture.alias?
     assert                                 fixture.methodized?
     assert_equal "Element",                fixture.doc_parent.name
-    assert_equal %w[Element dom],          fixture.ancestors.map(&:name)
+    assert_equal %w[Element DOM],          fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
   end
@@ -388,7 +388,7 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal [],                       fixture.mixins
     assert_equal "Toggle",                 fixture.name
     assert_equal nil,                      fixture.klass
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal "",                       fixture.namespace_string
     assert_equal nil,                      fixture.namespace
     assert                                 fixture.deprecated?
@@ -398,8 +398,8 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal [],                       fixture.instance_methods
     assert_equal [],                       fixture.instance_properties
     assert_equal [],                       fixture.related_utilities
-    assert_equal "dom",                    fixture.doc_parent.name
-    assert_equal %w[dom],                  fixture.ancestors.map(&:name)
+    assert_equal "DOM",                    fixture.doc_parent.name
+    assert_equal %w[DOM],                  fixture.ancestors.map(&:name)
     assert_equal %w[],                     fixture.children.map(&:name)
     assert_equal %w[],                     fixture.descendants.map(&:name)
     
@@ -409,13 +409,13 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "Toggle",                 fixture.namespace_string
     assert_equal "Toggle.display",         fixture.full_name
     assert_equal nil,                      fixture.klass_name
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal Namespace,                fixture.namespace.class
     assert_equal "Toggle",                 fixture.namespace.full_name
     assert                                 fixture.deprecated?
     assert                                !fixture.alias?
     assert_equal "Toggle",                 fixture.doc_parent.name
-    assert_equal %w[Toggle dom],           fixture.ancestors.map(&:name)
+    assert_equal %w[Toggle DOM],           fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
     
@@ -425,13 +425,13 @@ class DocumentationTest < Test::Unit::TestCase
     assert_equal "Toggle",                 fixture.namespace_string
     assert_equal "Toggle.foo",             fixture.full_name
     assert_equal nil,                      fixture.klass_name
-    assert_equal "dom",                    fixture.section.name
+    assert_equal "DOM",                    fixture.section.name
     assert_equal Namespace,                fixture.namespace.class
     assert_equal "Toggle",                 fixture.namespace.full_name
     assert                                 fixture.deprecated?
     assert                                !fixture.alias?
     assert_equal "Toggle",                 fixture.doc_parent.name
-    assert_equal %w[Toggle dom],           fixture.ancestors.map(&:name)
+    assert_equal %w[Toggle DOM],           fixture.ancestors.map(&:name)
     assert_equal [],                       fixture.children
     assert_equal [],                       fixture.descendants
   end
@@ -476,4 +476,45 @@ class DocumentationTest < Test::Unit::TestCase
     assert                                 fixture.alias?
     assert_equal "foo",                    fixture.alias_of.name
   end
+  
+  def test_weird
+    weird = parse(<<-EOS
+    
+      /** section: DOM
+       *  document
+       *
+       *  Prototype extends the built-in `document` object with several convenience
+       *  methods related to events.
+      **/
+      
+      
+    EOS
+    )
+    doc = weird.find_by_name("document")
+    assert_equal 'document', doc.name
+    assert_equal Documentation::Namespace, doc.class
+  end
+  
+  def test_weirder
+    weird = parse(<<-EOS
+    
+    /**
+     *  document.viewport
+     *
+     *  The `document.viewport` namespace contains methods that return information
+     *  about the viewport &mdash; the rectangle that represents the portion of a web
+     *  page within view. In other words, it's the browser window minus all chrome.
+    **/
+      
+      
+    EOS
+    )
+    doc = weird.find_by_name("document.viewport")
+    assert_equal 'viewport', doc.name
+    assert_equal Documentation::Namespace, doc.class
+  end
+  
+  def test_weirdest
+
+  end  
 end
