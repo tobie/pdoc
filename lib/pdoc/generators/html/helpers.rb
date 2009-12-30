@@ -163,6 +163,16 @@ module PDoc
             end
             result << '</code></pre>'
             result.join('')
+          def breadcrumb(obj, short = false)
+            result = []
+            original_obj = obj
+            begin
+              result << auto_link(obj, short)
+            end while obj = obj.namespace
+            unless original_obj.is_a?(Documentation::Section)
+              result << auto_link(original_obj.section, short)
+            end
+            result.reverse!
           end
         end
         
