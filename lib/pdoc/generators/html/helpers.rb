@@ -65,14 +65,26 @@ module PDoc
             "../" * depth
           end
 
-          def path_to(obj)
-            return path_to_section(obj) if obj.is_a?(Documentation::Section)
-            path = path_prefix << [obj.section.name.downcase].concat(obj.namespace_string.downcase.split('.')).join("/")
-            has_own_page?(obj) ? "#{path}/#{obj.id.downcase}.html" : "#{path}.html##{dom_id(obj)}"
+          def path_to(obj, methodized = false)
+            path_prefix << raw_path_to(obj, methodized)
           end
           
+          def raw_path_to(obj, methodized = false)
+            return "#{obj.name.downcase}/" if obj.is_a?(Documentation::Section)
+            
+            path = [obj.section.name.downcase].concat(obj.namespace_string.downcase.split('.')).join("/")
+            if obj.is_a?(Documentation::InstanceMethod) || obj.is_a?(Documentation::InstanceProperty)
+              "#{path}/prototype/#{obj.id.downcase}/"
+            elsif obj.is_a?(Documentation::KlassMethod)
+              methodized ? "#{path}/prototype/#{obj.id.downcase}/" : "#{path}/#{obj.id.downcase}/"
+            else
+              "#{path}/#{obj.id.downcase}/"
+            end
+          end
+          
+          # deprecated
           def path_to_section(obj)
-            "#{path_prefix}#{obj.id.gsub(/\s/, '_')}.html"
+            "#{obj.name.downcase}/"
           end
           
           def section_from_name(name)

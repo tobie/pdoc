@@ -1,6 +1,6 @@
 if (!window.PDoc) window.PDoc = {};
 PDoc.elements = {
   <%= @root.map { |e, i| 
-    "'#{e.full_name}': { 'name': '#{e.full_name}', 'type': '#{e.type}', 'path': '#{path_to(e)}' }" }.join(",\n") 
+    "'#{e.full_name}': { 'name': '#{e.full_name}', 'type': '#{e.type}', 'path': '#{raw_path_to(e)}' }" }.join(",\n") 
   %>
 };

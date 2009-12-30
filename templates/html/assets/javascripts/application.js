@@ -295,7 +295,7 @@ PDoc.Sidebar.Filterer = Class.create({
     var li = new Element('li', { 'class': 'menu-item' });
     var a = new Element('a', {
       'class': obj.type.gsub(/\s/, '_'),
-      'href':  PDoc.pathPrefix + this._fixPath(obj.path)
+      'href':  PDoc.pathPrefix + obj.path
     }).update(obj.name);
     
     li.appendChild(a);
@@ -321,12 +321,6 @@ PDoc.Sidebar.Filterer = Class.create({
     this.element.observe('keydown', this.observers.keydown);
     document.observe('keyup', this.observers.keyup);
   },
-  
-  // Given a path with any number of `../`s in front of it, remove them all.
-  // TODO: Fix this a better way.
-  _fixPath: function(path) {
-    return path.replace('../', '');
-  },  
   
   keydown: function(event) {
     if (!PDoc.Sidebar.Filterer.INTERCEPT_KEYS.include(event.keyCode))
