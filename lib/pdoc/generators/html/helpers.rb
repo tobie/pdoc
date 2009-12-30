@@ -92,16 +92,11 @@ module PDoc
           end          
 
           def auto_link(obj, short = true, attributes = {})
-            if obj.is_a?(String) && obj =~ /\ssection$/
-              obj = section_from_name(obj.gsub(/\ssection$/, ''))
+            if obj.is_a?(String)
+              original = obj
+              obj = root.find_by_name(obj)
+              return original unless obj
             end
-            obj.sub!('...', '…') if obj.is_a?(String)
-            if obj.is_a?(String) && obj.strip =~ /^\[.+\]$|\|/
-              return obj.gsub(/[^\],.…\s\|\[]+/) { |item| auto_link(item, short, attributes) }
-            end
-            obj = root.find_by_name(obj) || obj if obj.is_a?(String)
-            return nil if obj.nil?
-            return obj if obj.is_a?(String)
             name = short ? obj.name : obj.full_name
             link_to(name, path_to(obj), { :title => "#{obj.full_name} (#{obj.type})" }.merge(attributes))
           end

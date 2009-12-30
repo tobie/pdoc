@@ -19,29 +19,6 @@ class HtmlHelpersTest < Test::Unit::TestCase
     end
   end
   
-  def test_auto_link
-    html = run_helper(:auto_link, 'Element')
-    assert_match %r(<a.*?>Element</a>), html, 'Simple namespace not linked'
-    # Ellipsis typographical conversion: '...' -> '…'
-    doc = parse_doc('Element#foo() -> Element...')
-    html = run_helper(:auto_link, doc, doc.to_a.last.returns)
-    assert_equal 'Element…', html, 'Ellipsis not converted'
-    # Per-item processing of alternatives (w/ or w/o '...'/'…')
-    doc = parse_doc('Element.fakeMethod( ) -> Element | Array')
-    html = run_helper(:auto_link, doc, doc.to_a.last.returns)
-    assert_match %r(<a.*?>Element</a>), html, 'Namespace in alternative not linked'
-    assert_no_match %r(<a.*?>Array</a>), html, 'Generic type in alternative linked'
-    doc = parse_doc('Element.fakeMethod( ) -> [Element...] | Array')
-    html = run_helper(:auto_link, doc, doc.to_a.last.returns)
-    assert_match %r(<a.*?>Element</a>…), html, 'Ellipsis-bearing namespace in alternative not linked'
-    # Per-item processing of arrays (w/ or w/o '...'/'…')
-    doc = parse_doc('Element#foo() -> [Element, String]')
-    html = run_helper(:auto_link, doc, doc.to_a.last.returns)
-    assert_match %r(<a.*?>Element</a>), html, 'Namespace in array not linked'
-    doc = parse_doc('Element#foo() -> [Element..., String]')
-    html = run_helper(:auto_link, doc, doc.to_a.last.returns)
-    assert_match %r(<a.*?>Element</a>…), html, 'Ellipsis-bearing namespace in array not linked'
-  end
   
   def test_methodized_synopsis
     html = run_helper(:method_synopsis, 'Element.down(@element[,selector][,index=0]) -> Element')
