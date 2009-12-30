@@ -29,11 +29,11 @@ module PDoc
           File.open(filename, "w+") { |f| f << render }
         end
         
-        def include(path, options)
-          if object = options[:object]
-            Template.new(path, @templates_directory).result(binding)
-          else
+        def include(path, options = {})
+          if options[:collection]
             options[:collection].map { |object| Template.new(path, @templates_directory).result(binding) }.join("\n")
+          else
+            Template.new(path, @templates_directory).result(binding)
           end
         end
         
