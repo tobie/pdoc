@@ -122,6 +122,17 @@ module PDoc
             end
           end
           
+          def auto_link_types(types, short = true)
+            types = types.split(/\s+\|\s+/) if types.is_a?(String)
+            types.map do |t|
+              if match = /^\[([\w\d\$\.\(\)#]*[\w\d\$\(\)#])...\s*\]$/.match(t) # e.g.: [Element...]
+                "[#{auto_link(match[1], short)}…]"
+              else
+                auto_link(t, short)
+              end
+            end
+          end
+          
           def dom_id(obj)
             "#{obj.id}-#{obj.type.gsub(/\s+/, '_')}"
           end
