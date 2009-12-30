@@ -22,6 +22,8 @@ module PDoc
           language = :javascript if language.nil?
           case highlighter
             when :none
+              require 'cgi'
+              code = CGI.escapeHTML(code)
               "<pre><code class=\"#{language}\">#{code}</code></pre>"
             when :coderay
               require 'coderay'
