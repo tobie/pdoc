@@ -17,6 +17,10 @@ require 'pdoc/generators'
 require 'pdoc/parser'
 
 module PDoc
+  def self.run(options = {})
+    Runner.new(options.dup).run
+  end
+  
   def self.copy_templates(template_type, destination)
     dir = File.expand_path(destination)
     raise "File already exists: #{destination}" if File.exist?(dir)
