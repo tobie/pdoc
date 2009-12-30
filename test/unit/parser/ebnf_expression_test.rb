@@ -378,12 +378,5 @@ class EbnfExpressionTest < Test::Unit::TestCase
     assert_equal [nil, nil, "true"],               parse(ebnf2).arguments.map(&:default_value)
     assert_equal [false, true, true],              parse(ebnf).arguments.map(&:optional?)
     assert_equal [false, false, true],             parse(ebnf2).arguments.map(&:optional?)
-    
-    # Check instance-based, default signatures
-    assert_equal 'Element#down([selector][,index=0])', parse(ebnf).signature
-    assert_equal 'Element#writeAttribute(attribute[, value = true])', parse(ebnf2).signature
-    # Check static signatures
-    assert_equal 'Element.down(element[,selector][,index=0])', parse(ebnf).static_signature
-    assert_equal 'Element.writeAttribute(element, attribute[, value = true])', parse(ebnf2).static_signature
   end
 end

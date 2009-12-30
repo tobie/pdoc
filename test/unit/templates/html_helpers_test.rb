@@ -19,72 +19,7 @@ class HtmlHelpersTest < Test::Unit::TestCase
     end
   end
   
-  
-  def test_methodized_synopsis
-    html = run_helper(:method_synopsis, 'Element.down(@element[,selector][,index=0]) -> Element')
-    assert_equal 2, html.scan('&rArr;').size, 'Missing signature (1 instead of 2)'
-    assert html.include?('Element.down(element[,selector][,index=0])'), 'Missing static signature'
-    assert html.include?('Element#down([selector][,index=0])'), 'Missing instance signature'
-    
-    html = run_helper(:method_synopsis, %(
-    Element.up(@element[, expression[, index = 0]]) -> Element
-    Element.up(@element[, index = 0]) -> Element
-    ))
-    
-    assert_equal 3, html.scan('&rArr;').size, 'Missing signature(s) (should have 3)'
-    assert html.include?('Element.up(element[, expression[, index = 0]])'), 'Missing static signature'
-    assert html.include?('Element#up([expression[, index = 0]])'), 'Missing instance signature 1'
-    assert html.include?('Element#up([index = 0])'), 'Missing instance signature 2'
-  end
-  
-  def test_synopsis
-    # Static signature
-    html = run_helper(:method_synopsis, 'Ajax.getTransport( ) -> XMLHttpRequest | ActiveXObject')
-    assert_equal 1, html.scan('&rArr;').size, 'Incorrect signature count'
-    assert html.include?('Ajax.getTransport()'), 'Missing static signature'
-    # Instance signature
-    html = run_helper(:method_synopsis, 'Ajax.Request#request(url) -> undefined')
-    assert_equal 1, html.scan('&rArr;').size, 'Incorrect signature count'
-    assert html.include?('Ajax.Request#request(url)'), 'Missing instance signature'
-    # Multiple signatures
-    html = run_helper(:method_synopsis, %(
-    $(element) -> Element
-    $(element...) -> [Element...]
-    ))
-    assert_equal 2, html.scan('&rArr;').size, 'Incorrect signature count'
-    assert html.include?('$(element)'), 'Missing single-argument signature'
-    assert html.include?('$(element...)'), 'Missing vararg signature'
-  end
-  
-  def test_htmlize_syntax_highlight
-    PDoc::Generators::Html::Website.syntax_highlighter = PDoc::Generators::Html::SyntaxHighlighter.new
-    doc = parse_doc(<<-DOC)
-Element#foo() -> Element
-
-Example:
-    
-    var foo = "bar";
-DOC
-      html = run_helper(:htmlize, doc, doc.to_a.last.description)
-      assert_equal("<p>Example:</p>\n<pre><code class='javascript'>var foo = \"bar\";</code></pre>", html)
-    end
-  
-  def parse_doc(source)
-    src = %(
-/** section: dom
- * class Element
- **/
-
-/**
-#{source.strip.map { |line| " * #{line}" }}
- **/
-    )
-  PDoc::Parser.new(src).parse
-  end
-  
-  def run_helper(method, root, arg = nil)
-    root = parse_doc(root) if root.is_a?(String)
-    @helper.root = root
-    @helper.send(method, arg || root.to_a.last)
+  def test_truth
+    assert true
   end
 end

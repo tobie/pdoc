@@ -144,25 +144,36 @@ module PDoc
         end
         
         module CodeHelper
-          def method_synopsis(object)
+          def methodize_signature(sig)
+            sig.sub(/\.([\w\d\$]+)\((.*?)(,\s*|\))/) do
+              first_arg = $2.to_s.strip
+              prefix = first_arg[-1, 1] == '[' ? '([' : '('
+              rest = $3 == ')' ? $3 : ''
+              "##{$1}#{prefix}#{rest}"
+            end
+          end
+          
+          def methodize_full_name(obj)
+            obj.full_name.sub(/\.([^.]+)$/, '#\1')
+          end
+          
+          def method_synopsis(object, methodized = false)
             result = []
-            result << '<pre class="syntax"><code class="ebnf">'
-            if object.is_a?(Documentation::Property)
-              result << "#{object.signature}"
-            else
-              ebnfs = object.ebnf_expressions.dup
-              if object.is_a?(Documentation::KlassMethod) && object.methodized?
-                result << "#{object.static_signature} &rArr; #{auto_link(object.returns, false)}<br />"
-                result << "#{object.signature} &rArr; #{auto_link(object.returns, false)}"
-                ebnfs.shift
-                result.last << '<br />' unless ebnfs.empty?
-              end
-              ebnfs.each do |ebnf|
-                result << "#{ebnf.signature} &rArr; #{auto_link(ebnf.returns, false)}<br />"
+            object.ebnf_expressions.each do |ebnf|
+              if object.is_a?(Documentation::Constructor)
+                result << "#{object.full_name}#{ebnf.args.text_value}"
+              else
+                types = auto_link_types(ebnf.returns, false).join(' | ')
+                if object.is_a?(Documentation::KlassMethod) && object.methodized? && methodized
+                  result << "#{methodize_signature(ebnf.signature)} &rarr; #{types}"
+                else
+                  result << "#{ebnf.signature} &rarr; #{types}"
+                end
               end
             end
-            result << '</code></pre>'
-            result.join('')
+            result
+          end
+          
           def breadcrumb(obj, short = false)
             result = []
             original_obj = obj
