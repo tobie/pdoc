@@ -60,16 +60,7 @@ module EbnfExpression
       js_namespace.to_a.slice(0..-2).join(".")
     end
     
-    # If methodized, go instance-like.  Otherwise remain static-like.
     def signature
-      return static_signature unless methodized?
-      static_signature.sub('.', '#').sub(/\((.*?)(,\s*|\))/) {
-        first_arg = $1.to_s.strip
-        (first_arg[-1, 1] == '[' ? '([' : '(') + ($2 == ')' ? $2 : '')
-      }
-    end
-
-    def static_signature
       "#{namespace}.#{name}#{args.text_value.sub('@', '')}"
     end
   end
@@ -142,7 +133,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{namespace}.#{name}#{return_value}"
+      "#{namespace}.#{name}"
     end
   end
   
@@ -164,7 +155,7 @@ module EbnfExpression
     end
     
     def signature
-      "#{namespace}##{name}#{return_value}"
+      "#{namespace}##{name}"
     end
   end
   
@@ -183,6 +174,10 @@ module EbnfExpression
     
     def returns
       value.text_value.strip
+    end
+    
+    def signature
+      "#{namespace}.#{name}"
     end
   end
   
