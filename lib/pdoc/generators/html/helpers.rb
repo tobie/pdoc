@@ -113,8 +113,6 @@ module PDoc
             end
             content.gsub(/\[\[([a-zA-Z$\.#]+)(?:\s+([^\]]+))?\]\]/) do |m|
               if doc_instance = root.find_by_name($1)
-                $2 ? link_to($2, path_to(doc_instance)) :
-                  auto_link_code(doc_instance, false)
                 $2 ? link_to($2, path_to(doc_instance)) : auto_link_code(doc_instance, false)
               else
                 $1
