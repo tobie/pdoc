@@ -107,7 +107,7 @@ module PDoc
           end
           
           def auto_link_code(obj, short = true, attributes = {})
-            return "<code>#{auto_link(obj, short, attributes)}</code>"
+            "<code>#{auto_link(obj, short, attributes)}</code>"
           end
 
           def auto_link_content(content)
