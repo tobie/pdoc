@@ -189,33 +189,71 @@ module PDoc
         
         module MenuHelper
           def menu(obj)
-            class_names = menu_class_name(obj)
-            html = <<-EOS
-              <div class='menu-item'>
-                #{auto_link(obj, false, :class => class_names_for(obj))}
-              </div>
-            EOS
-            unless obj.children.empty?
-              html << content_tag(:ul, obj.children.map { |n|menu(n) }.join("\n"))
+            html = menu_item(obj, :short => false)
+            
+            if !obj.children.empty?
+              list_items = obj.children.map { |n| menu(n) }.join("\n")
+              li_class_names = obj.type == "section" ? "menu-section" : ""
+              html << content_tag(:ul, list_items, :class => li_class_names)
+            elsif obj == doc_instance && obj.respond_to?(:constants)
+              html << submenu(obj)
+            elsif doc_instance && doc_instance.respond_to?(:namespace)
+              namespace = doc_instance.namespace
+              html << submenu(namespace) if namespace == obj && obj.respond_to?(:constants)
             end
-            content_tag(:li, html, :class => class_names)
-          end
-
-          def menu_class_name(obj)
-            if !doc_instance
-              nil
-            elsif obj == doc_instance
-              "current"
-            elsif obj.descendants.include?(doc_instance)
-              "current-parent"
-            else
-              nil
-            end
+            
+            content_tag(:li, html)
           end
           
-          def class_names_for(obj)
-            classes = [obj.type.gsub(/\s+/, '-')]
+          def menu_item(obj, options = {})
+            name = options[:short] ? obj.name : obj.full_name
+            link = link_to(name, path_to(obj, options[:methodized]), {
+              :title => "#{obj.full_name} (#{obj.type})",
+              :class => class_names_for(obj, options)
+            })
+            content_tag(:div, link, :class => 'menu-item')
+          end
+          
+          def submenu(obj)
+            items = []
+            if obj.respond_to?(:constructor) && obj.constructor
+              items << content_tag(:li, menu_item(obj.constructor, :short => true))
+            end
+            [ :constants,
+              :klass_methods,
+              :klass_properties,
+            ].each do |prop|
+              obj.send(prop).map { |item| items << content_tag(:li, menu_item(item, :short => true)) }
+            end
+            instance_methods = obj.instance_methods.dup
+            methodized_methods = obj.klass_methods.select { |m| m.methodized? }
+            instance_methods.concat(methodized_methods)
+            instance_methods = instance_methods.sort_by { |e| e.name }
+            instance_methods.map do |item|
+              items << content_tag(:li, menu_item(item, :short => true, :methodized => true ))
+            end
+            obj.instance_properties.map { |item| items << content_tag(:li, menu_item(item, :short => true)) }
+            
+            content_tag(:ul, items.join("\n"))
+          end
+          
+          def class_names_for(obj, options = {})
+            classes = []
+            if obj.is_a?(Documentation::KlassMethod) && obj.methodized? && options[:methodized]
+              classes << 'instance-method'
+            else
+              classes << obj.type.gsub(/\s+/, '-')
+            end
             classes << "deprecated" if obj.deprecated?
+            if doc_instance
+              if obj == doc_instance
+                classes << "current"
+              elsif doc_instance.namespace == obj ||
+                obj.descendants.include?(doc_instance) ||
+                  obj.descendants.include?(doc_instance.namespace)
+                classes << "current-parent"
+              end
+            end
             classes.join(" ")
           end
         end
