@@ -60,18 +60,13 @@ module PDoc
           Dir.chdir(path)
           
           render_index
+          copy_assets
           
           root.sections.each do |section|
             @depth = 0
-            mkdir(section.name.downcase)
-            render_template('section', "#{section.id}.html", {:doc_instance => section})
+            render_template('section', { :doc_instance => section })
           end
-          
-          root.utilities.each(&method(:render_object))
-          root.namespaces.each(&method(:render_object))
-          
-          copy_assets
-          
+
           dest = File.join("javascripts", "item_index.js")
           DocPage.new("item_index.js", false, variables).render_to_file(dest)
         end
@@ -81,9 +76,37 @@ module PDoc
           DocPage.new('index', 'layout', vars).render_to_file('index.html')
         end
         
-        def render_template(template, dest, var = {})
+        def render_template(template, var = {})
+          @depth += 1
+          doc = var[:doc_instance]
+          dest = path(doc, var[:methodized])
           log "\c[[F\c[[K    Rendering: #{dest}"
-          DocPage.new(template, variables.merge(var)).render_to_file(dest)
+          FileUtils.mkdir_p(dest)
+          DocPage.new(template, variables.merge(var)).render_to_file(File.join(dest, 'index.html'))
+          render_children(doc)
+          @depth -= 1
+        end
+        
+        def render_children(obj)
+          if obj.is_a?(Documentation::Section)
+            obj.children.each { |c| is_leaf?(c) ? render_leaf(c) : render_node(c) }
+          else
+            obj.children.select { |c| c.namespace === obj }.each(&method(:render_node))
+          end
+          
+          render_leaf(obj.constructor) if obj.respond_to?(:constructor) && obj.constructor
+          
+          obj.instance_methods.each(&method(:render_leaf))    if obj.respond_to?(:instance_methods)
+          obj.instance_properties.each(&method(:render_leaf)) if obj.respond_to?(:instance_properties)
+          obj.klass_properties.each(&method(:render_leaf))    if obj.respond_to?(:klass_properties)
+          obj.constants.each(&method(:render_leaf))           if obj.respond_to?(:constants)
+          
+          if obj.respond_to?(:klass_methods)
+            obj.klass_methods.each do |m|
+              render_leaf(m)
+              render_leaf(m, true) if m.methodized?
+            end
+          end
         end
         
         # Copies the content of the assets folder to the generated website's
@@ -92,11 +115,15 @@ module PDoc
           FileUtils.cp_r(Dir.glob(File.join(@templates_directory, "assets", "**")), '.')
         end
         
-        def render_object(object)
-          template, path = find_template_name(object), path(object)
-          @depth = path.size
-          dest = File.join(path, "#{object.id}.html")
-          render_template(template, dest, {:doc_instance => object})
+        def render_leaf(object, methodized = false)
+          is_proto_prop = is_proto_prop?(object, methodized)
+          @depth += 1 if is_proto_prop
+          render_template('leaf', { :doc_instance => object, :methodized => methodized })
+          @depth -= 1 if is_proto_prop
+        end
+        
+        def render_node(object)          
+          render_template('node', { :doc_instance => object })
         end
         
         private
@@ -104,12 +131,23 @@ module PDoc
             {:root => root, :depth => @depth, :templates_directory => @templates_directory}
           end
           
-          def path(object)
-            [object.section.name.downcase].concat(object.namespace_string.downcase.split('.'))
+          def path(object, methodized = false)
+            return object.name.downcase if object.is_a?(Documentation::Section)
+            path = [object.section.name.downcase].concat(object.namespace_string.downcase.split('.'))
+            path << 'prototype' if is_proto_prop?(object, methodized)
+            File.join(path, object.id)
           end
           
-          def find_template_name(obj)
-            obj.is_a?(Documentation::Utility) ? "utility" : "namespace"
+          def is_proto_prop?(object, methodized = false)
+            object.is_a?(Documentation::InstanceMethod) ||
+              object.is_a?(Documentation::InstanceProperty) ||
+                (methodized && object.is_a?(Documentation::KlassMethod))
+          end
+          
+          def is_leaf?(object)
+            object.is_a?(Documentation::Method) ||
+              object.is_a?(Documentation::Property) ||
+                object.is_a?(Documentation::Constant)
           end
           
           def index_page_content

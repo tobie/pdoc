@@ -91,42 +91,44 @@ module PDoc
             root.sections.find { |section| section.name == name }
           end          
 
-          def auto_link(obj, short = true, attributes = {})
+          def auto_link(obj, options = {})
             if obj.is_a?(String)
               original = obj
               obj = root.find_by_name(obj)
               return original unless obj
             end
-            name = short ? obj.name : obj.full_name
-            link_to(name, path_to(obj), { :title => "#{obj.full_name} (#{obj.type})" }.merge(attributes))
+            name = options.delete(:name) == :short ? obj.name : obj.full_name
+            type = obj.is_a?(Documentation::KlassMethod) && options[:methodized] ? 'instance method' : obj.type
+            path = path_to(obj, options.delete(:methodized))
+            link_to(name, path, { :title => "#{obj.full_name} (#{type})" }.merge(options))
           end
           
-          def auto_link_code(obj, short = true, attributes = {})
-            "<code>#{auto_link(obj, short, attributes)}</code>"
+          def auto_link_code(obj, options = {})
+            "<code>#{auto_link(obj, options)}</code>"
           end
 
           def auto_link_content(content)
             return '' if content.nil?
             content.gsub!(/\[\[([a-zA-Z]+)\s+section\]\]/) do |m|
-              result = auto_link(section_from_name($1), false)
+              result = auto_link(section_from_name($1), :name => :long)
               result
             end
             content.gsub(/\[\[([a-zA-Z$\.#]+)(?:\s+([^\]]+))?\]\]/) do |m|
               if doc_instance = root.find_by_name($1)
-                $2 ? link_to($2, path_to(doc_instance)) : auto_link_code(doc_instance, false)
+                $2 ? link_to($2, path_to(doc_instance)) : auto_link_code(doc_instance, :name => :long)
               else
                 $1
               end
             end
           end
           
-          def auto_link_types(types, short = true)
+          def auto_link_types(types, options = {})
             types = types.split(/\s+\|\s+/) if types.is_a?(String)
             types.map do |t|
               if match = /^\[([\w\d\$\.\(\)#]*[\w\d\$\(\)#])...\s*\]$/.match(t) # e.g.: [Element...]
-                "[#{auto_link(match[1], short)}…]"
+                "[#{auto_link(match[1], options)}…]"
               else
-                auto_link(t, short)
+                auto_link(t, options)
               end
             end
           end
@@ -134,11 +136,6 @@ module PDoc
           def dom_id(obj)
             "#{obj.id}-#{obj.type.gsub(/\s+/, '_')}"
           end
-          
-          private
-            def has_own_page?(obj)
-              obj.is_a?(Documentation::Namespace) || obj.is_a?(Documentation::Utility)
-            end
         end
         
         module CodeHelper
@@ -161,7 +158,7 @@ module PDoc
               if object.is_a?(Documentation::Constructor)
                 result << "#{object.full_name}#{ebnf.args.text_value}"
               else
-                types = auto_link_types(ebnf.returns, false).join(' | ')
+                types = auto_link_types(ebnf.returns, :name => :long).join(' | ')
                 if object.is_a?(Documentation::KlassMethod) && object.methodized? && methodized
                   result << "#{methodize_signature(ebnf.signature)} &rarr; #{types}"
                 else
@@ -172,14 +169,14 @@ module PDoc
             result
           end
           
-          def breadcrumb(obj, short = false)
+          def breadcrumb(obj, options)
             result = []
             original_obj = obj
             begin
-              result << auto_link(obj, short)
+              result << auto_link(obj, options)
             end while obj = obj.namespace
             unless original_obj.is_a?(Documentation::Section)
-              result << auto_link(original_obj.section, short)
+              result << auto_link(original_obj.section, options)
             end
             result.reverse!
           end
@@ -187,7 +184,7 @@ module PDoc
         
         module MenuHelper
           def menu(obj)
-            html = menu_item(obj, :short => false)
+            html = menu_item(obj, :name => :long)
             
             if !obj.children.empty?
               list_items = obj.children.map { |n| menu(n) }.join("\n")
@@ -204,33 +201,30 @@ module PDoc
           end
           
           def menu_item(obj, options = {})
-            name = options[:short] ? obj.name : obj.full_name
-            link = link_to(name, path_to(obj, options[:methodized]), {
-              :title => "#{obj.full_name} (#{obj.type})",
-              :class => class_names_for(obj, options)
-            })
-            content_tag(:div, link, :class => 'menu-item')
+            options = options.dup
+            options[:class] = class_names_for(obj, options)
+            content_tag(:div, auto_link(obj, options), :class => 'menu-item')
           end
           
           def submenu(obj)
             items = []
             if obj.respond_to?(:constructor) && obj.constructor
-              items << content_tag(:li, menu_item(obj.constructor, :short => true))
+              items << content_tag(:li, menu_item(obj.constructor, :name => :short))
             end
             [ :constants,
               :klass_methods,
               :klass_properties,
             ].each do |prop|
-              obj.send(prop).map { |item| items << content_tag(:li, menu_item(item, :short => true)) }
+              obj.send(prop).map { |item| items << content_tag(:li, menu_item(item, :name => :short)) }
             end
             instance_methods = obj.instance_methods.dup
             methodized_methods = obj.klass_methods.select { |m| m.methodized? }
             instance_methods.concat(methodized_methods)
             instance_methods = instance_methods.sort_by { |e| e.name }
             instance_methods.map do |item|
-              items << content_tag(:li, menu_item(item, :short => true, :methodized => true ))
+              items << content_tag(:li, menu_item(item, :name => :short, :methodized => true ))
             end
-            obj.instance_properties.map { |item| items << content_tag(:li, menu_item(item, :short => true)) }
+            obj.instance_properties.map { |item| items << content_tag(:li, menu_item(item, :name => :short)) }
             
             content_tag(:ul, items.join("\n"))
           end

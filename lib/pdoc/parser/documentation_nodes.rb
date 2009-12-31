@@ -174,7 +174,7 @@ module Documentation
     def alias_of
       if alias?
         a = tags.find { |tag| tag.name == "alias of" }.value
-        root.find_by_name(a)
+        root.find_by_name(a) || a
       else
         nil
       end
@@ -237,7 +237,7 @@ module Documentation
     # Returns the instance's closests namespace or nil when instance or instance's
     # Klass is a global.
     def namespace
-      namespace_string.empty? ? nil : root.find_by_name(namespace_string)
+      @namespace ||= namespace_string.empty? ? nil : root.find_by_name(namespace_string)
     end
     
     # If instance is a global, returns its Section. Else its Namespace.
@@ -253,7 +253,7 @@ module Documentation
     
     # Returns all direct descendants of instance.
     def children
-      root.descendants.select { |d| d.namespace === self }.sort_by { |e| e.name }
+      @children ||= root.descendants.select { |d| self.equal?(d.namespace) }.sort_by { |e| e.name }
     end
     
     # Returns all descendants of instance.
@@ -261,6 +261,14 @@ module Documentation
       results = children
       children.inject(results) { |r, c| r.concat(c.descendants) } unless children.empty?
       results
+    end
+    
+    def namespaces
+      children.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
+    end
+    
+    def klasses
+      children.select { |d| d.is_a?(Klass) }
     end
     
     def ebnf_expressions
@@ -356,11 +364,11 @@ module Documentation
     end
     
     def children
-      root.children.select { |d| d.section === self }.sort_by { |e| e.name }
+      @children ||= root.descendants.select { |d| self.equal?(d.section) && d.global? }.sort_by { |e| e.name }
     end
     
     def descendants
-      root.descendants.select { |d| d.section === self }.sort_by { |e| e.name }
+      root.descendants.select { |d| self.equal?(d.section) }.sort_by { |e| e.name }
     end
     
     def utilities
@@ -414,11 +422,7 @@ module Documentation
     def signature
       ebnf_expressions.first.signature
     end
-    
-    def static_signature
-      ebnf_expressions.first.static_signature
-    end
-    
+
     def returns
       ebnf_expressions.first.returns
     end
@@ -431,6 +435,14 @@ module Documentation
   class Property < Base
     def klass
       namespace
+    end
+    
+    def signature
+      ebnf.signature
+    end
+    
+    def returns
+      ebnf.returns
     end
   end
   
@@ -511,6 +523,14 @@ module Documentation
       klass ? klass.name : nil
     end
     
+    def returns
+      ebnf.returns
+    end
+    
+    def signature
+      ebnf.signature
+    end
+    
     def type
       "constant"
     end
@@ -531,39 +551,35 @@ module Documentation
     
     # Returns a sorted array of KlassProperty
     def klass_properties
-      root.klass_properties.select { |e| e.namespace === self }.sort_by { |e| e.name }
+      root.klass_properties.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
     end
 
     # Returns a sorted array of KlassMethod
     def klass_methods
-      root.klass_methods.select { |e| e.namespace === self }.sort_by { |e| e.name }
+      root.klass_methods.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
     end
 
     # Returns a sorted array of InstanceProperty
     def instance_properties
-      root.instance_properties.select { |e| e.namespace === self }.sort_by { |e| e.name }
+      root.instance_properties.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
     end
 
     # Returns a sorted array of InstanceMethod
     def instance_methods
-      root.instance_methods.select { |e| e.namespace === self }.sort_by { |e| e.name }
+      root.instance_methods.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
     end
 
     # Returns a sorted array of Constant
     def constants
-      root.constants.select { |e| e.namespace === self }.sort_by { |e| e.name }
+      root.constants.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
     end
     
     def all_methods
       (klass_methods + instance_methods).sort_by { |e| e.name }
     end
     
-    def children
-      root.descendants.select { |e| e.namespace === self }.sort_by { |e| e.name }
-    end
-    
     def related_utilities
-      root.utilities.select { |e| e.related_to === self }.sort_by { |e| e.name }
+      root.utilities.select { |e| self.equal?(e.related_to) }.sort_by { |e| e.name }
     end
     
     def type
@@ -589,7 +605,7 @@ module Documentation
     end
     
     def subklasses
-      root.klasses.select { |k| k.superklass === self }
+      root.klasses.select { |k| self.equal?(k.superklass) }
     end
     
     def methodized_methods
@@ -597,7 +613,7 @@ module Documentation
     end
     
     def constructor
-      root.constructors.find { |c| c.namespace === self }
+      root.constructors.find { |c| self.equal?(c.namespace) }
     end
     
     def all_methods
