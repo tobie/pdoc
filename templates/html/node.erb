@@ -39,9 +39,7 @@ types = {
 unless instance_methods.empty? %>
   <%= layout_section('Instance methods', :instance_methods) %>
     <ul class="method-list">
-      <% instance_methods.each do |obj| %>
-        <li><%= auto_link_code(obj, { :name => :short, :class => class_names_for(obj) }) %></li>
-      <% end %>
+      <%= include "partials/link_list", :collection => instance_methods %>
     </ul>
   <%= end_layout_section %>
 <% end %>
