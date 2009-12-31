@@ -22,7 +22,7 @@ module PDoc
           
           def htmlize(markdown)
             markdown = Website.syntax_highlighter.parse(markdown)
-            Maruku.new(markdown).to_html
+            Website.markdown_parser.new(markdown).to_html
           end
           
           # Gah, what an ugly hack.

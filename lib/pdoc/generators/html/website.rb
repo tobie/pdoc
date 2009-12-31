@@ -12,6 +12,7 @@ module PDoc
         
         class << Website
           attr_accessor :syntax_highlighter
+          attr_accessor :markdown_parser
         end
         
         def initialize(parser_output, options = {})
@@ -19,7 +20,25 @@ module PDoc
           @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
           @index_page = options[:index_page] && File.expand_path(options[:index_page])
           Website.syntax_highlighter = SyntaxHighlighter.new(options[:syntax_highlighter])
+          set_markdown_parser(options[:markdown_parser])
           load_custom_helpers
+        end
+        
+        def set_markdown_parser(parser = nil)
+          parser = :rdiscount if parser.nil?
+          case parser.to_sym
+          when :rdiscount
+            require 'rdiscount'
+            Website.markdown_parser = RDiscount
+          when :bluecloth
+            require 'bluecloth'
+            Website.markdown_parser = BlueCloth
+          when :maruku
+            require 'maruku'
+            Website.markdown_parser = Maruku
+          else
+            raise "Requested unsupported Markdown parser: #{parser}."
+          end
         end
         
         def load_custom_helpers
