@@ -20,7 +20,7 @@ module PDoc
         
         def highlight_block(code, language)
           language = :javascript if language.nil?
-          case highlighter
+          case highlighter.to_sym
             when :none
               require 'cgi'
               code = CGI.escapeHTML(code)
