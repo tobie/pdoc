@@ -124,45 +124,6 @@ if (typeof PDoc === 'undefined') {
   Event.observe(window, 'load', poll);  
 })();
 
-Object.extend(PDoc, {
-  highlightSelected: function() {
-    if (!window.location.hash) return;
-    var element = $(window.location.hash.substr(1));
-    if (element) this.highlight(element.up('li, div'));
-  },
-  
-  highlight: function(element) {
-    var self = arguments.callee;
-    if (!self.frame) {
-      self.frame = new Element('div', { 'class': 'highlighter' });
-      document.body.appendChild(self.frame);
-    }
-    
-    var frame = self.frame;
-    element.getOffsetParent().appendChild(frame);
-
-    var offset = element.positionedOffset();
-    var w = parseFloat(element.getStyle('width')),
-        h = parseFloat(element.getStyle('height'));
-
-    frame.setStyle({
-      position: 'absolute',
-      top: (offset.top - 15) + 'px',
-      left: (offset.left - 12) + 'px',
-      width:  (w + 20) + 'px',
-      height: (h + 30) + 'px'
-    });
-
-    // Defer this call because Safari hasn't yet scrolled the viewport.
-    (function() {
-      var frameOffset = frame.viewportOffset(frame);
-      if (frameOffset.top < 0) {
-        $('page').scrollTop += (frameOffset.top - 10);
-      }    
-    }).defer();
-  }
-});
-
 Object.extend(PDoc.Sidebar, {
   getActiveTab: function() {
     var activeTab = $('sidebar_tabs').down('.active');
@@ -294,7 +255,7 @@ PDoc.Sidebar.Filterer = Class.create({
   _buildResult: function(obj) {
     var li = new Element('li', { 'class': 'menu-item' });
     var a = new Element('a', {
-      'class': obj.type.gsub(/\s/, '_'),
+      'class': obj.type.gsub(/\s/, '-'),
       'href':  PDoc.pathPrefix + obj.path
     }).update(obj.name);
     
@@ -485,8 +446,6 @@ Form.GhostedField = Class.create({
   }
 });
 
-
-document.observe('hash:changed', PDoc.highlightSelected.bind(PDoc));
 document.observe('dom:loaded', function() {
   PDoc.Sidebar.Tabs = new Control.Tabs($('sidebar_tabs'));
   
