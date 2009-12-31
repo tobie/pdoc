@@ -77,7 +77,7 @@ module PDoc
         end
         
         def render_index
-          vars = variables.merge(:index_page_content => index_page_content)
+          vars = variables.merge(:index_page_content => index_page_content, :home => true)
           DocPage.new('index', 'layout', vars).render_to_file('index.html')
         end
         
