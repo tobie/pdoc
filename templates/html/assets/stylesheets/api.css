@@ -96,7 +96,7 @@ code {
 /* MASTHEAD */
 
 .masthead {
-  margin-top: 50px;
+  margin-top: 31px;
   height: 75px;
   padding: 1px 0;
   background: url(../images/header-stripe-small.png) repeat-x;
@@ -123,8 +123,8 @@ ul.breadcrumbs {
   ul.breadcrumbs li {
     float: left;
     list-style-type: none;
-    margin-right: 10px;
     margin-left: 0;
+    margin-right: 0.4em;
   }
 
 #deprecated {
@@ -143,7 +143,7 @@ ul.breadcrumbs {
 
 .page-content {
   width: 715px;
-  margin: 30px 0 0;
+  margin: 0 0 30px 0;
 }
 
   .page-content h2.page-title {
@@ -260,6 +260,7 @@ ul.breadcrumbs {
     float: left;
     margin-right: 10px;
     padding-right: 0;
+    padding-bottom: 10px;
     text-align: right;
     overflow: hidden;
   }
@@ -473,17 +474,6 @@ p.related-to {
   border-color: #c9c;
 }
 
-/* halo around selected method */
-
-.highlighter {
-  border: 3px solid #69f;
-  z-index: -1;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-}
-
-
 /* SIDEBAR */
 
 #sidebar {
@@ -561,11 +551,28 @@ p.related-to {
         border-top: 1px solid #69f;
         border-bottom: 1px solid #69f;
         background-color: #f0f0ff;
-      }    
+      }
 
-    .menu-item a.class_method,
-    .menu-item a.instance_method {
-      background-image: url(../images/method.png);  
+      .menu-item a.current,
+      #sidebar .current a {
+        border-top: 1px solid #f0f0ff;
+        border-bottom: 1px solid #f0f0ff;
+        background-color: #f0f0ff;
+      }
+
+      .menu-item a.current-parent,
+      #sidebar .current-parent a {
+        border-top: 1px solid #f0f0ff;
+        border-bottom: 1px solid #f0f0ff;
+        background-color: #f0f0ff;
+      }
+
+    .menu-item a.class-method {
+      background-image: url(../images/class_method.png);  
+    }
+    
+    .menu-item a.instance-method {
+      background-image: url(../images/instance_method.png);  
     }
 
     .menu-item a.class {
@@ -576,11 +583,11 @@ p.related-to {
       background-image: url(../images/constructor.png);  
     }
 
-    .menu-item a.class_property {
+    .menu-item a.class-property {
       background-image: url(../images/class_property.png);  
     }
 
-    .menu-item a.instance_property {
+    .menu-item a.instance-property {
       background-image: url(../images/instance_property.png);  
     }
 
@@ -665,6 +672,7 @@ input.ghosted {
   width: 595px;
   margin-left: 120px;
   margin-top: 30px;
+  font-size: 10px;
 }
 
   #footer .content {
