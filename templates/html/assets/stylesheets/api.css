@@ -126,6 +126,17 @@ ul.breadcrumbs {
     margin-right: 10px;
     margin-left: 0;
   }
+
+#deprecated {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#deprecated img {
+  display: block;
+  border: 0;
+}
   
 
 /* PAGE CONTENT */
