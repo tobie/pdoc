@@ -1,0 +1,10 @@
+<% methodized ||= false %>
+<% if object.is_a?(Documentation::Method) && object.methodized? %>
+  <p class="note">
+    <% if methodized %>
+      This method can be called <em>either</em> as an instance method <em>or</em> as a <a href="<%= path_to(object) %>">generic method</a>.
+    <% else %>
+      This method can be called <em>either</em> as an <a href="<%= path_to(object, true) %>">instance method</a> <em>or</em> as a generic method.
+    <% end %>
+  If calling as a generic, pass the instance in as the first argument.<p>
+<% end %>

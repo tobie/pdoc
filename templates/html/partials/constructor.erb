@@ -1,0 +1,5 @@
+<% if object.is_a?(Documentation::Klass) && object.constructor %>
+  <%= layout_section('Constructor') %>
+    <p><%= auto_link_code(object.constructor, :name => :long) %></p>
+  <%= end_layout_section %>
+<% end %>

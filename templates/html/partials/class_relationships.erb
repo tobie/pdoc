@@ -1,0 +1,19 @@
+<% if object.is_a?(Documentation::Klass) %>
+  <% if object.superklass %>
+    <%= layout_section('Superclass') %>
+      <p><%= auto_link_code(object.superklass, :name => :long) %></p>
+    <%= end_layout_section %>
+  <% end %>
+
+  <% unless object.subklasses.empty? %>
+    <%= layout_section('Subclasses') %>
+      <p><%= object.subklasses.map { |s| auto_link_code(s, :name => :long) }.join(', ') %></p>
+    <%= end_layout_section %>
+  <% end %>
+<% end %>
+
+<% unless object.mixins.compact.empty? %>
+  <%= layout_section('Includes', :mixins) %>
+    <p><%= object.mixins.map { |m| auto_link_code(m, :name => :long) }.join(', ') %></p>
+  <%= end_layout_section %>
+<% end %>
