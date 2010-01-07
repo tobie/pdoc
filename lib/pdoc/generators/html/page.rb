@@ -25,6 +25,7 @@ module PDoc
         # using the assigned layout.
         def render_to_file(filename)
           filename ||= ""
+          @depth = filename.scan(/\//).size
           FileUtils.mkdir_p(File.dirname(filename).downcase)
           File.open(filename, "w+") { |f| f << render }
         end

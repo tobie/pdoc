@@ -54,7 +54,6 @@ module PDoc
         
         # Generates the website to the specified directory.
         def render(output)
-          @depth = 0
           path = File.expand_path(output)
           FileUtils.mkdir_p(path)
           Dir.chdir(path)
@@ -63,7 +62,6 @@ module PDoc
           copy_assets
           
           root.sections.each do |section|
-            @depth = 0
             render_template('section', { :doc_instance => section })
           end
 
@@ -77,19 +75,20 @@ module PDoc
         end
         
         def render_template(template, var = {})
-          @depth += 1
           doc = var[:doc_instance]
           dest = path(doc, var[:methodized])
           log "\c[[F\c[[K    Rendering: #{dest}"
           FileUtils.mkdir_p(dest)
           DocPage.new(template, variables.merge(var)).render_to_file(File.join(dest, 'index.html'))
           render_children(doc)
-          @depth -= 1
         end
         
         def render_children(obj)
           if obj.is_a?(Documentation::Section)
-            obj.children.each { |c| is_leaf?(c) ? render_leaf(c) : render_node(c) }
+            root.namespaces.each do |namespace|
+              next unless namespace.section == obj
+              is_leaf?(namespace) ? render_leaf(namespace) : render_node(namespace)
+            end
           else
             obj.children.select { |c| c.namespace === obj }.each(&method(:render_node))
           end
@@ -117,9 +116,7 @@ module PDoc
         
         def render_leaf(object, methodized = false)
           is_proto_prop = is_proto_prop?(object, methodized)
-          @depth += 1 if is_proto_prop
           render_template('leaf', { :doc_instance => object, :methodized => methodized })
-          @depth -= 1 if is_proto_prop
         end
         
         def render_node(object)          
@@ -128,7 +125,7 @@ module PDoc
         
         private
           def variables
-            {:root => root, :depth => @depth, :templates_directory => @templates_directory}
+            {:root => root, :templates_directory => @templates_directory}
           end
           
           def path(object, methodized = false)
