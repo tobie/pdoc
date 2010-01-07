@@ -50,9 +50,9 @@ if command = options[:'copy-templates']
 end
 
 files = (d = options[:directory]) ?
-        Dir["#{d}/**/*.js"] :
+        Dir["#{d}/**/*.js"].map(&File.method(:expand_path)) :
         options[:unclaimed].dup
 
-files << {:output => options[:output], :templates => options[:templates]}
+files << {:destination => options[:output], :templates => options[:templates]}
 PDoc::Runner.new(*files).run
 
