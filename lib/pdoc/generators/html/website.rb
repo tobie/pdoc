@@ -66,18 +66,19 @@ module PDoc
           @depth = 0
           path = File.expand_path(output)
           FileUtils.mkdir_p(path)
-          Dir.chdir(path)
+          Dir.chdir(path) do
           
-          render_index
-          copy_assets
+            render_index
+            copy_assets
           
-          root.sections.each do |section|
-            @depth = 0
-            render_template('section', { :doc_instance => section })
-          end
+            root.sections.each do |section|
+              @depth = 0
+              render_template('section', { :doc_instance => section })
+            end
 
-          dest = File.join("javascripts", "item_index.js")
-          DocPage.new("item_index.js", false, variables).render_to_file(dest)
+            dest = File.join("javascripts", "item_index.js")
+            DocPage.new("item_index.js", false, variables).render_to_file(dest)
+          end
         end
         
         def render_index
