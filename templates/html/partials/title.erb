@@ -1,5 +1,4 @@
-<% methodized ||= false
-   @title = object.full_name %>
+<% @title = object.full_name %>
 
 <% if object.deprecated? %>
   <div id="deprecated"><%= img_tag('deprecated.png', :alt => "Deprecated", :width => 150, :height => 150) %></div>
@@ -7,15 +6,17 @@
 
 <ul class="breadcrumbs clearfix">
   <li><a href="<%= path_prefix %>">Home</a></li>
-  <% breadcrumb(object, :name => :short, :methodized => methodized).each do |crumb| %>
+  <% breadcrumb(object, :name => :short).each do |crumb| %>
     <li>&rarr; <%= crumb %></li>
   <% end %>
 </ul>
 
+<% if object.respond_to?(:src_code_href) %>
+  <p id="src_code_href"><a href="<%= object.src_code_href %>">src code</a></p>
+<% end %>
+
 <h2 class="page-title">
-  <% if methodized %>
-    <span class="type">instance method</span> <%= methodize_full_name(object) %>
-  <% else %>
-    <span class="type"><%= object.type %></span> <%= object.full_name %>
-  <% end %>
+  <span class="type"><%= object.type %></span> <%= object.full_name %>
 </h2>
+
+

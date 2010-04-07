@@ -7,9 +7,8 @@ module PDoc
         parent.sections << self
       end
       
-      # returns an array of Function objects belonging to this section
-      def utilities
-        @utilities ||= []
+      def name
+        @name ||= @id.sub(' section', '')
       end
     end
   end

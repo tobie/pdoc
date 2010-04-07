@@ -1,6 +1,6 @@
 <% d = @doc_instance %>
 
-<%= include "partials/title", :object => @doc_instance, :methodized => false %>
+<%= include "partials/title", :object => @doc_instance %>
 
 <% if d.description && !d.description.empty? %>
   <%= layout_section('Description') %>
@@ -17,38 +17,18 @@
 
 <%
 types = {
-  :constants           => "Constants",
-  :klass_methods       => "Class methods",
-  :klass_properties    => "Class properties"
+  :class_methods       => 'Class methods',
+  :class_properties    => 'Class properties',
+  :instance_methods    => 'Instance methods',
+  :instance_properties => 'Instance properties',
+  :constants           => 'Constants'
 }.each do |method, title| %>
   <% methods = @doc_instance.send(method) %>
   <% unless methods.empty? %>
     <%= layout_section(title, method) %>
       <ul class="method-list">
-        <%= include "partials/link_list", :collection => methods %>
+        <%= include "partials/link_list", :collection => methods.sort! %>
       </ul>
     <%= end_layout_section %>
   <% end %>
 <% end %>
-
-<% instance_methods = @doc_instance.instance_methods.dup
-   methodized_methods = @doc_instance.klass_methods.select { |m| m.methodized? }
-   instance_methods.concat(methodized_methods)
-   instance_methods = instance_methods.sort_by { |e| e.name }
-   
-unless instance_methods.empty? %>
-  <%= layout_section('Instance methods', :instance_methods) %>
-    <ul class="method-list">
-      <%= include "partials/link_list", :collection => instance_methods %>
-    </ul>
-  <%= end_layout_section %>
-<% end %>
-
-<% unless @doc_instance.instance_properties.empty? %>
-  <%= layout_section('Instance properties', :instance_properties) %>
-    <ul class="method-list">
-      <%= include "partials/link_list", :collection => @doc_instance.instance_properties %>
-    </ul>
-  <%= end_layout_section %>
-<% end %>
-

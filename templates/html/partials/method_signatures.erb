@@ -1,5 +1,5 @@
-<pre class="syntax"><code class="ebnf"><%= method_synopsis(object, methodized).join('<br />') %></code></pre>
-<% unless object.arguments.empty? %>
+<pre class="syntax"><code class="ebnf"><%= method_synopsis(object).join('<br />') %></code></pre>
+<% if object.respond_to?(:arguments) && object.arguments? %>
   <ul class="argument-list">
     <% object.arguments.each do |arg| %>
       <li>

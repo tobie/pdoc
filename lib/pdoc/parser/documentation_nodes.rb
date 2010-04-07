@@ -10,66 +10,6 @@ module Documentation
       tags.each { |tag| yield tag }
     end
     
-    # Returns an array of all deprecated object.
-    def deprecated
-      select { |e| e.deprecated? }
-    end
-    
-    # Returns an array of all documented aliases.
-    def aliases
-      select { |e| e.alias? }
-    end
-    
-    # return an array of all documented KlassMethod instances.
-    def klass_methods
-      select { |e| e.is_a?(KlassMethod) }
-    end
-
-    # return an array of all documented InstanceMethod instances.
-    def instance_methods
-      select { |e| e.is_a?(InstanceMethod) }
-    end
-
-    # return an array of all documented Constructor instances.
-    def constructors
-      select { |e| e.is_a?(Constructor) }
-    end
-
-    # return an array of all documented Constant instances.
-    def constants
-      select { |e| e.is_a?(Constant) }
-    end
-
-    # return an array of all documented Namespace instances.
-    def namespaces
-      select { |e| e.is_a?(Namespace) }
-    end
-
-    # return an array of all documented KlassProperty instances.
-    def klass_properties
-      select { |e| e.is_a?(KlassProperty) }
-    end
-
-    # return an array of all documented InstanceProperty instances.
-    def instance_properties
-      select { |e| e.is_a?(InstanceProperty) }
-    end
-
-    # return an array of all documented Utility instances.
-    def utilities
-      select { |e| e.is_a?(Utility) }
-    end
-
-    # return an array of all documented Mixin instances.
-    def mixins
-      select { |e| e.is_a?(Mixin) }
-    end
-    
-    # return an array of all documented Klass instances.
-    def klasses
-      select { |e| e.is_a?(Klass) }
-    end
-    
     # find_by_name allows you to search through all the documented instances based on the 
     # instances Base#full_name.
     # For example:
@@ -79,21 +19,6 @@ module Documentation
     # Return an instance of InstanceMethod corresponding to "Element#update".
     def find_by_name(name)
       find { |e| e.full_name == name }
-    end
-    
-    def descendants
-      select { |e| e.is_a?(Namespace) || e.is_a?(Utility) }
-    end
-    
-    # Returns an array of all documented instances which are global variables.
-    def globals
-      select { |e| e.global? }.sort_by { |e| e.name }
-    end
-    alias children globals
-    
-    # Returns an array of all documented Section instances.
-    def sections
-      select { |e| e.is_a?(Section) }.sort_by { |e| e.name }
     end
     
     def inspect
@@ -107,6 +32,10 @@ module Documentation
     
     def name
       "Home"
+    end
+    
+    def serialize(serializer)
+      each { |obj| obj.serialize(serializer) }
     end
   end
   
@@ -156,33 +85,19 @@ module Documentation
     
     # True if the instance was tagged as deprecated.
     def deprecated?
-      tags.include?("deprecated") || ancestors.any? { |a| a.deprecated? }
-    end
-    
-    # True if the instance is a global variable.
-    def global?
-      namespace_string.empty?
-    end
-    
-    # True if the instance is an alias.
-    def alias?
-      tags.include?("alias of")
+      tags.include?("deprecated")
     end
     
     # If instance is tagged as an alias, alias_of returns the corresponding object.
     # It will return nil otherwise.
     def alias_of
-      if alias?
-        a = tags.find { |tag| tag.name == "alias of" }.value
-        root.find_by_name(a) || a
-      else
-        nil
-      end
+      tag = tags.find { |tag| tag.name == "alias of" }
+      tag.value if tag
     end
     
-    # Returns an array of all aliases of this instance.
-    def aliases
-      root.select { |a| a.alias_of == self }
+    def related_to
+      tag = tags.find { |tag| tag.name == "related to" }
+      tag.value if tag
     end
     
     # Returns an instance of Tags::Tags.
@@ -218,17 +133,6 @@ module Documentation
       ebnf.namespace
     end
     
-    # Returns the section this instance belongs to. If no section has been 
-    # specified in the tags, it iterates through the ancestors until it finds one.
-    def section
-      if tags.include?("section")
-        value = tags.find { |tag| tag.name == "section" }.value
-        root.sections.find { |s| s.name == value }
-      else
-        namespace.section
-      end
-    end
-    
     # Returns the Klass instance if object is a class, nil otherwise.
     def klass
       nil
@@ -245,47 +149,12 @@ module Documentation
       namespace ? namespace : section
     end
     
-    # Recursively collects all of instance's doc_parent and returns them
-    # as an ordered array.
-    def ancestors
-      [doc_parent].concat(doc_parent.ancestors)
-    end
-    
-    # Returns all direct descendants of instance.
-    def children
-      @children ||= root.descendants.select { |d| self.equal?(d.namespace) }.sort_by { |e| e.name }
-    end
-    
-    # Returns all descendants of instance.
-    def descendants
-      results = children
-      children.inject(results) { |r, c| r.concat(c.descendants) } unless children.empty?
-      results
-    end
-    
-    def namespaces
-      children.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
-    end
-    
-    def klasses
-      children.select { |d| d.is_a?(Klass) }
-    end
-    
     def ebnf_expressions
       ebnf.elements.map { |e| e.elements.last }
     end
     
     def description
       text.to_s
-    end
-    
-    # Just the first paragraph of the description.
-    def short_description
-      description.split(/\n\n/).first
-    end
-    
-    def id
-      name.downcase.gsub('$', "dollar")
     end
     
     def signature
@@ -295,17 +164,48 @@ module Documentation
     def inspect
       "#<#{self.class} #{full_name}>"
     end
+    
+    def src_code_line
+      input.line_of(interval.last) - 1
+    end
+    
+    def parent_id
+      namespace_string.empty? ? section_name : namespace_string
+    end
+    
+    def section_name
+      if tags.include?('section')
+        value = tags.find { |tag| tag.name == 'section' }.value
+        "#{value} section"
+      end
+    end
+    
+    def to_yaml
+      str = "id: \"#{full_name}\""
+      str << "\nparent_id: \"#{parent_id}\"" if parent_id
+      str << "\ntype: #{type}"
+      str << "\nsuperclass_id: \"#{superclass}\"" if respond_to?(:superclass) && superclass
+      str << "\nline_number: #{src_code_line}"
+      str << "\ndeprecated: true" if deprecated?
+      str << "\nalias_of: \"#{alias_of}\"" if respond_to?(:alias_of) && alias_of
+      str << "\nrelated_to: \"#{related_to}\"" if respond_to?(:related_to) && related_to
+      str << "\ndescription: |\n#{indent(description)}\n"
+    end
+    
+    def serialize(serializer)
+      serializer << to_yaml
+    end
+    
+    private
+    def indent(str, prefix = '  ')
+      str.split($/).map { |line| "#{prefix}#{line}" } * $/
+    end
   end
   
   class Section < Base
     # Returns section's name
     def name
       section.name
-    end
-
-    # Returns section's id
-    def id
-      "#{section.id}_section"
     end
 
     # Returns section's full_name
@@ -358,31 +258,6 @@ module Documentation
       nil
     end
     
-    # Returns an empty array.
-    def ancestors
-      []
-    end
-    
-    def children
-      @children ||= root.descendants.select { |d| self.equal?(d.section) && d.global? }.sort_by { |e| e.name }
-    end
-    
-    def descendants
-      root.descendants.select { |d| self.equal?(d.section) }.sort_by { |e| e.name }
-    end
-    
-    def utilities
-      descendants.select { |d| d.is_a?(Utility) }
-    end
-    
-    def namespaces
-      descendants.select { |d| d.is_a?(Namespace) && !d.is_a?(Klass) }
-    end
-    
-    def klasses
-      descendants.select { |d| d.is_a?(Klass) }
-    end
-    
     # Returns "section".
     def type
       "section"
@@ -430,6 +305,32 @@ module Documentation
     def fires
       events.empty? ? [] : events.to_a
     end
+    
+    def signatures
+      ebnf_expressions
+    end
+    
+    def serialize(serializer)
+      str = to_yaml
+      str << "\nmethodized: true" if respond_to?(:methodized?) && methodized?
+      
+      str << "\nsignatures:"
+      ebnf_expressions.each do |ebnf|
+        str << "\n -"
+        str << "\n  signature: \"#{ebnf.signature}\""
+        str << "\n  return_value: \"#{ebnf.returns}\"" if ebnf.returns
+      end
+      
+      str << "\narguments:" unless arguments.empty?
+      arguments.each do |arg|
+        str << "\n -"
+        str << "\n  name: #{arg.name}"
+        str << "\n  types: [#{arg.types.join(', ')}]" unless arg.types.empty?
+        str << "\n  description: >"
+        str << "\n    #{arg.description}\n"
+      end
+      serializer << str
+    end
   end
   
   class Property < Base
@@ -443,6 +344,17 @@ module Documentation
     
     def returns
       ebnf.returns
+    end
+    
+    def serialize(serializer)
+      str = to_yaml
+      
+      str << "\nsignatures:"
+      str << "\n -"
+      str << "\n  signature: \"#{signature}\""
+      str << "\n  return_value: \"#{returns}\""
+
+      serializer << str
     end
   end
   
@@ -461,26 +373,6 @@ module Documentation
   end
   
   class Utility < Method
-    def related_to
-      if tags.include?("related to")
-        namespace = tags.find { |tag| tag.name == "related to" }.value
-        root.find_by_name(namespace)
-      else
-        nil
-      end
-    end
-    
-    def section
-      if r = related_to
-        r.section
-      elsif tags.include?("section")
-        value = tags.find { |tag| tag.name == "section" }.value
-        root.sections.find { |s| s.name == value }
-      else
-        nil
-      end
-    end
-    
     def type
       "utility"
     end
@@ -538,7 +430,7 @@ module Documentation
   
   class Namespace < Base
     def mixins
-      ebnf.mixins.map { |m| root.find_by_name(m.full_name) }
+      ebnf.mixins.map { |m| m.full_name }
     end
     
     def mixin?
@@ -547,39 +439,6 @@ module Documentation
     
     def klass?
       false
-    end
-    
-    # Returns a sorted array of KlassProperty
-    def klass_properties
-      root.klass_properties.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
-    end
-
-    # Returns a sorted array of KlassMethod
-    def klass_methods
-      root.klass_methods.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
-    end
-
-    # Returns a sorted array of InstanceProperty
-    def instance_properties
-      root.instance_properties.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
-    end
-
-    # Returns a sorted array of InstanceMethod
-    def instance_methods
-      root.instance_methods.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
-    end
-
-    # Returns a sorted array of Constant
-    def constants
-      root.constants.select { |e| self.equal?(e.namespace) }.sort_by { |e| e.name }
-    end
-    
-    def all_methods
-      (klass_methods + instance_methods).sort_by { |e| e.name }
-    end
-    
-    def related_utilities
-      root.utilities.select { |e| self.equal?(e.related_to) }.sort_by { |e| e.name }
     end
     
     def type
@@ -592,33 +451,9 @@ module Documentation
       true
     end
     
-    def subklass?
-      ebnf.subklass?
-    end
-    
-    def superklass?
-      !subklasses.empty?
-    end
-    
-    def superklass
-      subklass? ? root.find_by_name(ebnf.superklass.text_value) : nil
-    end
-    
-    def subklasses
-      root.klasses.select { |k| self.equal?(k.superklass) }
-    end
-    
-    def methodized_methods
-      klass_methods.select { |e| e.methodized? }
-    end
-    
-    def constructor
-      root.constructors.find { |c| self.equal?(c.namespace) }
-    end
-    
-    def all_methods
-      c = constructor 
-      c ? (super << c).sort_by { |e| e.name } : super
+    def superclass
+      sc = ebnf.superklass
+      sc.text_value if sc
     end
     
     def type

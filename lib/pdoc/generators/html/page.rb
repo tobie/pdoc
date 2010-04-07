@@ -4,6 +4,7 @@ module PDoc
       class Page
 
         include Helpers::BaseHelper
+        include Helpers::LinkHelper
         
         def initialize(template, layout, variables = {})
           @template = template

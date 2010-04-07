@@ -1,70 +1,105 @@
 module PDoc
+  require 'yaml'
+  
   class Runner
     def initialize(*source_files)
       options              = source_files.last.is_a?(Hash) ? source_files.pop : {}
       @source_files        = source_files.empty? ? options[:source_files] : source_files
       @output_directory    = File.expand_path(options.delete(:destination) || OUTPUT_DIR)
       @generator           = options.delete(:generator) || Generators::Html::Website
-      @parser              = Parser.new(source)
-      @generator_options   = options
+      @parser              = Parser
+      @serializer          = Serializer
+      Models::Entity.repository_url = options.delete(:repository_url)
+      @generator_options = options
     end
     
-    def source
-      @source_files.map { |path| File.open(path) { |f| f.read } }.join("\n\n")
-    end
-    
-    def parse
-      Thread.new(@parser) do |parser|
-        log "Parsing source files: #{@source_files * ', '}."
-        log 'Processing... 0%'
-        i = 0
-        begin
-          dots = ('.' * i) << (' ' * (3-i)) 
-          log "\c[[F    Processing#{dots} #{parser.completion_percentage}"
-          i =  i == 3 ? 0 : i + 1
-          sleep 0.1
-        end until parser.finished?
+    def serialize(files)
+      files.each do |path|
+        File.open(pdoc_file(path), "w+") do |f|
+          f << serialize_file(path)
+        end
       end
-      start_time = Time.new
-      @parser_output = @parser.parse
-      log "\c[[F    Parsing completed in #{Time.new - start_time} seconds.\n\n"
     end
     
-    def render
-      log "Generating documentation to: #{@output_directory}.\n\n"
-      start_time = Time.new
-      @generator.new(@parser_output, @generator_options).render(@output_directory)
-      log "\c[[F    Documentation generated in #{Time.new - start_time} seconds."
+    def deserialize(files)
+      results = []
+      files.each do |file|
+        file = pdoc_file(file)
+        File.open(file) do |y|
+          YAML.load_documents(y) { |doc| results << doc }
+        end
+      end
+      results
+    end
+    
+    def new_files
+      @source_files.select do |path|
+        pdoc = pdoc_file(path)
+        !File.exist?(pdoc) || File.mtime(path) > File.mtime(pdoc)
+      end
     end
     
     def run
-      puts "\n"
-      parse
-      render
-      log summary
-    end
-    
-    def summary
-      <<-EOS
-  
-    Summary:
-      Sections:            #{@parser_output.sections.length}
-      Utilities:           #{@parser_output.utilities.length}
-      Namespaces:          #{@parser_output.namespaces.length}
-      Mixins:              #{@parser_output.mixins.length}
-      Classes:             #{@parser_output.klasses.length}
-      Constructor methods: #{@parser_output.constructors.length}
-      Constants:           #{@parser_output.constants.length}
-      Class methods:       #{@parser_output.klass_methods.length}
-      Instance methods:    #{@parser_output.instance_methods.length}
-      Class properties:    #{@parser_output.klass_properties.length}
-      Instance properties: #{@parser_output.instance_properties.length}
+      puts
+      puts "    Markdown parser:     #{@generator_options[:markdown_parser]}"
+      puts "    Syntax highlighter:  #{@generator_options[:syntax_highlighter]}"
+      puts "    Pretty urls:         #{@generator_options[:pretty_urls]}"
+      puts "    Repository url:      #{Models::Entity.repository_url}"
+      puts "    Index page:          #{@generator_options[:index_page]}"
+      puts "    Output directory:    #{@output_directory}\n\n"
+      
+      files = new_files
+      if files.empty?
+        puts "    Restoring serialized documentation from cache.\n\n"
+      else
+        puts "    Parsing JS files for PDoc comments:"
+        start_time = Time.new
+        serialize(files)
+        puts "    Finished parsing files in #{Time.new - start_time} seconds.\n\n"
+      end
 
-      EOS
+      
+      start_time = Time.new
+      data = deserialize(@source_files)
+      root = Treemaker.new(data).root
+      puts "    Building documentation tree. Finished in #{Time.new - start_time} seconds.\n\n"
+      
+      start_time = Time.new
+      puts "    Building website:"
+      @generator.new(root, @generator_options).render(@output_directory)
+      puts "\n    Finished building website in #{Time.new - start_time} seconds.\n\n"
     end
     
-    def log(message)
-      puts "    #{message}"
+    private
+      def serialize_file(path)
+        serializer = @serializer.new
+        puts "        Parsing #{path}..."
+        File.open(path) do |file|
+          @parser.new(file.read).parse.each do |fragment|
+            fragment.serialize(serializer)
+          end
+        end
+        serializer
+      end
+
+      def pdoc_file(path)
+        name = '.' << File.basename(path, '.js') << '.pdoc.yaml'
+        File.expand_path(File.join(File.dirname(path), name))
+      end
+  end
+  
+  class Serializer
+    attr_accessor :path
+    def initialize
+      @doc_fragments = []
+    end
+    
+    def <<(fragment)
+      @doc_fragments << "---\n#{fragment}"
+    end
+    
+    def to_s
+      @doc_fragments.join("\n\n")
     end
   end
 end

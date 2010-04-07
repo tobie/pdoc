@@ -1,11 +1,11 @@
 module PDoc
   module Models
-    class Class < Entity
+    class Object < Entity
       include Container
       attr_accessor :constructor
       attr_accessor :superclass
       def attach_to_parent(parent)
-        parent.classes << self
+        parent.children << self
       end
       
       def subclasses

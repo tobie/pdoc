@@ -117,6 +117,10 @@ module EbnfExpression
     def full_name
       "new #{super}"
     end
+    
+    def returns
+      nil
+    end
   end
   
   class KlassProperty < Base

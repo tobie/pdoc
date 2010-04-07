@@ -3,11 +3,6 @@ module PDoc
     class Root
       include Container
       
-      # returns an array of Function objects belonging to this section
-      def utilities
-        @utilities ||= []
-      end
-      
       def sections
         @sections ||= []
       end
@@ -18,6 +13,10 @@ module PDoc
       
       def find(id)
         registry[id]
+      end
+      
+      def parent
+        nil
       end
     end
   end

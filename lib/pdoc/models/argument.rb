@@ -16,6 +16,10 @@ module PDoc
       def id
         @id ||= "#{parent.id}:#{name}"
       end
+      
+      def types
+        @types ||= []
+      end
     end
   end
 end

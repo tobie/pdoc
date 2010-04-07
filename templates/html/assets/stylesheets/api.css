@@ -395,11 +395,11 @@ ul.argument-list {
   background-image: url(../images/method.png);
 }
 
-.section-klass_methods .section-title h3 {
+.section-class_methods .section-title h3 {
   background-image: url(../images/class_method.png);  
 }
 
-.section-klass_properties .section-title h3 {
+.section-class_properties .section-title h3 {
   background-image: url(../images/class_property.png);  
 }
 
@@ -672,42 +672,16 @@ input.ghosted {
   width: 595px;
   margin-left: 120px;
   margin-top: 30px;
+  border-top: 1px solid #ccc;
   font-size: 10px;
+  padding: 1em 0;
 }
-
-  #footer .content {
-    border-top: 1px solid #ccc;
-    margin: 0;
-    padding: 30px 0;
-  }
 
   #footer a,
   #footer a:link {
     color: #999;
   }
 
-  .cc {
-    float: left;
-    width: 360px;
-  }
-  
-    .cc span {
-      float: left;
-      width: 110px;
-      margin-right: 10px;
-      text-align: center;
-      padding-top: 6px;
-    }
-    
-    .cc p {
-      float: left;
-      width: 180px;
-    }
-    
-  .credits {
-    float: left;
-    width: 235px;
-  }
-  
-    
-
+#src_code_href {
+	float: right;
+}

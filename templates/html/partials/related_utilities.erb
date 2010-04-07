@@ -1,5 +1,5 @@
-<% unless object.related_utilities.empty? %>
+<% if object.respond_to?(:utilities) && object.utilities? %>
   <%= layout_section('Related utilities', :utilities) %>
-    <p><%= object.related_utilities.map { |u| auto_link_code(u, :name => :long) }.join(', ') %></p>
+    <p><%= object.utilities.map { |u| auto_link_code(u, :name => :long) }.join(', ') %></p>
   <%= end_layout_section %>
 <% end %>

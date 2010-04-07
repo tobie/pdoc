@@ -7,7 +7,10 @@ grammar Documentation
   include EbnfExpression
   
   rule documentation
-    ((!comment_start .)* doc_instance)+ (!comment_start .)* <Doc>
+    ((!comment_start .)* doc_instance)+ (!comment_start .)* <Doc> / (!comment_start .)* {
+      def each
+      end
+    }
   end
   
   rule doc_instance

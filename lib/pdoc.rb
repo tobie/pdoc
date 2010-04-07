@@ -15,6 +15,8 @@ require 'fileutils'
 require 'pdoc/runner'
 require 'pdoc/generators'
 require 'pdoc/parser'
+require 'pdoc/models'
+require 'pdoc/treemaker'
 
 module PDoc
   def self.run(options = {})

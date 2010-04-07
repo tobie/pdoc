@@ -64,43 +64,35 @@ module PDoc
           def path_prefix
             "../" * depth
           end
-
-          def path_to(obj, methodized = false)
-            path_prefix << raw_path_to(obj, methodized)
+          
+          def path_to(obj)
+            path = path_prefix << raw_path_to(obj).join('/')
+            Website.pretty_urls? ? "#{path}" : "#{path}/index.html"
           end
           
-          def raw_path_to(obj, methodized = false)
-            return "#{obj.name.downcase}/" if obj.is_a?(Documentation::Section)
-            
-            path = [obj.section.name.downcase].concat(obj.namespace_string.downcase.split('.')).join("/")
-            if obj.is_a?(Documentation::InstanceMethod) || obj.is_a?(Documentation::InstanceProperty)
-              "#{path}/prototype/#{obj.id.downcase}/"
-            elsif obj.is_a?(Documentation::KlassMethod)
-              methodized ? "#{path}/prototype/#{obj.id.downcase}/" : "#{path}/#{obj.id.downcase}/"
-            else
-              "#{path}/#{obj.id.downcase}/"
-            end
+          def raw_path_to(obj)
+            result = []
+            begin
+              result << obj.name.downcase.sub(' section', '').gsub('$', 'dollar')
+              if obj.is_a?(Models::InstanceMethod) || obj.is_a?(Models::InstanceProperty)
+                result << 'prototype'
+              end
+              obj = obj.parent
+            end while obj.respond_to?(:name)
+            result.reverse
           end
-          
-          # deprecated
-          def path_to_section(obj)
-            "#{obj.name.downcase}/"
-          end
-          
-          def section_from_name(name)
-            root.sections.find { |section| section.name == name }
-          end          
 
           def auto_link(obj, options = {})
             if obj.is_a?(String)
               original = obj
-              obj = root.find_by_name(obj)
+              obj = root.find(obj)
               return original unless obj
             end
             name = options.delete(:name) == :short ? obj.name : obj.full_name
-            type = obj.is_a?(Documentation::KlassMethod) && options[:methodized] ? 'instance method' : obj.type
-            path = path_to(obj, options.delete(:methodized))
-            link_to(name, path, { :title => "#{obj.full_name} (#{type})" }.merge(options))
+            path = path_to(obj)
+            title = obj.full_name
+            title = "#{title} (#{obj.type})" unless obj.type == 'section'
+            link_to(name, path, { :title => title }.merge(options))
           end
           
           def auto_link_code(obj, options = {})
@@ -110,11 +102,11 @@ module PDoc
           def auto_link_content(content)
             return '' if content.nil?
             content.gsub!(/\[\[([a-zA-Z]+)\s+section\]\]/) do |m|
-              result = auto_link(section_from_name($1), :name => :long)
+              result = auto_link(root.find($1), :name => :long)
               result
             end
             content.gsub(/\[\[([a-zA-Z$\.#]+)(?:\s+([^\]]+))?\]\]/) do |m|
-              if doc_instance = root.find_by_name($1)
+              if doc_instance = root.find($1)
                 $2 ? link_to($2, path_to(doc_instance)) : auto_link_code(doc_instance, :name => :long)
               else
                 $1
@@ -152,18 +144,14 @@ module PDoc
             obj.full_name.sub(/\.([^.]+)$/, '#\1')
           end
           
-          def method_synopsis(object, methodized = false)
+          def method_synopsis(object)
             result = []
-            object.ebnf_expressions.each do |ebnf|
-              if object.is_a?(Documentation::Constructor)
-                result << "#{object.full_name}#{ebnf.args.text_value}"
-              else
-                types = auto_link_types(ebnf.returns, :name => :long).join(' | ')
-                if object.is_a?(Documentation::KlassMethod) && object.methodized? && methodized
-                  result << "#{methodize_signature(ebnf.signature)} &rarr; #{types}"
-                else
-                  result << "#{ebnf.signature} &rarr; #{types}"
-                end
+            object.signatures.each do |signature|
+              if return_value = signature.return_value
+                types = auto_link_types(return_value, :name => :long).join(' | ')
+                result << "#{signature.name} &rarr; #{types}"
+              else # Constructors
+                result << signature.name
               end
             end
             result
@@ -171,33 +159,54 @@ module PDoc
           
           def breadcrumb(obj, options)
             result = []
-            original_obj = obj
             begin
               result << auto_link(obj, options)
-            end while obj = obj.namespace
-            unless original_obj.is_a?(Documentation::Section)
-              result << auto_link(original_obj.section, options)
-            end
+              obj = obj.parent
+            end until obj.is_a?(Models::Root)
             result.reverse!
           end
         end
         
         module MenuHelper
+          NODES = [
+            :namespaces,
+            :classes,
+            :mixins,
+            :utilities
+          ]
+          LEAVES = [
+            :constants,
+            :class_methods,
+            :class_properties,
+            :instance_methods,
+            :instance_properties
+          ]
+          
           def menu(obj)
             html = menu_item(obj, :name => :long)
             
-            if !obj.children.empty?
-              list_items = obj.children.map { |n| menu(n) }.join("\n")
-              li_class_names = obj.type == "section" ? "menu-section" : ""
-              html << content_tag(:ul, list_items, :class => li_class_names)
-            elsif obj == doc_instance && obj.respond_to?(:constants)
-              html << submenu(obj)
-            elsif doc_instance && doc_instance.respond_to?(:namespace)
-              namespace = doc_instance.namespace
-              html << submenu(namespace) if namespace == obj && obj.respond_to?(:constants)
+            html << node_submenu(obj)
+            
+            if obj == doc_instance && obj.respond_to?(:constants)
+              html << leaf_submenu(obj)
+            elsif doc_instance && doc_instance.respond_to?(:parent)
+              parent = doc_instance.parent
+              html << leaf_submenu(parent) if parent == obj && obj.respond_to?(:constants)
             end
             
             content_tag(:li, html)
+          end
+          
+          def node_submenu(obj)
+            children = []
+            
+            NODES.each do |prop|
+              children.concat(obj.send(prop)) if obj.respond_to?(prop)
+            end
+            
+            list_items = children.sort.map { |item| menu(item) }.join("\n")
+            li_class_names = obj.type == "section" ? "menu-section" : ""
+            content_tag(:ul, list_items, :class => li_class_names)
           end
           
           def menu_item(obj, options = {})
@@ -206,47 +215,33 @@ module PDoc
             content_tag(:div, auto_link(obj, options), :class => 'menu-item')
           end
           
-          def submenu(obj)
+          def leaf_submenu(obj)
             items = []
             if obj.respond_to?(:constructor) && obj.constructor
               items << content_tag(:li, menu_item(obj.constructor, :name => :short))
             end
-            [ :constants,
-              :klass_methods,
-              :klass_properties,
-            ].each do |prop|
-              obj.send(prop).map { |item| items << content_tag(:li, menu_item(item, :name => :short)) }
+            LEAVES.each do |prop|
+              if obj.respond_to?(prop)
+                obj.send(prop).sort!.map do |item|
+                  items << content_tag(:li, menu_item(item, :name => :short))
+                end
+              end
             end
-            instance_methods = obj.instance_methods.dup
-            methodized_methods = obj.klass_methods.select { |m| m.methodized? }
-            instance_methods.concat(methodized_methods)
-            instance_methods = instance_methods.sort_by { |e| e.name }
-            instance_methods.map do |item|
-              items << content_tag(:li, menu_item(item, :name => :short, :methodized => true ))
-            end
-            obj.instance_properties.map { |item| items << content_tag(:li, menu_item(item, :name => :short)) }
-            
             content_tag(:ul, items.join("\n"))
           end
           
           def class_names_for(obj, options = {})
             classes = []
-            if obj.is_a?(Documentation::KlassMethod) && obj.methodized? && options[:methodized]
-              classes << 'instance-method'
-            else
-              classes << obj.type.gsub(/\s+/, '-')
-            end
+            classes << obj.type.gsub(/\s+/, '-')
             classes << "deprecated" if obj.deprecated?
             if doc_instance
               if obj == doc_instance
                 classes << "current"
-              elsif doc_instance.namespace == obj ||
-                obj.descendants.include?(doc_instance) ||
-                  obj.descendants.include?(doc_instance.namespace)
+              elsif obj.ancestor_of?(doc_instance)
                 classes << "current-parent"
               end
             end
-            classes.join(" ")
+            classes.join(' ')
           end
         end
       end

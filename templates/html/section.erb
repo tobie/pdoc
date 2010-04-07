@@ -8,7 +8,7 @@
 
 <% # Iterate over the items in this section. %>
 
-<% unless @doc_instance.utilities.empty? %>
+<% unless @doc_instance.respond_to?(:utilities) && @doc_instance.utilities? %>
   <%= layout_section('Utilities') %>
     <ul class="method-list">
       <% @doc_instance.utilities.each do |utility| %>  
