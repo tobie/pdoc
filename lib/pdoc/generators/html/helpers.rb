@@ -66,8 +66,8 @@ module PDoc
           end
           
           def path_to(obj)
-            path = path_prefix << raw_path_to(obj).join('/')
-            Website.pretty_urls? ? path : "#{path}/index.html"
+            path = path_prefix << raw_path_to(obj).join('/') << '/'
+            Website.pretty_urls? ? path : "#{path}index.html"
           end
           
           def raw_path_to(obj)
