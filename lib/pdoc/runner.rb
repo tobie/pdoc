@@ -75,6 +75,7 @@ module PDoc
     private
       def serialize_file(path)
         serializer = @serializer.new
+        serializer.path = path
         puts "        Parsing #{path}..."
         File.open(path) do |file|
           @parser.new(file.read).parse.each do |fragment|
@@ -97,7 +98,9 @@ module PDoc
     end
     
     def <<(fragment)
-      @doc_fragments << "---\n#{fragment}"
+      fragment = "---\n#{fragment}"
+      fragment << "\nfile: #{path}"
+      @doc_fragments << fragment
     end
     
     def to_s
