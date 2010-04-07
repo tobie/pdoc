@@ -9,8 +9,10 @@ module PDoc
       @generator           = options.delete(:generator) || Generators::Html::Website
       @parser              = Parser
       @serializer          = Serializer
+      @bust_cache          = options.delete(:bust_cache) || false
       Models::Entity.repository_url = options.delete(:repository_url)
       @generator_options = options
+      
     end
     
     def serialize(files)
@@ -48,7 +50,7 @@ module PDoc
       puts "    Index page:          #{@generator_options[:index_page]}"
       puts "    Output directory:    #{@output_directory}\n\n"
       
-      files = new_files
+      files = @bust_cache ? @source_files : new_files
       if files.empty?
         puts "    Restoring serialized documentation from cache.\n\n"
       else
