@@ -128,7 +128,17 @@ module PDoc
         
         private
           def variables
-            {:root => root, :depth => @depth, :templates_directory => @templates_directory}
+            {
+              :root => root,
+              :depth => @depth,
+              :templates_directory => @templates_directory,
+              :name => @options[:name],
+              :short_name => @options[:short_name] || @options[:name],
+              :home_url => @options[:home_url],
+              :doc_url => @options[:doc_url],
+              :version => @options[:version],
+              :copyright_notice => @options[:copyright_notice]
+            }
           end
           
           def is_proto_prop?(object)
