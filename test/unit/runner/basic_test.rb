@@ -5,7 +5,7 @@ class BasicTest < Test::Unit::TestCase
   def test_restores_original_dir
     original_dir = Dir.pwd
     puts "*** #{original_dir}"
-    PDoc::Runner.new("test/fixtures/ajax.js",
+    PDoc::Runner.new("test/fixtures/test.txt",
       :output    => 'test/output',
       :templates => 'templates/html'
     ).run
