@@ -56,7 +56,11 @@ module PDoc
           
           private
             def attributes_to_html(attributes)
-              attributes.map { |k, v| v ? " #{k}=\"#{v}\"" : "" }.join
+              attributes = attributes.sort { |a, b| a.to_s <=> b.to_s }
+              attributes.map do |a|
+                k, v = a
+                k ? " #{k}=\"#{v}\"" : ""
+              end.join
             end
         end
         
