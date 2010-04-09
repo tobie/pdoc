@@ -620,8 +620,9 @@ p.related-to {
     }
     
     #api_menu .menu-item a.section:hover {
-      color: #D3D3D3;
-      border-color: #D3D3D3;
+      border-color: #69f;
+      color: #D8D9EA;
+      background-image: url(../images/selected-section-background.png);
     }
     
 .menu-section {
