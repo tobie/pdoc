@@ -70,10 +70,14 @@ module PDoc
           
             render_index
             copy_assets
-          
-            root.sections.each do |section|
-              @depth = 0
-              render_template('section', { :doc_instance => section })
+            
+            if root.sections?
+              root.sections.each do |section|
+                @depth = 0
+                render_template('section', { :doc_instance => section })
+              end
+            else
+              render_children(root)
             end
 
             dest = File.join("javascripts", "item_index.js")

@@ -7,6 +7,10 @@ module PDoc
         @sections ||= []
       end
       
+      def sections?
+        @sections && !@sections.empty?
+      end
+      
       def registry
         @registry ||= {}
       end
