@@ -9,12 +9,10 @@ Unlike other inline-doc parsers, PDoc does not rely on the JavaScript source cod
 
 ## Installation
 
-PDoc depends on Rake, [Maruku](http://maruku.rubyforge.org/), and treetop, all of which can be obtained through RubyGems:
+PDoc depends on Rake, your choice of markdown parser, and treetop, all of which can be obtained through RubyGems:
 
-    gem install rake maruku treetop
+    gem install rake bluecloth treetop
     
-Maruku is a more solid alternative to BlueCloth and is compatible with Ruby 1.9.1.
-
 ## Usage
 
 For hints on how to run PDoc on the command line, consult the built-in Rake tasks (in `Rakefile`) and the `PDoc::Runner` class (in `lib/pdoc/runner.rb`).
