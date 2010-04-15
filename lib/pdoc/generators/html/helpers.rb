@@ -187,30 +187,41 @@ module PDoc
           ]
           
           def menu(obj)
-            html = menu_item(obj, :name => :long)
+            if obj.parent
+              html = menu_item(obj, :name => :long)
             
-            html << node_submenu(obj)
+              html << node_submenu(obj)
             
-            if obj == doc_instance && obj.respond_to?(:constants)
-              html << leaf_submenu(obj)
-            elsif doc_instance && doc_instance.respond_to?(:parent)
-              parent = doc_instance.parent
-              html << leaf_submenu(parent) if parent == obj && obj.respond_to?(:constants)
+              if obj == doc_instance && obj.respond_to?(:constants)
+                html << leaf_submenu(obj)
+              elsif doc_instance && doc_instance.respond_to?(:parent)
+                parent = doc_instance.parent
+                html << leaf_submenu(parent) if parent == obj && obj.respond_to?(:constants)
+              end
+            
+              content_tag(:li, html)
+            else #root
+              node_submenu(obj)
             end
-            
-            content_tag(:li, html)
           end
           
           def node_submenu(obj)
             children = []
+            options = {}
             
             NODES.each do |prop|
               children.concat(obj.send(prop)) if obj.respond_to?(prop)
             end
             
-            list_items = children.sort.map { |item| menu(item) }.join("\n")
-            li_class_names = obj.type == "section" ? "menu-section" : ""
-            content_tag(:ul, list_items, :class => li_class_names)
+            list_items = children.sort.map { |item| menu(item) }
+            if obj.respond_to?(:sections)
+              obj.sections.each { |section| list_items << menu(section) }
+              options[:class] = "menu-items"
+              options[:id] = "api_menu"
+            elsif obj.type == "section"
+              options[:class] = "menu-section"
+            end
+            content_tag(:ul, list_items.join("\n"), options)
           end
           
           def menu_item(obj, options = {})

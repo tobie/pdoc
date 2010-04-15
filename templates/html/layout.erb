@@ -36,11 +36,7 @@
       </form>
       
       <div class="sidebar-pane scrollable" id="menu_pane">
-        <ul id="api_menu" class="menu-items">
-          <% @root.sections.each do |section| %>
-            <%= menu(section) %>
-          <% end %>
-        </ul> <!--- #api_menu =-->
+        <%= menu(@root) %><!--- #api_menu =-->
       </div> <!-- .sidebar-pane -->
       <div class="sidebar-pane" id="search_pane">
         <ul id="search_results" class="search-results menu-items scrollable"></ul>
