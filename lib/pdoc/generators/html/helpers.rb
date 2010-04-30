@@ -221,7 +221,7 @@ module PDoc
             elsif obj.type == "section"
               options[:class] = "menu-section"
             end
-            content_tag(:ul, list_items.join("\n"), options)
+            list_items.empty? ? '' : content_tag(:ul, list_items.join("\n"), options)
           end
           
           def menu_item(obj, options = {})
