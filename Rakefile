@@ -3,8 +3,21 @@ require 'lib/pdoc'
 
 desc "Builds the documentation"
 task :build_doc do
-  source = File.expand_path(File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js"))
-  PDoc::Runner.new(source).run
+  PDoc.run({
+    :source_files => [File.expand_path(File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js"))],
+    :destination => OUTPUT_DIR,
+    :syntax_highlighter => :pygments,
+    :markdown_parser => :bluecloth,
+    :repository_url => "http://github.com/example/ex/",
+    :pretty_urls => false,
+    :bust_cache => true,
+    :name => 'Example JavaScript Framework',
+    :short_name => 'Ex',
+    :home_url => 'http://example.com',
+    :doc_url => 'http://example.com/api',
+    :version => "1.2.0",
+    :copyright_notice => 'This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported License</a>.' 
+  })
 end
 
 desc "Empties output directory"
