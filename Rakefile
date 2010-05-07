@@ -4,11 +4,13 @@ require 'lib/pdoc'
 desc "Builds the documentation"
 task :build_doc do
   PDoc.run({
-    :source_files => [File.expand_path(File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js"))],
+    :source_files => [File.join(File.dirname(__FILE__), "test", "fixtures", "ajax.js")],
     :destination => OUTPUT_DIR,
     :syntax_highlighter => :pygments,
     :markdown_parser => :bluecloth,
-    :repository_url => "http://github.com/example/ex/",
+    :src_code_href => proc { |file, line|
+      "http://github.com/example/ex/#{file}##{line}"
+    },
     :pretty_urls => false,
     :bust_cache => true,
     :name => 'Example JavaScript Framework',

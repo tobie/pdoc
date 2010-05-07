@@ -10,9 +10,8 @@ module PDoc
       @parser              = Parser
       @serializer          = Serializer
       @bust_cache          = options.delete(:bust_cache) || false
-      Models::Entity.repository_url = options.delete(:repository_url)
+      Models::Entity.src_code_href = options.delete(:src_code_href)
       @generator_options = options
-      
     end
     
     def serialize(files)
@@ -46,7 +45,6 @@ module PDoc
       puts "    Markdown parser:     #{@generator_options[:markdown_parser]}"
       puts "    Syntax highlighter:  #{@generator_options[:syntax_highlighter]}"
       puts "    Pretty urls:         #{@generator_options[:pretty_urls]}"
-      puts "    Repository url:      #{Models::Entity.repository_url}"
       puts "    Index page:          #{@generator_options[:index_page]}"
       puts "    Output directory:    #{@output_directory}\n\n"
       
