@@ -181,14 +181,14 @@ module Documentation
     end
     
     def to_yaml
-      str = "id: \"#{full_name}\""
-      str << "\nparent_id: \"#{parent_id}\"" if parent_id
+      str = "id: #{full_name.inspect}"
+      str << "\nparent_id: #{parent_id.inspect}" if parent_id
       str << "\ntype: #{type}"
-      str << "\nsuperclass_id: \"#{superclass}\"" if respond_to?(:superclass) && superclass
+      str << "\nsuperclass_id: #{superclass.inspect}" if respond_to?(:superclass) && superclass
       str << "\nline_number: #{src_code_line}"
       str << "\ndeprecated: true" if deprecated?
-      str << "\nalias_of: \"#{alias_of}\"" if respond_to?(:alias_of) && alias_of
-      str << "\nrelated_to: \"#{related_to}\"" if respond_to?(:related_to) && related_to
+      str << "\nalias_of: #{alias_of.inspect}" if respond_to?(:alias_of) && alias_of
+      str << "\nrelated_to: #{related_to.inspect}" if respond_to?(:related_to) && related_to
       str << "\ndescription: |\n#{indent(description)}\n"
     end
     
@@ -317,8 +317,8 @@ module Documentation
       str << "\nsignatures:"
       ebnf_expressions.each do |ebnf|
         str << "\n -"
-        str << "\n  signature: \"#{ebnf.signature}\""
-        str << "\n  return_value: \"#{ebnf.returns}\"" if ebnf.returns
+        str << "\n  signature: #{ebnf.signature.inspect}"
+        str << "\n  return_value: #{ebnf.returns.inspect}" if ebnf.returns
       end
       
       str << "\narguments:" unless arguments.empty?
@@ -351,8 +351,8 @@ module Documentation
       
       str << "\nsignatures:"
       str << "\n -"
-      str << "\n  signature: \"#{signature}\""
-      str << "\n  return_value: \"#{returns}\""
+      str << "\n  signature: #{signature.inspect}"
+      str << "\n  return_value: #{returns.inspect}"
 
       serializer << str
     end
