@@ -4,7 +4,8 @@ module PDoc
       class << Entity
         attr_accessor :src_code_href
       end
-
+      attr_accessor :alias
+      
       def signatures
         @signatures ||= []
       end
@@ -28,10 +29,6 @@ module PDoc
       
       def methodized?
         !!@methodized
-      end
-      
-      def alias
-        @alias
       end
       
       def alias?

@@ -3,7 +3,7 @@
 <% end %>
 
 <% if object.alias? %>
-  <p class="alias alias-of">Alias of: <%= auto_link_code(object.alias_of, :name => :long) %></p>
+  <p class="alias alias-of">Alias of: <%= auto_link_code(object.alias, :name => :long) %></p>
 <% end %>
 
 <% if object.respond_to?(:related_to) && related_to = object.related_to %>
