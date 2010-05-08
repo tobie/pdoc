@@ -7,7 +7,7 @@ module PDoc
       doc_fragments.each do |attributes|
         if attributes['methodized']
           dups = attributes.dup
-          dups['id'] = dups['id'].sub(/\.([^\.]+)$/) { "##{$1}" }
+          dups['id'] = methodize_id(dups['id'])
           dups['type'] = 'instance method'
           if dups['signatures']
             dups['signatures'] = dups['signatures'].map do |s|
@@ -16,6 +16,9 @@ module PDoc
                 'return_value' => s['return_value']
               }
             end
+          end
+          if dups['alias_of']
+            dups['alias_of'] = methodize_id(dups['alias_of'])
           end
           methodized << dups
           i = instantiate_from(dups)
@@ -78,6 +81,10 @@ module PDoc
         rest = $3 == ')' ? $3 : ''
         "##{$1}#{prefix}#{rest}"
       end
+    end
+    
+    def methodize_id(id)
+      id.sub(/\.([^\.]+)$/) { "##{$1}" }
     end
     
     def root
