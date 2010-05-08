@@ -41,11 +41,12 @@ module PDoc
     end
     
     def run
+      opts = @generator_options
       puts
-      puts "    Markdown parser:     #{@generator_options[:markdown_parser]}"
-      puts "    Syntax highlighter:  #{@generator_options[:syntax_highlighter]}"
-      puts "    Pretty urls:         #{@generator_options[:pretty_urls]}"
-      puts "    Index page:          #{@generator_options[:index_page]}"
+      puts "    Markdown parser:     #{opts[:markdown_parser]}" if opts[:markdown_parser]
+      puts "    Syntax highlighter:  #{opts[:syntax_highlighter]}" if opts[:syntax_highlighter]
+      puts "    Pretty urls:         #{opts[:pretty_urls]}" if opts[:pretty_urls]
+      puts "    Index page:          #{opts[:index_page]}" if opts[:index_page]
       puts "    Output directory:    #{@output_directory}\n\n"
       
       files = @bust_cache ? @source_files : new_files
@@ -65,9 +66,9 @@ module PDoc
       puts "    Building documentation tree. Finished in #{Time.new - start_time} seconds.\n\n"
       
       start_time = Time.new
-      puts "    Building website:"
+      puts "    Generating documentation:"
       @generator.new(root, @generator_options).render(@output_directory)
-      puts "\n    Finished building website in #{Time.new - start_time} seconds.\n\n"
+      puts "\n    Finished generating documentation in #{Time.new - start_time} seconds.\n\n"
     end
     
     private
