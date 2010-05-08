@@ -44,6 +44,15 @@ module PDoc
           object.superclass = superclass
           superclass.subclasses << object
         end
+        
+        if included = attributes['included']
+          included.each do |id|
+            mixin = root.find(id)
+            raise "Undocumented object: #{id}." unless mixin
+            object.included_mixins << mixin
+          end
+        end
+        
         if alias_of_id = attributes['alias_of']
           alias_of = root.find(alias_of_id)
           raise "Undocumented object: #{alias_of_id}." unless alias_of

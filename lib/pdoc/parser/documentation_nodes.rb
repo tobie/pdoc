@@ -185,6 +185,7 @@ module Documentation
       str << "\nparent_id: #{parent_id.inspect}" if parent_id
       str << "\ntype: #{type}"
       str << "\nsuperclass_id: #{superclass.inspect}" if respond_to?(:superclass) && superclass
+      str << "\nincluded: #{mixins.inspect}" if respond_to?(:mixins) && !mixins.empty?
       str << "\nline_number: #{src_code_line}"
       str << "\ndeprecated: true" if deprecated?
       str << "\nalias_of: #{alias_of.inspect}" if respond_to?(:alias_of) && alias_of

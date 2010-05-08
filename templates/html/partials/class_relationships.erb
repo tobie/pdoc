@@ -12,8 +12,8 @@
   <% end %>
 <% end %>
 
-<% if object.mixins? %>
+<% if object.included_mixins? %>
   <%= layout_section('Includes', :mixins) %>
-    <p><%= object.mixins.sort!.map { |m| auto_link_code(m, :name => :long) }.join(', ') %></p>
+    <p><%= object.included_mixins.sort!.map { |m| auto_link_code(m, :name => :long) }.join(', ') %></p>
   <%= end_layout_section %>
 <% end %>

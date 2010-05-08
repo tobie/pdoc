@@ -36,6 +36,14 @@ module PDoc
         @mixins && !@mixins.empty?
       end
       
+      def included_mixins
+        @included_mixins ||= []
+      end
+      
+      def included_mixins?
+        @included_mixins && !@included_mixins.empty?
+      end
+      
       # returns an array of Function objects belonging to this section
       def utilities
         @utilities ||= []
