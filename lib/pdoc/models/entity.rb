@@ -20,7 +20,7 @@ module PDoc
       end
 
       def signatures?
-        @signatures && @signatures.empty?
+        @signatures && !@signatures.empty?
       end
       
       def signature
