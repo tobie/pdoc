@@ -48,6 +48,9 @@ module PDoc
         obj.ancestor_of?(self)
       end
       
+      def inspect
+        "#<#{self.class} #{id}>"
+      end
     end
   end
 end
