@@ -64,7 +64,7 @@ module PDoc
             result << 'prototype'
           end
           obj = obj.parent
-        end while obj.respond_to?(:normalized_name)
+        end until obj.is_a?(Models::Root)
         result.reverse.join(separator)
       end
       
@@ -75,7 +75,7 @@ module PDoc
           :type => type,
           :description => description,
           :short_description => short_description,
-          :parent => parent ? parent.id : nil,
+          :parent => parent.is_a?(Models::Root) ? nil : parent.id,
           :doc_href => doc_href
         }
       end
