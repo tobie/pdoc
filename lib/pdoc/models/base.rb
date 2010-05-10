@@ -50,6 +50,33 @@ module PDoc
         obj.ancestor_of?(self)
       end
       
+      def url(separator = '/')
+        result = []
+        obj = self
+        begin
+          result << obj.normalized_name
+          if obj.is_a?(Models::InstanceMethod) || obj.is_a?(Models::InstanceProperty)
+            result << 'prototype'
+          end
+          obj = obj.parent
+        end while obj.respond_to?(:normalized_name)
+        result.reverse.join(separator)
+      end
+      def normalized_name
+        @normalized_name ||= name.gsub(/(^\$+$)|(^\$+)|(\$+$)|(\$+)/) do |m|
+          dollar = Array.new(m.length, 'dollar').join('-')
+          if $1
+            dollar
+          elsif $2
+            "#{dollar}-"
+          elsif $3
+            "-#{dollar}"
+          elsif $4
+            "-#{dollar}-"
+          end
+        end
+      end
+      
       def inspect
         "#<#{self.class} #{id}>"
       end

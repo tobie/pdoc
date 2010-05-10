@@ -70,39 +70,10 @@ module PDoc
           end
           
           def path_to(obj)
-            path = path_prefix << raw_path_to(obj).join('/') << '/'
+            path = path_prefix << obj.url << '/'
             Website.pretty_urls? ? path : "#{path}index.html"
           end
           
-          def raw_path_to(obj)
-            result = []
-            begin
-              result << normalize_obj_name(obj)
-              if obj.is_a?(Models::InstanceMethod) || obj.is_a?(Models::InstanceProperty)
-                result << 'prototype'
-              end
-              obj = obj.parent
-            end while obj.respond_to?(:name)
-            result.reverse
-          end
-          
-          def normalize_obj_name(obj)
-            name = obj.name
-            name.downcase! if obj.is_a?(Models::Section)
-            name.gsub(/(^\$+$)|(^\$+)|(\$+$)|(\$+)/) do |m|
-              dollar = Array.new(m.length, 'dollar').join('-')
-              if $1
-                dollar
-              elsif $2
-                "#{dollar}-"
-              elsif $3
-                "-#{dollar}"
-              elsif $4
-                "-#{dollar}-"
-              end
-            end
-          end
-
           def auto_link(obj, options = {})
             if obj.is_a?(String)
               original = obj

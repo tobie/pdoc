@@ -92,7 +92,7 @@ module PDoc
         def render_template(template, var = {})
           @depth += 1
           doc = var[:doc_instance]
-          dest = File.join(*raw_path_to(doc))
+          dest = doc.url(File::SEPARATOR)
           puts "        Rendering #{dest}..."
           FileUtils.mkdir_p(dest)
           DocPage.new(template, variables.merge(var)).render_to_file(File.join(dest, 'index.html'))

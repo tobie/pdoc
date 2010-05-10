@@ -10,6 +10,10 @@ module PDoc
       def name
         @name ||= @id.sub(' section', '')
       end
+      
+      def normalized_name
+        super.downcase
+      end
     end
   end
 end
