@@ -11,6 +11,8 @@ module PDoc
       attr_reader   :description
       attr_reader   :id
       attr_reader   :type
+      attr_reader   :file
+      attr_reader   :line_number
       
       def initialize(attributes = {})
         attributes.each { |k, v| instance_variable_set("@#{k}", v) }

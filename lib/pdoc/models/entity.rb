@@ -16,7 +16,7 @@ module PDoc
       
       def src_code_href
         proc = Entity.src_code_href
-        @src_code_href ||= proc ? proc.call(@file, @line_number) : nil
+        @src_code_href ||= proc ? proc.call(file, line_number) : nil
       end
 
       def signatures?
