@@ -315,14 +315,24 @@ module Documentation
       str = to_yaml
       str << "\nmethodized: true" if respond_to?(:methodized?) && methodized?
       
+      serialize_signatures(str)
+      
+      serialize_arguments(str) unless arguments.empty?
+      
+      serializer << str
+    end
+    
+    def serialize_signatures(str)
       str << "\nsignatures:"
       ebnf_expressions.each do |ebnf|
         str << "\n -"
         str << "\n  signature: #{ebnf.signature.inspect}"
         str << "\n  return_value: #{ebnf.returns.inspect}" if ebnf.returns
       end
-      
-      str << "\narguments:" unless arguments.empty?
+    end
+    
+    def serialize_arguments(str)
+      str << "\narguments:"
       arguments.each do |arg|
         str << "\n -"
         str << "\n  name: #{arg.name}"
@@ -330,7 +340,6 @@ module Documentation
         str << "\n  description: >"
         str << "\n    #{arg.description}\n"
       end
-      serializer << str
     end
   end
   

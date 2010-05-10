@@ -121,6 +121,10 @@ module EbnfExpression
     def returns
       nil
     end
+    
+    def signature
+      "#{full_name}#{args.text_value}"
+    end
   end
   
   class KlassProperty < Base
