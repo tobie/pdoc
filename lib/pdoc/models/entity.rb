@@ -43,7 +43,9 @@ module PDoc
       
       def to_hash
         super.merge({
-          :aliases => aliases,
+          :aliases => aliases.map { |a| a.id },
+          :alias => self.alias ? self.alias.id : nil,
+          :signatures => signatures,
           :src_code_href => src_code_href
         })
       end

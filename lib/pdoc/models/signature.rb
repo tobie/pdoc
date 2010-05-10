@@ -18,7 +18,7 @@ module PDoc
       
       def to_hash
         {
-          :signature => signature,
+          :name => name,
           :return_value => return_value
         }
       end

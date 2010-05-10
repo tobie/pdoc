@@ -26,6 +26,7 @@ module PDoc
       def to_hash
         {
           :name => name,
+          :description => description,
           :default_value => default_value,
           :optional => optional?,
           :types => types
