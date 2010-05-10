@@ -21,6 +21,11 @@ require 'models/utility'
 
 module PDoc
   module Models
+    class << Models
+      attr_accessor :src_code_href
+      attr_accessor :doc_href
+    end
+    
     class Base
       @@subclasses_by_type = {
         'section' => Section,

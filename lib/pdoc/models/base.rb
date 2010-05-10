@@ -50,6 +50,11 @@ module PDoc
         obj.ancestor_of?(self)
       end
       
+      def doc_href
+        proc = Models.doc_href
+        @doc_href ||= proc ? proc.call(self) : nil
+      end
+      
       def url(separator = '/')
         result = []
         obj = self
@@ -70,7 +75,8 @@ module PDoc
           :type => type,
           :description => description,
           :short_description => short_description,
-          :parent => parent ? parent.id : nil
+          :parent => parent ? parent.id : nil,
+          :doc_href => doc_href
         }
       end
       

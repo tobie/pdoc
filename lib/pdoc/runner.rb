@@ -10,7 +10,8 @@ module PDoc
       @parser              = Parser
       @serializer          = Serializer
       @bust_cache          = options.delete(:bust_cache) || false
-      Models::Entity.src_code_href = options.delete(:src_code_href)
+      Models.src_code_href = options.delete(:src_code_href)
+      Models.doc_href = options.delete(:doc_href)
       @generator_options = options
     end
     

@@ -1,9 +1,6 @@
 module PDoc
   module Models
     class Entity < Base
-      class << Entity
-        attr_accessor :src_code_href
-      end
       attr_accessor :alias
       
       def signatures
@@ -15,8 +12,8 @@ module PDoc
       end
       
       def src_code_href
-        proc = Entity.src_code_href
-        @src_code_href ||= proc ? proc.call(file, line_number) : nil
+        proc = Models.src_code_href
+        @src_code_href ||= proc ? proc.call(self) : nil
       end
 
       def signatures?
