@@ -8,8 +8,9 @@ module PDoc
       end
       
       def to_hash
+        m = methodized_self
         super.merge({
-          :methodized_self => methodized_self
+          :methodized_self => m ? m.id : nil
         })
       end
     end

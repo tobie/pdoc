@@ -8,8 +8,9 @@ module PDoc
       end
       
       def to_hash
+        f = functionalized_self
         super.merge({
-          :functionalized_self => functionalized_self
+          :functionalized_self => f ? f.id : nil
         })
       end
     end
