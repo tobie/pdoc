@@ -1,10 +1,8 @@
 module PDoc
   module Models
-    class Argument < Entity
+    class Argument < Base
       attr_reader :name
       attr_reader :default_value
-      attr_reader :optional
-      attr_reader :types
       
       def attach_to_parent(parent)
         parent.arguments << self
