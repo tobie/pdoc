@@ -15,6 +15,14 @@ module PDoc
       def subclasses?
         @subclasses && !@subclasses.empty?
       end
+      
+      def to_hash
+        super.merge({
+          :superclass => superclass,
+          :constructor => constructor,
+          :subclasses => subclasses.map { |obj| obj.id }
+        })
+      end
     end
   end
 end

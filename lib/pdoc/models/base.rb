@@ -62,6 +62,22 @@ module PDoc
         end while obj.respond_to?(:normalized_name)
         result.reverse.join(separator)
       end
+      
+      def to_hash
+        {
+          :deprecated => deprecated?,
+          :id => id,
+          :type => type,
+          :description => description,
+          :short_description => short_description,
+          :parent => parent ? parent.id : nil
+        }
+      end
+      
+      def to_json(*args)
+        to_hash.to_json(*args)
+      end
+      
       def normalized_name
         @normalized_name ||= name.gsub(/(^\$+$)|(^\$+)|(\$+$)|(\$+)/) do |m|
           dollar = Array.new(m.length, 'dollar').join('-')

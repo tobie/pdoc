@@ -15,8 +15,21 @@ module PDoc
         @id ||= "#{parent.id}:#{name}"
       end
       
+      def optional?
+        !!@optional
+      end
+      
       def types
         @types ||= []
+      end
+      
+      def to_hash
+        {
+          :name => name,
+          :default_value => default_value,
+          :optional => optional?,
+          :types => types
+        }
       end
     end
   end

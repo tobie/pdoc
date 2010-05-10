@@ -43,6 +43,13 @@ module PDoc
       def aliases?
         @aliases && !@aliases.empty?
       end
+      
+      def to_hash
+        super.merge({
+          :aliases => aliases,
+          :src_code_href => src_code_href
+        })
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 module PDoc
   module Models
-    class Signature < Entity
+    class Signature < Base
       attr_reader :return_value
       def attach_to_parent(parent)
         parent.signatures << self
@@ -14,6 +14,13 @@ module PDoc
       
       def name
         @signature
+      end
+      
+      def to_hash
+        {
+          :signature => signature,
+          :return_value => return_value
+        }
       end
     end
   end

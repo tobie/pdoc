@@ -6,6 +6,12 @@ module PDoc
       def attach_to_parent(parent)
         parent.instance_methods << self
       end
+      
+      def to_hash
+        super.merge({
+          :functionalized_self => functionalized_self
+        })
+      end
     end
   end
 end

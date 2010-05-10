@@ -93,6 +93,22 @@ module PDoc
       def instance_properties?
         @instance_properties && !@instance_properties.empty?
       end
+      
+      def to_hash
+        super.merge({
+          :children => children.map { |obj| obj.id },
+          :namespaces => namespaces.map { |obj| obj.id },
+          :classes => classes.map { |obj| obj.id },
+          :mixins => mixins.map { |obj| obj.id },
+          :included_mixins => included_mixins.map { |obj| obj.id },
+          :utilities => utilities.map { |obj| obj.id },
+          :constants => constants.map { |obj| obj.id },
+          :class_methods => class_methods.map { |obj| obj.id },
+          :class_properties => class_properties.map { |obj| obj.id },
+          :instance_methods => instance_methods.map { |obj| obj.id },
+          :instance_properties => instance_properties.map { |obj| obj.id }
+        })
+      end
     end
   end
 end
