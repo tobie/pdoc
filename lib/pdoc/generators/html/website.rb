@@ -27,6 +27,7 @@ module PDoc
           super
           @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
           @index_page = options[:index_page] && File.expand_path(options[:index_page])
+          @json_api = options[:json_api]
           self.class.syntax_highlighter = SyntaxHighlighter.new(options[:syntax_highlighter])
           self.class.pretty_urls = options[:pretty_urls]
           set_markdown_parser(options[:markdown_parser])
@@ -96,8 +97,13 @@ module PDoc
           puts "        Rendering #{dest}..."
           FileUtils.mkdir_p(dest)
           DocPage.new(template, variables.merge(var)).render_to_file(File.join(dest, 'index.html'))
+          render_json("#{dest}.json", doc) if @json_api
           render_children(doc)
           @depth -= 1
+        end
+        
+        def render_json(dest, obj)
+          open(dest, 'w') { |file| file << obj.to_json }
         end
         
         def render_children(obj)
