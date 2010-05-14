@@ -22,7 +22,7 @@ module PDoc
             @pretty_urls = boolean
           end
         end
-        
+        attr_reader :templates_directory, :custom_assets, :index_page
         def initialize(parser_output, options = {})
           super
           @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
@@ -53,7 +53,7 @@ module PDoc
         
         def load_custom_helpers
           begin
-            require File.join(@templates_directory, "helpers")
+            require File.join(templates_directory, "helpers")
           rescue LoadError => e
             return nil
           end
@@ -122,7 +122,7 @@ module PDoc
         # Copies the content of the assets folder to the generated website's
         # root directory.
         def copy_assets
-          FileUtils.cp_r(Dir.glob(File.join(@templates_directory, "assets", "**")), '.')
+          FileUtils.cp_r(Dir.glob(File.join(templates_directory, "assets", "**")), '.')
         end
         
         def render_leaf(object)
@@ -141,7 +141,7 @@ module PDoc
             {
               :root => root,
               :depth => @depth,
-              :templates_directory => @templates_directory,
+              :templates_directory => templates_directory,
               :name => @options[:name],
               :short_name => @options[:short_name] || @options[:name],
               :home_url => @options[:home_url],
