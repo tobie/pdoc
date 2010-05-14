@@ -144,7 +144,6 @@ module PDoc
               :name => @options[:name],
               :short_name => @options[:short_name] || @options[:name],
               :home_url => @options[:home_url],
-              :doc_url => @options[:doc_url],
               :version => @options[:version],
               :footer => footer,
               :index_header => index_header,
