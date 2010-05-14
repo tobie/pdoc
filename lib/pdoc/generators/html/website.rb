@@ -27,6 +27,7 @@ module PDoc
           super
           @templates_directory = File.expand_path(options[:templates] || TEMPLATES_DIRECTORY)
           @index_page = options[:index_page] && File.expand_path(options[:index_page])
+          @custom_assets = @options[:assets] && File.expand_path(@options[:assets])
           self.class.syntax_highlighter = SyntaxHighlighter.new(options[:syntax_highlighter])
           self.class.pretty_urls = options[:pretty_urls]
           set_markdown_parser(options[:markdown_parser])
@@ -70,6 +71,7 @@ module PDoc
           
             render_index
             copy_assets
+            copy_custom_assets
             
             render_children(root)
             if root.sections?
@@ -122,6 +124,13 @@ module PDoc
         # root directory.
         def copy_assets
           FileUtils.cp_r(Dir.glob(File.join(templates_directory, "assets", "**")), '.')
+        end
+        
+        def copy_custom_assets
+          if custom_assets
+            mkdir('assets')
+            FileUtils.cp_r(Dir.glob(File.join(custom_assets, "**")), "assets")
+          end
         end
         
         def render_leaf(object)
