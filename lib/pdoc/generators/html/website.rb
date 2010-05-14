@@ -147,9 +147,24 @@ module PDoc
               :home_url => @options[:home_url],
               :doc_url => @options[:doc_url],
               :version => @options[:version],
-              :copyright_notice => @options[:copyright_notice]
+              :footer => footer,
+              :index_header => index_header,
+              :header => header
             }
           end
+
+          def header
+            @header ||= @options[:header] ? htmlize(@options[:header]) : ''
+          end
+          
+          def index_header
+            @index_header ||= @options[:index_header] ? htmlize(@options[:index_header]) : ''
+          end
+          
+          def footer
+            @footer ||= @options[:footer] ? htmlize(@options[:footer]) : ''
+          end
+          
           
           def is_proto_prop?(object)
             object.is_a?(Models::InstanceMethod) ||

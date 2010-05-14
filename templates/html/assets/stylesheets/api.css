@@ -24,9 +24,7 @@ html[xmlns] .section {
     height: 1%;
 }
 
-span.replaced { visibility: hidden; }
 span.hidden { display: none; }
-
 
 body {
   font-family: Verdana, sans-serif;
@@ -92,26 +90,6 @@ code, pre {
   overflow-x: auto;
 }
 
-
-/* MASTHEAD */
-
-.masthead {
-  margin-top: 31px;
-  height: 75px;
-  padding: 1px 0;
-  background: url(../images/header-stripe-small.png) repeat-x;
-}
-
-h1.logo {
-  width: 236px;
-  height: 150px;
-  background: url(../images/header-logo-small.png) no-repeat;
-}
-
-  h1.logo a {
-    text-decoration: none;
-  }
-  
 /* BREADCRUMBS */
 
 ul.breadcrumbs {
