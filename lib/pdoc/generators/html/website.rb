@@ -155,7 +155,8 @@ module PDoc
               :version => @options[:version],
               :footer => footer,
               :index_header => index_header,
-              :header => header
+              :header => header,
+              :timestamp => timestamp
             }
           end
 
@@ -169,6 +170,10 @@ module PDoc
           
           def footer
             @footer ||= @options[:footer] ? htmlize(@options[:footer]) : ''
+          end
+          
+          def timestamp
+            @timestamp ||= @options[:timestamp] == false ? nil : Time.now.utc
           end
           
           def json_api?
