@@ -128,8 +128,7 @@ module PDoc
         
         def copy_custom_assets
           if custom_assets
-            mkdir('assets')
-            FileUtils.cp_r(Dir.glob(File.join(custom_assets, "**")), "assets")
+            FileUtils.cp_r(Dir.glob(File.join(custom_assets, "**")), ".")
           end
         end
         
