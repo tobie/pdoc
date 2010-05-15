@@ -6,11 +6,11 @@
   <title><%= @short_name %>  v<%= @version %> API documentation | <%= @title %></title>
   <meta name="generator" content="PDoc" />
   
-  <%= javascript_include_tag "prototype" %>
-  <%= javascript_include_tag "application", "tabs" %>
-  <%= javascript_include_tag "item_index" %>
+  <%= javascript_include_tag "pdoc/prototype" %>
+  <%= javascript_include_tag "pdoc/application", "pdoc/tabs" %>
+  <%= javascript_include_tag "pdoc/item_index" %>
   
-  <%= stylesheet_link_tag "api", "pygments" %>
+  <%= stylesheet_link_tag "pdoc/api", "pdoc/pygments" %>
   
   <script type="text/javascript">
     PDoc.pathPrefix = '<%= path_prefix %>';

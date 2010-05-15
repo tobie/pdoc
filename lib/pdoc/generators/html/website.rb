@@ -81,7 +81,7 @@ module PDoc
               end
             end
 
-            dest = File.join("javascripts", "item_index.js")
+            dest = File.join("javascripts", "pdoc", "item_index.js")
             DocPage.new("item_index.js", false, variables).render_to_file(dest)
           end
         end
