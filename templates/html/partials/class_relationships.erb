@@ -1,4 +1,4 @@
-<% if object.respond_to?(:subclass) %>
+<% if object.is_a?(Models::Class) %>
   <% if object.superclass %>
     <%= layout_section('Superclass') %>
       <p><%= auto_link_code(object.superclass, :name => :long) %></p>
