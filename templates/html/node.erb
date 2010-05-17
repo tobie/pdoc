@@ -1,12 +1,7 @@
 <% d = @doc_instance %>
 
 <%= include "partials/title", :object => @doc_instance %>
-
-<% if d.description && !d.description.empty? %>
-  <%= layout_section('Description') %>
-    <%= htmlize(d.description) %>
-  <%= end_layout_section %>
-<% end %>
+<%= include "partials/description", :object => @doc_instance %>
 
 <%= include "partials/namespaces", :object => @doc_instance %>
 <%= include "partials/classes", :object => @doc_instance %>

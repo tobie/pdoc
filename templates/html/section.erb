@@ -1,12 +1,7 @@
 <% @title = "#{@doc_instance.full_name} " %>
 
 <%= include "partials/title", :object => @doc_instance %>
-
-<%= layout_section('Description') %>
-  <%= htmlize(@doc_instance.description) %>
-<%= end_layout_section %>
-
-<% # Iterate over the items in this section. %>
+<%= include "partials/description", :object => @doc_instance %>
 
 <% if @doc_instance.respond_to?(:utilities) && @doc_instance.utilities? %>
   <%= layout_section('Utilities') %>
