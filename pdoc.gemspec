@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.authors  = ["Tobie Langel"]
   s.files    = [
-        "CHANGELOG", 
 		"README.markdown", 
 		"Rakefile", 
 		"pdoc.gemspec"] +
@@ -24,7 +23,7 @@ Gem::Specification.new do |s|
   
   s.test_files = Dir['test/**/*.rb']
   s.rdoc_options = ["--main", "README.markdown"]
-  s.extra_rdoc_files = ["CHANGELOG", "README.markdown"]
+  s.extra_rdoc_files = ["README.markdown"]
   s.add_dependency("BlueCloth", ["> 0.0.0"])
   s.add_dependency("treetop", ["> 0.0.0"])
   s.add_dependency("oyster", ["> 0.0.0"])
