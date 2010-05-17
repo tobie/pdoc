@@ -1,0 +1,7 @@
+<% if object.mixins? %>
+  <%= layout_section('Mixins') %>
+    <ul class="method-details-list">
+      <%= include "partials/short_description_list", :collection => object.mixins.sort! %>
+    </ul>
+  <%= end_layout_section %>
+<% end %>
