@@ -12,6 +12,7 @@ require 'rubygems'
 require 'erb'
 require 'fileutils'
 
+require 'pdoc/error'
 require 'pdoc/runner'
 require 'pdoc/generators'
 require 'pdoc/parser'
