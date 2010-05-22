@@ -10,7 +10,7 @@ module PDoc
       @string = string
     end
     
-    def normalize
+    def normalized_lines
       # Cleans up the text by removing opening and closing comment tags
       # and removing the prefix off of every line.
       # Raises and error if prefix are inconsistent. (Prefix is calculated
@@ -37,6 +37,7 @@ module PDoc
     def prefix_regexp
       @prefix_regexp ||= Regexp.new('^' << Regexp.escape(prefix))
     end
+    private(:prefix_regexp)
     
     def lines
       @lines ||= @string.split("\n")

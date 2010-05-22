@@ -4,7 +4,7 @@ require "../../../lib/pdoc/error"
 
 class TestFragment < Test::Unit::TestCase
   
-  def test_normalize_empty_fragment
+  def test_normalized_lines_of_empty_fragment
     fragment =<<EOF
     /**
     *
@@ -12,13 +12,13 @@ class TestFragment < Test::Unit::TestCase
     **/
 EOF
     fragment = PDoc::Fragment.new(fragment, 0)
-    lines = fragment.normalize
+    lines = fragment.normalized_lines
     assert_equal("", lines[0])
     assert_equal("", lines[1])
     assert_equal("", lines.last)
   end
   
-  def test_normalize_basic_fragment
+  def test_normalized_lines_of_basic_fragment
     fragment =<<EOF
     /**
     * foo
@@ -26,14 +26,14 @@ EOF
     **/
 EOF
     fragment = PDoc::Fragment.new(fragment, 0)
-    lines = fragment.normalize
+    lines = fragment.normalized_lines
     assert_equal("", lines[0])
     assert_equal("foo", lines[1])
     assert_equal("  bar", lines[2])
     assert_equal("", lines.last)
   end
   
-  def test_normalize_broken_fragment
+  def test_normalized_lines_of_broken_fragment
     fragment =<<EOF
     /**
     * foo
@@ -41,7 +41,7 @@ EOF
     **/
 EOF
     assert_raise PDoc::Fragment::InconsistentPrefixError do
-      PDoc::Fragment.new(fragment, 0).normalize
+      PDoc::Fragment.new(fragment, 0).normalized_lines
     end
   end
   
