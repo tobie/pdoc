@@ -1,3 +1,4 @@
+# encoding: utf-8
 module PDoc
   module Generators
     module Html
@@ -31,14 +32,15 @@ module PDoc
         end
         
         def include(path, options = {})
-          r = ''
-          options.each { |k, v| r << "#{k.to_s} = options[:#{k}];" }
-          eval(r)
+          r = options.collect { |k, v| "#{k.to_s} = options[:#{k}]" }.join(';')
           
           if options[:collection]
-            options[:collection].map { |object| Template.new(path, @templates_directory).result(binding) }.join("\n")
+            # XXX This assumes that `options[:collection]` and `options[:object]` are mutually exclusive
+            options[:collection].map { |object| b = binding; b.eval(r); Template.new(path, @templates_directory).result(b) }.join("\n")
           else
-            Template.new(path, @templates_directory).result(binding)
+            b = binding
+            b.eval(r)
+            Template.new(path, @templates_directory).result(b)
           end
         end
         

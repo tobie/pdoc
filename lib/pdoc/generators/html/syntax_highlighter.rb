@@ -1,3 +1,4 @@
+# encoding: utf-8
 module PDoc
   module Generators
     module Html

@@ -1,3 +1,4 @@
+# encoding: utf-8
 HTML_DIR = File.expand_path(File.join(File.dirname(__FILE__), "html"))
 
 require File.join(HTML_DIR, "helpers")
