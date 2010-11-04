@@ -11,6 +11,7 @@ module PDoc
       @serializer          = Serializer
       @bust_cache          = options.delete(:bust_cache) || false
       Models.src_code_href = options.delete(:src_code_href)
+      Models.src_code_text = options.delete(:src_code_text)
       Models.doc_href = options.delete(:doc_href)
       @generator_options = options
     end

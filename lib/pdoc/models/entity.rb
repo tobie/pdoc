@@ -15,6 +15,10 @@ module PDoc
         proc = Models.src_code_href
         @src_code_href ||= proc ? proc.call(self) : nil
       end
+      
+      def src_code_text
+        @src_code_text ||= Models.src_code_text
+      end
 
       def signatures?
         @signatures && !@signatures.empty?

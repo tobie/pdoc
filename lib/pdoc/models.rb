@@ -23,6 +23,7 @@ module PDoc
   module Models
     class << Models
       attr_accessor :src_code_href
+      attr_accessor :src_code_text
       attr_accessor :doc_href
     end
     
