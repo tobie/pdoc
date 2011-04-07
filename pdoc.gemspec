@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name     = "pdoc"
-  s.version  = "0.2.0"
-  s.date     = "2008-11-17"
+  s.version  = "0.2.1"
+  s.date     = "2011-04-07"
   s.summary  = "Inline comment parser and JavaScript documentation generator"
   s.email    = "tobie.langel@gmail.com"
   s.homepage = "http://pdoc.org/"
@@ -9,11 +9,11 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.authors  = ["Tobie Langel"]
   s.files    = [
-		"README.markdown", 
-		"Rakefile", 
-		"pdoc.gemspec"] +
-		Dir['lib/**/*'] +
-        Dir['templates/**/*']
+                "README.markdown", 
+                "Rakefile", 
+                "pdoc.gemspec"] +
+                Dir['lib/**/*'] +
+                Dir['templates/**/*']
   
   s.autorequire = "lib/pdoc.rb"
   
