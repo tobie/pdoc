@@ -183,7 +183,7 @@ module Documentation
     def to_yaml
       str = "id: #{full_name.inspect}"
       str << "\nparent_id: #{parent_id.inspect}" if parent_id
-      str << "\ntype: #{type}"
+      str << "\ntype: #{type.inspect}"
       str << "\nsuperclass_id: #{superclass.inspect}" if respond_to?(:superclass) && superclass
       str << "\nincluded: #{mixins.inspect}" if respond_to?(:mixins) && !mixins.empty?
       str << "\nline_number: #{src_code_line}"
@@ -334,9 +334,10 @@ module Documentation
     def serialize_arguments(str)
       str << "\narguments:"
       arguments.each do |arg|
+        types = arg.types.map { |type| type.inspect }
         str << "\n -"
-        str << "\n  name: #{arg.name}"
-        str << "\n  types: [#{arg.types.join(', ')}]" unless arg.types.empty?
+        str << "\n  name: #{arg.name.inspect}"
+        str << "\n  types: [#{types.join(', ')}]" unless types.empty?
         str << "\n  description: >"
         str << "\n    #{arg.description}\n"
       end
